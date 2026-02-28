@@ -7,18 +7,18 @@ updated: 2026-03-01T06:50:00+07:00
 ## Current Position
 
 **Milestone:** v2.1-multi-client
-**Phase:** 1 (completed)
+**Phase:** 2 (completed)
 **Task:** All tasks complete
 **Status:** Verified
 
 ## Last Session Summary
 
-Phase 1 executed successfully. 1 plan, 3 tasks completed. Created install module with adapter interface, client detection, registry, and template loader.
+Phase 2 executed successfully. 1 plan, 2 tasks completed. Created Antigravity adapter (`.agent/workflows/pm-guide.md` with YAML frontmatter) and Claude Code adapter (`CLAUDE.md` with section markers for safe update/removal).
 
 ## Next Steps
 
-1. `/execute 2` → Antigravity & Claude Code adapters
-2. `/execute 3` → Cursor & Codex adapters
+1. `/execute 3` → Cursor & Codex adapters
+2. `/execute 4` → OpenCode & CLI Command
 
 ## Active Decisions
 
