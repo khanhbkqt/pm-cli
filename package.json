@@ -14,7 +14,8 @@
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsup",
+    "build": "tsup && cd dashboard && npm run build",
+    "build:dashboard": "cd dashboard && npm run build",
     "test": "vitest run",
     "test:watch": "vitest",
     "install:local": "bash scripts/install.sh",
