@@ -1,0 +1,33 @@
+import express from 'express';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import type Database from 'better-sqlite3';
+
+/**
+ * Create an Express app for the dashboard.
+ * Accepts a database connection for future API routes (Phase 2).
+ */
+export function createApp(db: Database.Database): express.Express {
+    const app = express();
+    app.use(express.json());
+
+    // Health check endpoint
+    app.get('/api/health', (_req, res) => {
+        res.json({ status: 'ok' });
+    });
+
+    // Serve static dashboard files if the directory exists
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    const dashboardPath = path.join(__dirname, 'dashboard');
+    if (fs.existsSync(dashboardPath)) {
+        app.use(express.static(dashboardPath));
+        app.get('*', (req, res) => {
+            if (!req.path.startsWith('/api')) {
+                res.sendFile(path.join(dashboardPath, 'index.html'));
+            }
+        });
+    }
+
+    return app;
+}
