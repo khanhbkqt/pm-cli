@@ -1,16 +1,18 @@
-## Phase 1 Verification
+## Phase 1 Verification (v1.1-dashboard)
 
 ### Must-Haves
-- [x] TypeScript project with build pipeline — VERIFIED (`npm run build` → dist/index.js 3.79 KB)
-- [x] SQLite database schema (4 tables: agents, tasks, task_comments, context) — VERIFIED (all created with correct columns/constraints)
-- [x] CLI framework (Commander.js) — VERIFIED (`pm --help` shows commands)
-- [x] `pm init` creates `.pm/` with `data.db` + `config.yaml` — VERIFIED (tested manually + 5 integration tests)
+- [x] Express server integrated into CLI codebase — VERIFIED (`express` ^5.2.1 in deps, `src/server/` module created)
+- [x] `pm dashboard` command (opens browser, starts server on available port) — VERIFIED (`pm dashboard --help` shows `--port`, `--no-open`)
+- [x] Static file serving for React build output — VERIFIED (SPA fallback with `express.static()` in `src/server/app.ts`)
+- [x] Graceful shutdown handling — VERIFIED (SIGINT/SIGTERM handlers close server + db)
 
-### Additional Checks
-- [x] WAL mode enabled — VERIFIED (`journal_mode: 'wal'`)
-- [x] Foreign keys enabled — VERIFIED
-- [x] Domain-layered structure (cli/, core/, db/, output/) — VERIFIED
-- [x] `npm test` — 5/5 tests passing
-- [x] Error handling for re-initialization — VERIFIED
+### Additional Verification
+- [x] `npm run build` succeeds — 30.03 KB bundle
+- [x] 4 new server tests pass (`npx vitest run tests/server.test.ts`)
+- [x] `tsup.config.ts` externalizes `better-sqlite3` and `express`
+- [x] Health check at `GET /api/health` → `{ status: "ok" }`
+
+### Pre-existing Issues (not related to Phase 1)
+- 2 CLI integration tests have timeout flakes (`agent-cli.test.ts`, `context-cli.test.ts`)
 
 ### Verdict: PASS

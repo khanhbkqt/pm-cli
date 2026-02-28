@@ -4,99 +4,54 @@ plan: 1
 wave: 1
 ---
 
-# Plan 1.1: TypeScript Project Scaffolding
+# Plan 1.1: Express Dependencies & Build Config
 
 ## Objective
-Bootstrap the Node.js/TypeScript project with build pipeline, dev tooling, and domain-layered directory structure. This is the foundation everything else builds on.
+Install Express.js as a dependency and update the tsup build configuration to externalize Express and better-sqlite3. This ensures the CLI binary can use Express at runtime without bundling issues.
 
 ## Context
-- .gsd/SPEC.md — Tech stack: Node.js/TypeScript
-- .gsd/DECISIONS.md — DECISION-007 (domain-layered), DECISION-009 (tsup+tsx), DECISION-010 (CLI name `pm`), DECISION-011 (vitest)
-- docs/design/final-design.md — Project structure
+- .gsd/SPEC.md
+- .gsd/phases/1-dashboard/RESEARCH.md
+- package.json
+- tsup.config.ts
 
 ## Tasks
 
 <task type="auto">
-  <name>Initialize npm project and install dependencies</name>
-  <files>package.json, tsconfig.json, .gitignore</files>
+  <name>Install Express dependency</name>
+  <files>package.json</files>
   <action>
-    1. Run `npm init -y` in project root
-    2. Edit package.json:
-       - name: "@pm-cli/pm"
-       - version: "0.1.0"
-       - type: "module"
-       - bin: { "pm": "./dist/index.js" }
-       - scripts:
-         - "dev": "tsx watch src/index.ts"
-         - "build": "tsup"
-         - "test": "vitest run"
-         - "test:watch": "vitest"
-    3. Install dev dependencies:
-       `npm install -D typescript tsup tsx vitest @types/node @types/better-sqlite3`
-    4. Install production dependencies:
-       `npm install commander better-sqlite3 yaml`
-    5. Create tsconfig.json:
-       - target: "ES2022"
-       - module: "ESNext"
-       - moduleResolution: "bundler"
-       - outDir: "./dist"
-       - rootDir: "./src"
-       - strict: true
-       - esModuleInterop: true
-       - declaration: true
-    6. Create tsup.config.ts:
-       - entry: ["src/index.ts"]
-       - format: ["esm"]
-       - target: "node18"
-       - clean: true
-       - shims: true
-       - banner with #!/usr/bin/env node
-    7. Update .gitignore: add node_modules/, dist/, .pm/
+    Run `npm install express` to add Express as a production dependency.
+    Run `npm install --save-dev @types/express` to add TypeScript types.
+    
+    - Do NOT install any port-finding or browser-opening libraries — we use Node.js built-ins per research decision.
   </action>
   <verify>
-    npm run build 2>&1 | tail -5
-    # Should complete without errors (may warn about empty entry)
+    grep '"express"' package.json && grep '"@types/express"' package.json
   </verify>
-  <done>package.json exists with correct scripts, tsconfig.json compiles, tsup builds without fatal errors</done>
+  <done>Express and @types/express appear in package.json dependencies/devDependencies</done>
 </task>
 
 <task type="auto">
-  <name>Create domain-layered directory structure</name>
-  <files>src/index.ts, src/cli/, src/core/, src/db/, src/output/</files>
+  <name>Update tsup externals</name>
+  <files>tsup.config.ts</files>
   <action>
-    1. Create directory structure:
-       ```
-       src/
-       ├── index.ts          # Entry point — imports and runs CLI
-       ├── cli/              # Command definitions (Commander.js)
-       │   └── .gitkeep
-       ├── core/             # Domain logic (init, agents, tasks, context)
-       │   └── .gitkeep
-       ├── db/               # Database layer (schema, queries, connection)
-       │   └── .gitkeep
-       └── output/           # Formatters (human-readable, JSON)
-           └── .gitkeep
-       ```
-    2. Create src/index.ts with minimal content:
-       ```typescript
-       #!/usr/bin/env node
-       console.log('pm-cli v0.1.0');
-       ```
-    3. Ensure `npm run build` produces dist/index.js
-    4. Ensure `node dist/index.js` prints version
-
-    **Avoid**: Don't add any real CLI logic yet — that's Plan 1.3.
+    Add `external: ['better-sqlite3', 'express']` to tsup.config.ts.
+    
+    Both are needed because:
+    - `better-sqlite3` is a native module (cannot be bundled)
+    - `express` is a large Node.js framework that should remain in node_modules
+    
+    Do NOT change any other tsup settings (entry, format, target, clean, shims, banner).
   </action>
   <verify>
-    npm run build && node dist/index.js
-    # Should output: pm-cli v0.1.0
+    npx tsup && node -e "import('file://' + process.cwd() + '/dist/index.js').catch(() => {})" 2>&1 | head -5
   </verify>
-  <done>Domain directories exist, build outputs dist/index.js, running it prints version string</done>
+  <done>tsup builds successfully with external config; `dist/index.js` does not contain Express source code</done>
 </task>
 
 ## Success Criteria
-- [ ] `npm run build` completes successfully
-- [ ] `node dist/index.js` runs and prints version
-- [ ] `npm run dev` starts tsx watch mode
-- [ ] Directory structure matches domain-layered pattern (cli/, core/, db/, output/)
-- [ ] All dependencies installed (commander, better-sqlite3, yaml, vitest, tsup, tsx)
+- [ ] `express` in package.json dependencies
+- [ ] `@types/express` in package.json devDependencies
+- [ ] `tsup.config.ts` has `external: ['better-sqlite3', 'express']`
+- [ ] `npm run build` succeeds

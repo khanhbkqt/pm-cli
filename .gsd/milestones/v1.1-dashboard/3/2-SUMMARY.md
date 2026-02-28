@@ -1,12 +1,19 @@
-## Plan 3.2 Summary: Task CLI Commands
+---
+phase: 3-dashboard
+plan: 2
+wave: 2
+status: complete
+---
 
-**Status:** ✅ Complete
+# Summary: Plan 3.2 — Dashboard Overview Page — Stats & Layout
 
-### What was done
-- Created `src/cli/commands/task.ts` with 6 subcommands: `add`, `list`, `show`, `update`, `assign`, `comment`
-- Wired into `src/index.ts` via `registerTaskCommands()`
+## What Was Done
+- Global CSS design system with dark theme, Inter font, variables, skeleton loading
+- Layout shell with collapsible glass sidebar, responsive hamburger
+- `useApi` hook with loading/error/refetch pattern
+- StatsCards component with animated count-up numbers, status distribution bar
+- Overview page with loading skeletons and error state
 
-### Key decisions
-- Identity enforced on write operations (add, update, assign, comment)
-- Read operations (list, show) work without identity
-- Agent name → ID resolution in CLI layer for `--assigned` and `--to` options
+## Verification
+- `npx tsc --noEmit` → no type errors ✓
+- `npm run build` → successful ✓

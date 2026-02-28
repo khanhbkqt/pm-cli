@@ -1,30 +1,15 @@
----
-phase: 1
-plan: 3
-completed: 2026-02-28T18:11:00+07:00
----
+# Plan 1.3 Summary: Dashboard CLI Command & Integration
 
-# Plan 1.3 Summary: CLI Framework + `pm init` Command
-
-## What Was Done
-- Created `src/cli/program.ts` — Commander.js program instance (name: pm, version: 0.1.0)
-- Created `src/cli/commands/init.ts` — `pm init [name]` command registration
-- Created `src/core/init.ts` — Core init logic:
-  - Creates `.pm/` directory
-  - Initializes SQLite database (all 4 tables, WAL mode)
-  - Generates `config.yaml` with project name, timestamps, default statuses/roles
-  - Error handling for existing `.pm/` directory
-- Updated `src/index.ts` to wire Commander.js with init command
-- Created `vitest.config.ts` (globals: true)
-- Created `tests/init.test.ts` with 5 integration tests:
-  1. Creates .pm directory
-  2. Creates data.db with correct schema (4 tables)
-  3. Enables WAL mode
-  4. Creates config.yaml with project name and defaults
-  5. Errors if .pm already exists
-
-## Verification
-- ✅ `pm init my-project` creates `.pm/data.db` + `.pm/config.yaml`
-- ✅ `pm --help` shows init command
-- ✅ Re-init errors gracefully
-- ✅ `npm test` — 5/5 tests passing (35ms)
+## Completed
+- Created `src/cli/commands/dashboard.ts` with `registerDashboardCommand()`
+  - `--port <number>` option (default: 4000)
+  - `--no-open` option to skip browser auto-open
+  - SIGINT/SIGTERM graceful shutdown (closes server + db)
+- Registered dashboard command in `src/index.ts`
+- Created `tests/server.test.ts` with 4 tests (all passing):
+  - getAvailablePort returns default port when available
+  - getAvailablePort returns alternative when port busy
+  - createApp returns Express app with listen function
+  - GET /api/health returns { status: "ok" }
+- `npm run build` succeeds (30.03 KB)
+- `pm dashboard --help` shows correct usage

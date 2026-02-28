@@ -1,15 +1,23 @@
-# Plan 4.3 Summary: Context Tests + Status Dashboard + npm Polish
+---
+phase: 4-dashboard
+plan: 3
+status: complete
+---
 
-## Completed
-- Created `tests/context.test.ts` — 13 unit tests covering setContext, getContext, listContext, searchContext
-- Created `tests/context-cli.test.ts` — 10 CLI integration tests covering all context commands + JSON output
-- Created `src/cli/commands/status.ts` with `registerStatusCommand`:
-  - `pm status` — shows dashboard with agent/task/context counts
-  - `pm status --json` — JSON output
-- Registered in `src/index.ts`
-- Updated `package.json`: version 1.0.0, added `files` and `engines` fields
+# Plan 4.3 Summary: Task CRUD UI & Visual Verification
 
-## Verification
-- `npx vitest run tests/context.test.ts tests/context-cli.test.ts` — 23/23 PASS
-- `npx tsc --noEmit` — PASS
-- `npx tsx src/index.ts status --help` — shows status command
+## What Was Done
+- Created `TaskDetailPanel.tsx` — slide-in panel with editable title, description, status, priority, assignee fields plus comments section
+- Created `CreateTaskModal.tsx` — centered modal with form validation, agent selection, and API submission
+- Wired both into `TasksBoard.tsx` with proper create/update callbacks and API refetching
+- Created seed test project with 4 agents, 8 tasks (varied statuses), and 2 comments
+
+## Visual Verification
+All components verified in browser at http://localhost:4173/tasks:
+- ✅ Kanban board renders 4 columns with correct task distribution
+- ✅ Task cards display priority coloring and metadata
+- ✅ Filter bar filters by status, priority, and agent
+- ✅ View toggle switches between Kanban and List views
+- ✅ Create Task modal opens and shows form fields
+- ✅ Task Detail panel slides in with editable fields and comments
+- ✅ Comments section displays seeded comments with timestamps

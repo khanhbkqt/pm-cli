@@ -1,10 +1,16 @@
-# Plan 2.1 Summary: Agent Data Layer
+## Plan 2.1 Summary: Task API Routes
 
-## Completed
-- Created `src/core/agent.ts` with 4 exported functions:
-  - `registerAgent(db, { name, role, type })` — insert with UUID, unique name + type validation
-  - `listAgents(db)` — all agents ordered by created_at DESC
-  - `getAgentByName(db, name)` — lookup by name
-  - `getAgentById(db, id)` — lookup by ID
-- Created `tests/agent.test.ts` with 7 passing tests
-- No new npm dependencies added (uses `crypto.randomUUID()`)
+**Status:** ✅ Complete
+
+### What was done
+- Created `src/server/routes/tasks.ts` with 7 endpoints delegating to `src/core/task.ts`
+- Mounted task routes in `src/server/app.ts` using `createTaskRoutes(db)` factory
+
+### Endpoints
+1. `GET /api/tasks` — list with optional `?status=&assigned_to=`
+2. `POST /api/tasks` — create task (201)
+3. `GET /api/tasks/:id` — show or 404
+4. `PUT /api/tasks/:id` — update fields
+5. `POST /api/tasks/:id/assign` — assign agent
+6. `POST /api/tasks/:id/comments` — add comment (201)
+7. `GET /api/tasks/:id/comments` — list comments

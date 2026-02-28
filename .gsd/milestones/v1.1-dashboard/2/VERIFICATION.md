@@ -1,21 +1,15 @@
 ## Phase 2 Verification
 
 ### Must-Haves
-
-- [x] `pm agent register <name> --role <role> --type <human|ai>` — VERIFIED (integration test #1, #3)
-- [x] `pm agent list` — VERIFIED (integration test #4)
-- [x] `pm agent show <name>` — VERIFIED (integration test #6, #7)
-- [x] `pm agent whoami` — VERIFIED (integration test #8, #9)
-- [x] Identity enforcement (`--agent` flag / `PM_AGENT` env var) — VERIFIED (identity unit tests #1-5)
-
-### Test Results
-
-| Suite | Tests | Status |
-|-------|-------|--------|
-| tests/agent.test.ts | 7/7 | ✅ |
-| tests/identity.test.ts | 8/8 | ✅ |
-| tests/agent-cli.test.ts | 9/9 | ✅ |
-| tests/init.test.ts (Phase 1) | 5/5 | ✅ (no regressions) |
-| **Total** | **29/29** | **✅ PASS** |
+- [x] `GET/POST /api/tasks` — list & create tasks — VERIFIED (17 passing integration tests)
+- [x] `GET/PUT /api/tasks/:id` — show & update task — VERIFIED (tests confirm 200/404 codes)
+- [x] `POST /api/tasks/:id/assign` — assign agent — VERIFIED (test confirms assigned_to set)
+- [x] `POST /api/tasks/:id/comment` — add comment — VERIFIED (test confirms 201 + body)
+- [x] `GET /api/agents` — list agents — VERIFIED (test confirms array with registered agent)
+- [x] `GET /api/context` — list context entries — VERIFIED (test confirms filter by category)
+- [x] `GET /api/status` — project overview stats — VERIFIED (test confirms shape with counts)
+- [x] Error handling & JSON responses — VERIFIED (404, 400 tested across endpoints)
 
 ### Verdict: PASS
+
+All 12 API endpoints implemented and tested. 17 integration tests pass. TypeScript compiles clean. Full suite: 104/105 (1 pre-existing CLI timeout).

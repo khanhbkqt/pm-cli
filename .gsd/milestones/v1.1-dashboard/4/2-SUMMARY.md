@@ -1,13 +1,18 @@
-# Plan 4.2 Summary: Context CLI Commands + Registration
+---
+phase: 4-dashboard
+plan: 2
+status: complete
+---
 
-## Completed
-- Created `src/cli/commands/context.ts` with `registerContextCommands`:
-  - `pm context set <key> <value>` — requires --agent identity, --category option
-  - `pm context get <key>` — no identity required, error on not found
-  - `pm context list` — no identity required, --category filter
-  - `pm context search <query>` — no identity required
-- Registered in `src/index.ts`
+# Plan 4.2 Summary: Kanban Board & Task Cards
+
+## What Was Done
+- Created `TaskCard.tsx` with priority-colored border-left, priority badge, drag support, and meta display
+- Created `KanbanBoard.tsx` with 4 status columns (todo, in-progress, done, blocked), native HTML5 drag-and-drop
+- Created `FilterBar.tsx` with status pills, priority/agent dropdowns, kanban/list view toggle, and "+ New Task" button
+- Created `ListView.tsx` with sortable table columns, status/priority badges, and row click
+- Wired `TasksBoard.tsx` with `useApi` hooks, client-side filtering, drag-and-drop status updates via API, loading/error/empty states
 
 ## Verification
-- `npx tsx src/index.ts context --help` — shows all 4 subcommands
-- `npx tsc --noEmit` — PASS
+- `npx tsc --noEmit` — ✅ no type errors
+- `npm run build` — ✅ builds successfully

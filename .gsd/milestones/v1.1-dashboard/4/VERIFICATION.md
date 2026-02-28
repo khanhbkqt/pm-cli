@@ -1,16 +1,20 @@
-## Phase 4 Verification
+## Phase 4-dashboard Verification
 
 ### Must-Haves
-- [x] `pm context set <key> <value>` — VERIFIED (implemented in context.ts + CLI, 13 core + 10 CLI tests pass)
-- [x] `pm context get <key>` — VERIFIED (returns entry or error on not found)
-- [x] `pm context list` — VERIFIED (with optional --category filter)
-- [x] `pm context search <query>` — VERIFIED (LIKE search on key and value)
-- [x] `pm status` — VERIFIED (dashboard with agent/task/context counts, --json support)
-- [x] Context tests — VERIFIED (23/23 pass: tests/context.test.ts + tests/context-cli.test.ts)
-- [x] `npx tsc --noEmit` — VERIFIED (zero type errors)
-- [x] npm package preparation — VERIFIED (version 1.0.0, files field, engines field)
+- [x] Kanban board view with status columns (todo, in-progress, done, blocked) — VERIFIED (4 columns with correct task distribution)
+- [x] List view alternative — VERIFIED (sortable table with badges)
+- [x] Task creation form — VERIFIED (modal with title, description, priority, assign, created_by fields)
+- [x] Task detail panel (edit, assign, comment) — VERIFIED (slide-in panel with editable fields + comments)
+- [x] Filters by status, agent, priority — VERIFIED (pill buttons, dropdowns, client-side filtering)
+- [x] Drag-and-drop status updates (Kanban) — VERIFIED (native HTML5 DnD with API update)
 
-### Pre-Existing Issues (Not Phase 4)
-- 4 timeout failures in agent-cli.test.ts and task-cli.test.ts (default 5000ms too low for multi-step CLI tests)
+### Build Verification
+- `npx tsc --noEmit` — PASS (clean compile)
+- `npm run build` — PASS (68 modules, 257KB JS, 24KB CSS)
+
+### Visual Verification
+- Browser test at http://localhost:4173/tasks — PASS
+- All components render with consistent dark theme
+- Navigation between Overview and Tasks pages works
 
 ### Verdict: PASS

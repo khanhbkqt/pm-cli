@@ -4,78 +4,105 @@ level: 1
 researched_at: 2026-02-28
 ---
 
-# Phase 5 Research
+# Phase 5 Research — Agents & Context Screens
 
 ## Questions Investigated
-1. How to install an npm package globally from source without publishing?
-2. Does the `pm` binary name conflict with anything on this system?
-3. Are the existing `package.json` bin and tsup shebang configs sufficient?
+
+1. What backend API endpoints already exist for agents and context?
+2. What frontend API client / types / hooks are already in place?
+3. What UI patterns (pages, components, CSS) should new screens follow?
+4. Are any new backend routes or DB changes required?
+5. How should agent detail view show assigned tasks / activity?
 
 ## Findings
 
-### npm link
+### 1. Backend APIs — Already Sufficient
 
-`npm link` creates a global symlink to the local package. It reads the `bin` field from `package.json` and creates symlinks in the global `bin` directory.
+All needed endpoints exist in `src/server/routes/`:
 
-**Workflow:**
-```bash
-npm run build        # compile TS → dist/index.js
-npm link             # symlink package globally → creates `pm` command
-```
+| Endpoint | File | Purpose |
+|----------|------|---------|
+| `GET /api/agents` | `agents.ts` | List all agents |
+| `GET /api/agents/:id` | `agents.ts` | Agent by ID |
+| `GET /api/context` | `context.ts` | List entries (optional `?category=` filter) |
+| `GET /api/context/search?q=` | `context.ts` | Full-text search on key/value |
+| `GET /api/tasks?assigned_to=` | `tasks.ts` | Tasks filtered by agent ID |
 
-**Uninstall:**
-```bash
-npm unlink -g @pm-cli/pm
-```
+**Recommendation:** No new backend routes needed. Existing endpoints cover listing, detail, filtering, and search for both agents and context. Tasks assigned to an agent can be fetched via `GET /api/tasks?assigned_to={agentId}`.
 
-**Recommendation:** Use `npm link` — it's the standard approach, no extra tooling needed.
+### 2. Frontend API Client — Ready
 
-### Binary Name Conflict Check
+`dashboard/src/api/client.ts` already exports:
+- `fetchAgents()` → `Agent[]`
+- `fetchContext(filters?)` → `ContextEntry[]`
+- `fetchTasks(filters?)` → `Task[]`
 
-```
-$ which pm → "pm not found"
-$ npm prefix -g → /opt/homebrew
-```
+Missing:
+- `fetchAgentById(id)` → need to add
+- `searchContext(query)` → need to add
 
-**Result:** No `pm` binary exists on this system. Safe to use.
+Both map to existing backend endpoints, so only thin client wrappers needed.
 
-### Existing Config Readiness
+### 3. Frontend Patterns — Clear Conventions
 
-| Config | Status | Detail |
-|--------|--------|--------|
-| `package.json` bin | ✅ | `"pm": "./dist/index.js"` |
-| tsup shebang | ✅ | `#!/usr/bin/env node` injected via banner |
-| ESM module type | ✅ | `"type": "module"` |
-| Node target | ✅ | `node18` (current: v24.14.0) |
+| Pattern | Convention |
+|---------|-----------|
+| **Pages** | `dashboard/src/pages/{Name}.tsx` + `{Name}.css` |
+| **Components** | `dashboard/src/components/{Name}.tsx` + `{Name}.css` |
+| **Data fetching** | `useApi(fetcher)` hook from `hooks/useApi.ts` |
+| **Routing** | `react-router-dom` v7, routes in `App.tsx`, sidebar `NavLink` in `Layout.tsx` |
+| **Design system** | CSS custom properties in `index.css` (dark theme palette), `Inter` font, `--radius`, `--border-color` tokens |
+| **Component style** | BEM-ish naming, `.panel-title`, avatar with `hashColor()`, `relativeTime()` helper |
 
-**Result:** No changes needed — existing config is sufficient for `npm link`.
+### 4. Existing Reusable Code
+
+- `AgentList.tsx` — compact agent list panel (Overview sidebar). Utility functions `getInitials()`, `hashColor()`, `relativeTime()` can be reused/extracted.
+- `FilterBar.tsx` — status/agent filter bar. Pattern can be adapted for category/search filters.
+- `TaskCard.tsx` — card pattern reusable for context entry cards.
+
+### 5. Navigation Wiring
+
+`Layout.tsx` already has disabled sidebar links for Agents and Context (lines 57–64). These need to be converted from `<a href="#">` to `<NavLink>` pointing to `/agents` and `/context`, and `pageTitles` map needs two new entries.
 
 ## Decisions Made
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
-| Install method | `npm link` | Standard, no extra deps, reversible |
-| Script format | bash (.sh) | macOS/Linux target, simple |
-| Script location | `scripts/` | Follows common project convention |
+| New backend routes | None needed | Existing API covers all data needs |
+| DB schema changes | None needed | Agent, Context, Task tables already have all fields |
+| Agent detail view | Slide-in panel (like TaskDetailPanel) | Consistent pattern, avoids separate route |
+| Context detail view | Expandable row / modal | Context values can be long; inline expansion is best UX |
+| Search implementation | Client-side for agents (small dataset), server-side for context (uses existing search endpoint) | Agents are typically few; context entries can be many |
+| Utility extraction | Extract `getInitials`, `hashColor`, `relativeTime` to `utils.ts` | Reuse across AgentList, new Agents page |
 
 ## Patterns to Follow
-- Build before link to ensure `dist/` is fresh
-- Check exit codes in scripts for error handling
-- Use color output for user feedback
+
+- Page = `useApi` hook → loading/error/data states → render
+- CSS file per component/page, BEM naming, CSS custom properties
+- Filter bar as a separate component with controlled state
+- Empty states with icon + message (see `AgentList` empty state)
+- `NavLink` for routing, sidebar `--active` class for current page
 
 ## Anti-Patterns to Avoid
-- `npm install -g .` — copies files instead of symlinking (stale on code changes)
-- Manual PATH manipulation — fragile, user-specific
+
+- **No new npm dependencies** — the stack is intentionally minimal (React + RRD + Vite). No UI libraries.
+- **Don't fetch data inline** — always use `useApi` hook for consistency and abort cleanup
+- **Don't duplicate type definitions** — types are in `api/types.ts`, matching backend `db/types.ts`
+- **Don't use inline styles** — CSS custom properties and class-based styling only (except dynamic avatar colors)
 
 ## Dependencies Identified
 
-None — `npm link` is built into npm.
+| Package | Version | Purpose |
+|---------|---------|---------|
+| (none) | — | No new dependencies required |
 
 ## Risks
-- **Permission errors on global npm:** Mitigated by using homebrew Node (no sudo needed)
-- **Stale build after code changes:** Script always runs `npm run build` first
+
+- **Agent detail: no dedicated `/api/agents/:id/tasks` endpoint** — mitigated by using existing `GET /api/tasks?assigned_to=` filter. Two API calls needed per agent detail view (agent + their tasks). Acceptable overhead for small dataset.
+- **Context search latency** — mitigated by debouncing search input before hitting backend. `GET /api/context/search?q=` already exists.
 
 ## Ready for Planning
+
 - [x] Questions answered
 - [x] Approach selected
 - [x] Dependencies identified

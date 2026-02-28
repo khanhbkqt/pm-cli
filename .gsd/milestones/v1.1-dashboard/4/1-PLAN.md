@@ -1,87 +1,113 @@
 ---
-phase: 4
+phase: 4-dashboard
 plan: 1
 wave: 1
 ---
 
-# Plan 4.1: Context CRUD Core + Formatters
+# Plan 4.1: Routing & API Mutations
 
 ## Objective
-Implement the context sharing core logic (`src/core/context.ts`) and output formatters (`src/output/formatter.ts`), following the exact patterns established by `task.ts` and `agent.ts`. The `context` table already exists in the schema, and the `ContextEntry` type is already defined in `src/db/types.ts`.
+Add client-side routing so the sidebar links work, create the Tasks page shell, and extend the API client with mutation functions (create, update, assign, comment) needed by the Tasks Board.
 
 ## Context
-- .gsd/SPEC.md
-- src/db/schema.ts — context table definition (key UNIQUE, category CHECK constraint)
-- src/db/types.ts — ContextEntry interface
-- src/core/task.ts — pattern to follow (requireAgent helper, CRUD functions)
-- src/core/agent.ts — getAgentById used for validation
-- src/output/formatter.ts — existing formatTable, formatAgent, formatTask, etc.
+- dashboard/src/App.tsx
+- dashboard/src/components/Layout.tsx
+- dashboard/src/api/client.ts
+- dashboard/src/api/types.ts
+- dashboard/package.json
+- src/server/routes/tasks.ts
 
 ## Tasks
 
 <task type="auto">
-  <name>Create src/core/context.ts — Context CRUD functions</name>
-  <files>src/core/context.ts</files>
+  <name>Install react-router-dom and add routing</name>
+  <files>
+    dashboard/package.json
+    dashboard/src/App.tsx
+    dashboard/src/main.tsx
+  </files>
   <action>
-    Create `src/core/context.ts` with these exported functions, following the pattern in `src/core/task.ts`:
-
-    1. `setContext(db, params: { key: string, value: string, category?: string, created_by: string }): ContextEntry`
-       - Validate `created_by` agent exists (reuse the requireAgent pattern from task.ts or call getAgentById directly)
-       - Use `INSERT INTO context ... ON CONFLICT(key) DO UPDATE SET value=excluded.value, category=excluded.category, created_by=excluded.created_by, updated_at=CURRENT_TIMESTAMP` for upsert — this preserves the original `id` and `created_at` (do NOT use INSERT OR REPLACE, it destroys row identity)
-       - Default category to 'note' if not provided
-       - Return the inserted/updated row by selecting WHERE key = ?
-
-    2. `getContext(db, key: string): ContextEntry | undefined`
-       - Simple SELECT by key
-       - Return undefined if not found
-
-    3. `listContext(db, filters?: { category?: string }): ContextEntry[]`
-       - SELECT all, optional WHERE category = ?
-       - ORDER BY key ASC
-
-    4. `searchContext(db, query: string): ContextEntry[]`
-       - Use SQL LIKE with `%query%` on both key and value columns
-       - ORDER BY key ASC
-
-    Import only from `../db/types.js` and `./agent.js`.
-    Do NOT create any new tables or modify the schema.
-    Do NOT add a `deleteContext` function (not in SPEC).
+    1. Run `npm install react-router-dom` in `dashboard/` directory.
+    2. Update `dashboard/src/App.tsx`:
+       - Import `BrowserRouter`, `Routes`, `Route` from react-router-dom.
+       - Wrap content in `<BrowserRouter>`.
+       - Define routes: `/` → Overview, `/tasks` → TasksBoard (new page).
+       - Keep `<Layout>` as the wrapper around routes.
+    3. Create `dashboard/src/pages/TasksBoard.tsx` as a minimal placeholder that renders "Tasks Board" heading.
+    4. Create `dashboard/src/pages/TasksBoard.css` with empty content.
   </action>
-  <verify>npx tsx -e "import('./src/core/context.js')" — should compile without errors</verify>
+  <verify>
+    Run `cd dashboard && npx tsc --noEmit` — no type errors.
+    Run `cd dashboard && npm run build` — builds successfully.
+  </verify>
   <done>
-    - src/core/context.ts exists with 4 exported functions: setContext, getContext, listContext, searchContext
-    - Each function has proper TypeScript types
-    - Agent validation on setContext
-    - No schema changes
+    - react-router-dom installed
+    - `/` renders Overview, `/tasks` renders TasksBoard
+    - TypeScript compiles clean
   </done>
 </task>
 
 <task type="auto">
-  <name>Add context formatters to src/output/formatter.ts</name>
-  <files>src/output/formatter.ts</files>
+  <name>Update Layout sidebar with working navigation links</name>
+  <files>
+    dashboard/src/components/Layout.tsx
+    dashboard/src/components/Layout.css
+  </files>
   <action>
-    Add two new exported functions to `src/output/formatter.ts`, following the pattern of `formatTask`/`formatTaskList`:
-
-    1. `formatContext(entry: ContextEntry, json: boolean): string`
-       - JSON mode: `JSON.stringify(entry, null, 2)`
-       - Human mode: multi-line display showing Key, Value, Category, Creator, Created, Updated
-
-    2. `formatContextList(entries: ContextEntry[], json: boolean): string`
-       - JSON mode: `JSON.stringify(entries, null, 2)`
-       - Human mode: use `formatTable` with headers ['Key', 'Value', 'Category', 'Creator']
-       - Empty state: 'No context entries.'
-
-    Import `ContextEntry` from `../db/types.js` (it's already imported in the file if done correctly; check if the import already includes it).
+    1. Replace `<a href="#">` links in Layout sidebar with react-router `<NavLink>` components.
+    2. Remove `sidebar__link--disabled` class from Tasks link — make it active/navigable.
+    3. Keep Agents and Context links as disabled for now (future phases).
+    4. Use `NavLink` className callback to apply `sidebar__link--active` based on current route.
+    5. Update the `<h1>` in the header to be dynamic — show "Project Overview" for `/` and "Tasks Board" for `/tasks`.
+       - Use `useLocation()` hook to detect current path.
+    6. Do NOT change any existing CSS — only add new classes if needed.
   </action>
-  <verify>npx tsc --noEmit — src/output/formatter.ts compiles without type errors</verify>
+  <verify>
+    Run `cd dashboard && npx tsc --noEmit` — no type errors.
+  </verify>
   <done>
-    - formatContext and formatContextList exported from formatter.ts
-    - Both support json=true and json=false modes
-    - Follows existing patterns exactly
+    - Sidebar "Overview" link navigates to `/`
+    - Sidebar "Tasks" link navigates to `/tasks`
+    - Active link is highlighted based on current route
+    - Page title updates per route
+  </done>
+</task>
+
+<task type="auto">
+  <name>Extend API client with mutation functions</name>
+  <files>
+    dashboard/src/api/client.ts
+    dashboard/src/api/types.ts
+  </files>
+  <action>
+    1. Add `apiPost<T>` and `apiPut<T>` helpers to `client.ts` alongside existing `apiFetch<T>`:
+       - Both send JSON body with Content-Type header
+       - `apiPost` uses POST method, `apiPut` uses PUT method
+       - Same error handling pattern as `apiFetch`
+    2. Add these client functions:
+       - `createTask(data: CreateTaskInput): Promise<Task>` — POST /api/tasks
+       - `updateTask(id: number, data: UpdateTaskInput): Promise<Task>` — PUT /api/tasks/:id
+       - `assignTask(id: number, agentId: string): Promise<Task>` — POST /api/tasks/:id/assign
+       - `addTaskComment(id: number, data: AddCommentInput): Promise<TaskComment>` — POST /api/tasks/:id/comments
+       - `fetchTaskComments(taskId: number): Promise<TaskComment[]>` — GET /api/tasks/:id/comments
+    3. Add corresponding input types to `types.ts`:
+       - `CreateTaskInput { title: string; description?: string; priority?: string; assigned_to?: string; created_by: string; }`
+       - `UpdateTaskInput { title?: string; description?: string; status?: string; priority?: string; }`
+       - `AddCommentInput { agent_id: string; content: string; }`
+  </action>
+  <verify>
+    Run `cd dashboard && npx tsc --noEmit` — no type errors.
+  </verify>
+  <done>
+    - API client has all mutation functions
+    - Input types defined in types.ts
+    - TypeScript compiles clean
   </done>
 </task>
 
 ## Success Criteria
-- [ ] `src/core/context.ts` exports setContext, getContext, listContext, searchContext
-- [ ] `src/output/formatter.ts` exports formatContext, formatContextList
-- [ ] `npx tsc --noEmit` passes with no errors
+- [ ] react-router-dom installed and working
+- [ ] Two routes: `/` (Overview), `/tasks` (TasksBoard placeholder)
+- [ ] Layout sidebar navigates between pages
+- [ ] API client has create/update/assign/comment mutation functions
+- [ ] `npm run build` succeeds in dashboard/

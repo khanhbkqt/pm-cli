@@ -4,74 +4,69 @@ plan: 1
 wave: 1
 ---
 
-# Plan 2.1: Agent Data Layer
+# Plan 2.1: Task API Routes
 
 ## Objective
-Create the core agent CRUD functions that interact with the SQLite `agents` table. This is the foundation for all agent commands — no CLI wiring yet, just pure data operations.
+Create REST API endpoints for task operations (list, create, show, update, assign, comment) by wiring Express route handlers to existing `src/core/task.ts` functions. These endpoints are the core data layer for the dashboard UI.
 
 ## Context
 - .gsd/SPEC.md
-- src/db/schema.ts — agents table already exists (id, name, role, type, created_at)
-- src/db/types.ts — Agent interface already defined
-- src/db/connection.ts — getDatabase/createDatabase already exist
-- src/core/init.ts — reference pattern for core module structure
+- src/server/app.ts
+- src/core/task.ts
+- src/db/types.ts
 
 ## Tasks
 
 <task type="auto">
-  <name>Create agent core module</name>
-  <files>src/core/agent.ts</files>
+  <name>Create task routes module</name>
+  <files>src/server/routes/tasks.ts</files>
   <action>
-    Create `src/core/agent.ts` with these functions:
-    
-    1. `registerAgent(db, { name, role, type })` — Insert new agent into agents table
-       - Generate `id` using nanoid or crypto.randomUUID()
-       - Validate: name must be unique (handle UNIQUE constraint error gracefully)
-       - Validate: type must be 'human' or 'ai'
-       - Return the created Agent object
+    Create `src/server/routes/tasks.ts` exporting an Express Router with these endpoints:
 
-    2. `listAgents(db)` — Return all agents ordered by created_at DESC
-       - Return Agent[] array
+    1. `GET /api/tasks` — calls `listTasks(db, { status, assigned_to })` with optional query params `?status=&assigned_to=`. Returns `{ tasks: Task[] }`.
+    2. `POST /api/tasks` — calls `addTask(db, body)`. Body: `{ title, description?, priority?, assigned_to?, parent_id?, created_by }`. Returns `{ task: Task }` with 201 status.
+    3. `GET /api/tasks/:id` — calls `getTaskById(db, id)`. Returns `{ task: Task }`. Returns 404 if not found.
+    4. `PUT /api/tasks/:id` — calls `updateTask(db, id, body)`. Body: `{ title?, description?, status?, priority?, assigned_to? }`. Returns `{ task: Task }`.
+    5. `POST /api/tasks/:id/assign` — calls `assignTask(db, id, body.agent_id)`. Body: `{ agent_id }`. Returns `{ task: Task }`.
+    6. `POST /api/tasks/:id/comments` — calls `addComment(db, { task_id: id, agent_id, content })`. Body: `{ agent_id, content }`. Returns `{ comment: TaskComment }` with 201 status.
+    7. `GET /api/tasks/:id/comments` — calls `getComments(db, id)`. Returns `{ comments: TaskComment[] }`.
 
-    3. `getAgentByName(db, name)` — Find agent by name
-       - Return Agent | undefined
-       - Used for identity resolution
+    Use the Express Router factory pattern: `export function createTaskRoutes(db: Database.Database): Router`.
 
-    4. `getAgentById(db, id)` — Find agent by ID
-       - Return Agent | undefined
-       - Used for FK validation in later phases
+    Each handler wraps core function calls in try/catch. On error: return `{ error: message }` with 400 status (validation errors) or 404 (not found — check error message for "not found").
 
-    All functions take `Database.Database` as first argument (same pattern as connection.ts).
-    Use prepared statements (db.prepare().run/get/all).
-    Do NOT use any ORM — plain SQL per DECISION-008.
-    Do NOT add any npm dependencies — use crypto.randomUUID() from Node.js built-in.
+    - Do NOT write any SQL — import and call functions from `src/core/task.ts`
+    - Do NOT re-validate data that core functions already validate
+    - Parse `:id` param as integer with `parseInt(req.params.id, 10)` — return 400 if NaN
   </action>
-  <verify>npx tsx -e "import { registerAgent, listAgents, getAgentByName } from './src/core/agent.js'; console.log('✓ agent module compiles')"</verify>
-  <done>src/core/agent.ts exists with 4 exported functions: registerAgent, listAgents, getAgentByName, getAgentById</done>
+  <verify>npx tsx -e "import { createTaskRoutes } from './src/server/routes/tasks.js'; console.log(typeof createTaskRoutes)"</verify>
+  <done>File exists, exports createTaskRoutes function, has all 7 route handlers</done>
 </task>
 
 <task type="auto">
-  <name>Create agent core tests</name>
-  <files>tests/agent.test.ts</files>
+  <name>Mount task routes in Express app</name>
+  <files>src/server/app.ts</files>
   <action>
-    Create `tests/agent.test.ts` following the pattern in tests/init.test.ts:
-    - Use temp directory with beforeEach/afterEach cleanup
-    - Create a fresh database using getDatabase() for each test
+    Modify `createApp` in `src/server/app.ts` to:
 
-    Test cases:
-    1. `registerAgent` creates agent with correct fields
-    2. `registerAgent` rejects duplicate name (throws Error)
-    3. `registerAgent` rejects invalid type (not 'human'/'ai')
-    4. `listAgents` returns all agents sorted by created_at DESC
-    5. `getAgentByName` returns agent when found
-    6. `getAgentByName` returns undefined when not found
-    7. `getAgentById` returns agent when found
+    1. Import `createTaskRoutes` from `./routes/tasks.js`
+    2. After `app.use(express.json())`, mount: `app.use(createTaskRoutes(db))`
+    3. Ensure task routes are mounted BEFORE the static file catch-all route
+
+    - Do NOT change the existing `/api/health` endpoint
+    - Do NOT change the static file serving logic
+    - Keep the `db` parameter — it's already passed through
   </action>
-  <verify>npx vitest run tests/agent.test.ts</verify>
-  <done>All 7 test cases pass with `npx vitest run tests/agent.test.ts`</done>
+  <verify>npx tsx -e "import { createApp } from './src/server/app.js'; import Database from 'better-sqlite3'; const db = new Database(':memory:'); const app = createApp(db); console.log('mounted ok')"</verify>
+  <done>Task routes mounted in createApp, health endpoint unchanged, static serving unchanged</done>
 </task>
 
 ## Success Criteria
-- [ ] `src/core/agent.ts` exports 4 functions
-- [ ] 7 tests pass in `tests/agent.test.ts`
-- [ ] No new npm dependencies added
+- [ ] `GET /api/tasks` returns JSON array of tasks
+- [ ] `POST /api/tasks` creates a task and returns 201
+- [ ] `GET /api/tasks/:id` returns a single task or 404
+- [ ] `PUT /api/tasks/:id` updates task fields
+- [ ] `POST /api/tasks/:id/assign` assigns agent to task
+- [ ] `POST /api/tasks/:id/comments` creates comment with 201
+- [ ] `GET /api/tasks/:id/comments` returns comments array
+- [ ] All handlers delegate to `src/core/task.ts` — no raw SQL

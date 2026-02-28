@@ -4,134 +4,100 @@ plan: 3
 wave: 2
 ---
 
-# Plan 1.3: CLI Framework + `pm init` Command
+# Plan 1.3: Dashboard CLI Command & Integration
 
 ## Objective
-Wire up Commander.js CLI framework and implement the `pm init` command that creates `.pm/` directory with `data.db` (initialized schema) and `config.yaml`.
+Create the `pm dashboard` CLI command that starts the Express server, opens the browser, and handles graceful shutdown. Wire it into the main CLI entry point.
 
 ## Context
-- .gsd/SPEC.md — `pm init` creates `.pm/data.db` + `config.yaml`
-- .gsd/DECISIONS.md — DECISION-006 (Commander.js), DECISION-012 (all tables upfront)
-- docs/design/final-design.md — Section 4: Project Scaffolding, config.yaml structure
-- src/db/ — Database module from Plan 1.2
+- .gsd/SPEC.md
+- .gsd/phases/1-dashboard/RESEARCH.md
+- src/index.ts — main entry point, command registration pattern
+- src/cli/commands/status.ts — example command pattern (Commander + getProjectDb)
+- src/server/app.ts — createApp factory
+- src/server/utils.ts — getAvailablePort, openBrowser
 
 ## Tasks
 
 <task type="auto">
-  <name>Set up Commander.js CLI skeleton with init command</name>
-  <files>src/index.ts, src/cli/program.ts, src/cli/commands/init.ts</files>
+  <name>Create dashboard CLI command</name>
+  <files>src/cli/commands/dashboard.ts</files>
   <action>
-    1. Create `src/cli/program.ts`:
-       - Import Commander's `Command`
-       - Create and export program instance
-       - Set name('pm'), description('Project Management CLI for Humans & AI Agents'), version('0.1.0')
-
-    2. Create `src/cli/commands/init.ts`:
-       - Export a function `registerInitCommand(program: Command): void`
-       - Register `pm init [name]` command with:
-         - description: "Initialize a new PM project"
-         - Optional `name` argument (defaults to current directory name)
-         - Action handler that calls core init logic
-
-    3. Create `src/core/init.ts`:
-       - Export async function `initProject(name: string, targetDir: string): void`
-       - Logic:
-         a. Check if `.pm/` already exists → error "Project already initialized"
-         b. Create `.pm/` directory
-         c. Create SQLite database at `.pm/data.db` using `getDatabase()`
-         d. Initialize schema (all 4 tables)
-         e. Create `.pm/config.yaml` with default content:
-            ```yaml
-            project:
-              name: <project-name>
-              created_at: <ISO timestamp>
-              version: 1
-
-            settings:
-              task_statuses:
-                - todo
-                - in_progress
-                - review
-                - done
-                - blocked
-                - cancelled
-              agent_roles:
-                - developer
-                - reviewer
-                - pm
-                - researcher
-            ```
-         f. Print success message with project name
-
-    4. Update `src/index.ts`:
-       - Import program from cli/program.ts
-       - Import and register init command
-       - Call `program.parse(process.argv)`
-
-    **Avoid**: Don't add `--agent` requirement to `pm init` — init is the one command that doesn't need agent identity (no agents exist yet).
-    **Avoid**: Don't add other commands yet — those come in Phase 2+.
+    Create `src/cli/commands/dashboard.ts` following the existing command pattern:
+    
+    1. Export `registerDashboardCommand(program: Command): void`
+    2. Register command: `program.command('dashboard').description('Launch project dashboard in browser')`
+    3. Add options:
+       - `--port <number>` — Preferred port (default: 4000)
+       - `--no-open` — Don't auto-open browser
+    4. Action handler:
+       a. Call `getProjectDb()` to get database connection (validates project exists)
+       b. Call `createApp(db)` to build the Express app
+       c. Call `getAvailablePort(port)` to find available port
+       d. Start server: `const server = app.listen(resolvedPort)`
+       e. Log: `Dashboard running at http://localhost:{port}` and `Press Ctrl+C to stop`
+       f. If `--no-open` is NOT set, call `openBrowser(url)`
+       g. Register `SIGINT` and `SIGTERM` handlers:
+          - Log `\nShutting down dashboard...`
+          - `server.close(() => { db.close(); process.exit(0); })`
+    
+    - Follow the SAME error handling pattern as `src/cli/commands/status.ts`
+    - Do NOT require `--agent` flag for dashboard (it's a viewing tool, not an action)
+    - Import from `../../server/index.js`
   </action>
   <verify>
-    npm run build && cd /tmp && rm -rf pm-test-project && mkdir pm-test-project && cd pm-test-project && node /Users/khanhnguyen/Projects/cli-prj-mgmt/dist/index.js init my-project
-    # Should create .pm/data.db and .pm/config.yaml
-    ls -la /tmp/pm-test-project/.pm/
-    cat /tmp/pm-test-project/.pm/config.yaml
+    npx tsx -e "import { registerDashboardCommand } from './src/cli/commands/dashboard.js'; console.log(typeof registerDashboardCommand)"
   </verify>
-  <done>`pm init my-project` creates .pm/ with data.db (4 tables, WAL mode) and config.yaml (default settings)</done>
+  <done>`registerDashboardCommand` function exists and is importable</done>
 </task>
 
 <task type="auto">
-  <name>Create integration test for pm init</name>
-  <files>tests/init.test.ts, vitest.config.ts</files>
+  <name>Register dashboard command in main entry</name>
+  <files>src/index.ts</files>
   <action>
-    1. Create `vitest.config.ts` in project root:
-       ```typescript
-       import { defineConfig } from 'vitest/config';
-       export default defineConfig({
-         test: {
-           globals: true,
-         },
-       });
-       ```
-
-    2. Create `tests/init.test.ts`:
-       - Test: "creates .pm directory"
-         - Call initProject() in a temp directory
-         - Assert .pm/ directory exists
-       - Test: "creates data.db with correct schema"
-         - Call initProject() in temp dir
-         - Open .pm/data.db with better-sqlite3
-         - Query sqlite_master for tables
-         - Assert all 4 tables exist: agents, tasks, task_comments, context
-       - Test: "enables WAL mode"
-         - Open .pm/data.db
-         - Check pragma journal_mode = wal
-       - Test: "creates config.yaml with project name"
-         - Call initProject('my-project', tempDir)
-         - Read and parse .pm/config.yaml
-         - Assert project.name === 'my-project'
-         - Assert settings.task_statuses contains expected values
-       - Test: "errors if .pm already exists"
-         - Create .pm directory manually
-         - Call initProject() and expect error
-       - Use beforeEach/afterEach to create and clean temp directories
-
-    3. Run tests: `npm test`
-
-    **Avoid**: Don't mock the database — use real SQLite for integration tests.
-    **Avoid**: Don't test CLI parsing here — test core logic directly.
+    Add to `src/index.ts`:
+    
+    1. Add import: `import { registerDashboardCommand } from './cli/commands/dashboard.js';`
+    2. Add registration call: `registerDashboardCommand(program);`
+    3. Place it after the existing `registerStatusCommand(program)` line
+    
+    - Do NOT change any other existing imports or registrations
+    - Do NOT change `program.parse(process.argv)`
   </action>
   <verify>
-    npm test
-    # All tests should pass
+    npm run build && node dist/index.js dashboard --help
   </verify>
-  <done>Integration tests cover: directory creation, schema verification, WAL mode, config.yaml content, error on re-init. All passing.</done>
+  <done>`pm dashboard --help` shows usage with --port and --no-open options; build succeeds</done>
+</task>
+
+<task type="auto">
+  <name>Write unit test for server module</name>
+  <files>tests/server.test.ts</files>
+  <action>
+    Create `tests/server.test.ts` with vitest:
+    
+    1. Test `getAvailablePort`:
+       - Should return default port (4000) when available
+       - Should return an alternative port when preferred port is busy (start a server on 4000 first)
+    
+    2. Test `createApp`:
+       - Should return an Express app with `listen` function
+       - Should respond to `GET /api/health` with `{ status: 'ok' }` — use supertest-like approach: start app on random port, fetch, close
+    
+    Import from `../src/server/index.js`
+    Use `import Database from 'better-sqlite3'` for in-memory db
+    Use native `fetch()` (available in Node 18+) to test HTTP responses
+    
+    - Clean up servers and db connections in afterEach
+    - Do NOT import supertest — use native fetch
+  </action>
+  <verify>npx vitest run tests/server.test.ts</verify>
+  <done>All server tests pass; port discovery and health endpoint are validated</done>
 </task>
 
 ## Success Criteria
-- [ ] `pm init my-project` creates `.pm/data.db` with 4 tables in WAL mode
-- [ ] `pm init my-project` creates `.pm/config.yaml` with correct default content
-- [ ] `pm init` errors gracefully if `.pm/` already exists
-- [ ] `pm --help` shows available commands
-- [ ] `npm test` passes all integration tests
-- [ ] `npm run build` produces working dist/index.js
+- [ ] `pm dashboard --help` shows command with --port and --no-open options
+- [ ] `pm dashboard` starts server, prints URL, opens browser
+- [ ] Ctrl+C gracefully shuts down server and closes DB
+- [ ] `npm run build` succeeds with dashboard command included
+- [ ] Server tests pass (`npx vitest run tests/server.test.ts`)

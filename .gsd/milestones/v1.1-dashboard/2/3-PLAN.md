@@ -4,134 +4,96 @@ plan: 3
 wave: 2
 ---
 
-# Plan 2.3: Agent CLI Commands
+# Plan 2.3: API Integration Tests
 
 ## Objective
-Wire agent management commands into the CLI. This connects the core agent functions (Plan 2.1) and identity system (Plan 2.2) to Commander.js commands, completing Phase 2.
+Write comprehensive integration tests for all API endpoints using Vitest. Tests exercise the full stack: HTTP request → Express route → core function → SQLite (in-memory). This ensures the API layer correctly delegates to core logic and returns proper HTTP responses.
 
 ## Context
-- .gsd/SPEC.md — Agent commands spec
-- .gsd/ROADMAP.md — Phase 2 deliverables
-- src/core/agent.ts — registerAgent, listAgents, getAgentByName (Plan 2.1)
-- src/core/identity.ts — resolveIdentity, findProjectRoot, getProjectDb (Plan 2.2)
-- src/cli/commands/init.ts — reference pattern for command registration
-- src/cli/program.ts — Commander program
-- src/index.ts — command registration entrypoint
-- src/output/ — output formatting (currently empty)
+- tests/server.test.ts (existing pattern)
+- src/server/app.ts
+- src/server/routes/tasks.ts
+- src/server/routes/agents.ts
+- src/server/routes/context.ts
+- src/server/routes/status.ts
+- src/db/schema.ts
 
 ## Tasks
 
 <task type="auto">
-  <name>Create output formatter</name>
-  <files>src/output/formatter.ts</files>
+  <name>Write API integration tests</name>
+  <files>tests/api.test.ts</files>
   <action>
-    Create `src/output/formatter.ts` with:
+    Create `tests/api.test.ts` following the pattern in `tests/server.test.ts`:
 
-    1. `formatTable(headers: string[], rows: string[][])` — Simple ASCII table
-       - Column widths auto-calculated from content
-       - Returns formatted string
+    **Test setup:**
+    - Create in-memory SQLite DB, run `SCHEMA_SQL` to create tables
+    - Create Express app via `createApp(db)`
+    - Start server on available port via `getAvailablePort`
+    - `afterEach` / `afterAll`: close server, close db
+    - Register a test agent before each test group (agent is needed for task creation)
 
-    2. `formatAgent(agent: Agent, json: boolean)` — Format single agent for display
-       - If json: return JSON.stringify(agent, null, 2)
-       - If human: return formatted key-value block:
-         ```
-         Name: alice
-         Role: developer
-         Type: human
-         ID:   abc123
-         Since: 2026-02-28
-         ```
+    **Test groups:**
 
-    3. `formatAgentList(agents: Agent[], json: boolean)` — Format agent list
-       - If json: return JSON.stringify(agents, null, 2)
-       - If human: return formatted table with columns: Name, Role, Type, Created
+    1. **Task Endpoints** (describe block):
+       - POST /api/tasks — creates task, returns 201
+       - GET /api/tasks — returns array with created task
+       - GET /api/tasks?status=todo — filters by status
+       - GET /api/tasks/:id — returns task by id
+       - GET /api/tasks/999 — returns 404
+       - PUT /api/tasks/:id — updates title
+       - POST /api/tasks/:id/assign — assigns agent
+       - POST /api/tasks/:id/comments — creates comment, returns 201
+       - GET /api/tasks/:id/comments — returns comments array
 
-    Do NOT add chalk/colors dependency — keep output plain for v1 (agents need parseable output).
+    2. **Agent Endpoints** (describe block):
+       - GET /api/agents — returns registered agents
+       - GET /api/agents/:id — returns agent by id
+       - GET /api/agents/nonexistent — returns 404
+
+    3. **Context Endpoints** (describe block):
+       - GET /api/context — returns empty initially
+       - GET /api/context?category=note — filters work
+       - GET /api/context/search?q=test — search works
+       - GET /api/context/search — missing q returns 400
+
+    4. **Status Endpoint** (describe block):
+       - GET /api/status — returns shape with tasks.total, agents.total, context.total, recent_tasks
+
+    Use `fetch()` for HTTP requests (available globally in Node 18+).
+    Assert on both HTTP status codes AND response body shape.
+
+    - Do NOT mock anything — use real DB, real Express, real HTTP
+    - Do register a test agent using `registerAgent(db, ...)` directly before task tests
+    - Do set context entries using `setContext(db, ...)` directly for context tests
   </action>
-  <verify>npx tsx -e "import { formatTable, formatAgent, formatAgentList } from './src/output/formatter.js'; console.log('✓ formatter compiles')"</verify>
-  <done>src/output/formatter.ts exists with 3 exported functions</done>
+  <verify>npx vitest run tests/api.test.ts</verify>
+  <done>All tests pass, covering task/agent/context/status endpoints with proper status codes and response bodies</done>
 </task>
 
 <task type="auto">
-  <name>Create agent CLI commands and wire up</name>
-  <files>src/cli/commands/agent.ts, src/index.ts</files>
+  <name>Run full test suite</name>
+  <files>N/A</files>
   <action>
-    Create `src/cli/commands/agent.ts` with:
+    Run the complete test suite to ensure no regressions:
+    ```bash
+    npx vitest run
+    ```
+    
+    Verify that:
+    1. All existing tests still pass (server, task, agent, context, identity, init, CLI tests)
+    2. New `api.test.ts` tests pass
+    3. No TypeScript compilation errors
 
-    1. `registerAgentCommands(program: Command)` — Register `pm agent` subcommand group:
-    
-       a. `pm agent register <name> --role <role> --type <human|ai>`
-          - Required: name (positional), --role, --type
-          - Uses getProjectDb() to get database
-          - Calls registerAgent() from core
-          - Output: "✓ Agent '<name>' registered (id: <id>)"
-          - Supports --json flag on parent command
-       
-       b. `pm agent list`
-          - Uses getProjectDb() to get database
-          - Calls listAgents()
-          - Uses formatAgentList() for output
-          - Supports --json flag
-       
-       c. `pm agent show <name>`
-          - Uses getProjectDb() to get database
-          - Calls getAgentByName()
-          - If not found: error "Agent '<name>' not found"
-          - Uses formatAgent() for output
-          - Supports --json flag
-       
-       d. `pm agent whoami`
-          - Uses resolveIdentity() to get current agent
-          - Uses formatAgent() for output
-          - This is the one command that USES identity to show who the caller is
-          - Supports --json flag
-
-    Add `--json` flag as a global option on the program in `src/cli/program.ts`.
-    
-    Update `src/index.ts` to import and call `registerAgentCommands(program)`.
-    
-    Error handling: wrap each action in try/catch, print error message, exit(1).
-    Do NOT enforce identity on `agent register` / `agent list` / `agent show` — those are management commands.
-    Only `agent whoami` uses identity (it answers "who am I?").
+    If any test fails, fix the issue before proceeding.
   </action>
-  <verify>npx tsx src/index.ts agent --help</verify>
-  <done>
-    - `pm agent register`, `pm agent list`, `pm agent show`, `pm agent whoami` commands all work
-    - `pm agent --help` shows all 4 subcommands
-    - --json flag is available globally
-  </done>
-</task>
-
-<task type="auto">
-  <name>Create agent CLI integration tests</name>
-  <files>tests/agent-cli.test.ts</files>
-  <action>
-    Create `tests/agent-cli.test.ts` — integration tests using child_process.execSync:
-    
-    Setup: temp dir, run `pm init` via tsx, then test agent commands.
-
-    Test cases:
-    1. `pm agent register alice --role developer --type human` succeeds
-    2. `pm agent register` without --role/--type shows error
-    3. `pm agent register alice` twice shows duplicate error
-    4. `pm agent list` shows registered agents
-    5. `pm agent list --json` outputs valid JSON array
-    6. `pm agent show alice` shows agent details
-    7. `pm agent show nonexistent` shows not found error
-    8. `pm agent whoami --agent alice` shows alice's details
-    9. `pm agent whoami` without --agent or PM_AGENT shows identity error
-
-    Use execSync with { cwd: tempDir, encoding: 'utf-8' } pattern.
-    Run commands via: `npx tsx {path-to-src}/index.ts agent register ...`
-  </action>
-  <verify>npx vitest run tests/agent-cli.test.ts</verify>
-  <done>All 9 test cases pass with `npx vitest run tests/agent-cli.test.ts`</done>
+  <verify>npx vitest run</verify>
+  <done>Full test suite passes with zero failures</done>
 </task>
 
 ## Success Criteria
-- [ ] `pm agent register <name> --role <role> --type <type>` works
-- [ ] `pm agent list` and `pm agent list --json` work
-- [ ] `pm agent show <name>` works
-- [ ] `pm agent whoami --agent <name>` works
-- [ ] All 9 integration tests pass
-- [ ] `--json` flag available on all commands
+- [ ] `tests/api.test.ts` exists with 15+ test cases
+- [ ] All API endpoints tested: tasks, agents, context, status
+- [ ] Tests use real HTTP requests to real Express server with in-memory DB
+- [ ] Full test suite passes (existing + new tests)
+- [ ] No TypeScript errors

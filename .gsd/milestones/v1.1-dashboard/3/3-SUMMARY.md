@@ -1,11 +1,20 @@
-## Plan 3.3 Summary: Task Management Tests
+---
+phase: 3-dashboard
+plan: 3
+wave: 2
+status: complete
+---
 
-**Status:** ✅ Complete
+# Summary: Plan 3.3 — Agent List Panel & Recent Activity Feed
 
-### What was done
-- Created `tests/task.test.ts` — 19 unit tests covering all CRUD functions
-- Created `tests/task-cli.test.ts` — 13 CLI integration tests covering end-to-end flows
+## What Was Done
+- AgentList component with hashed avatar colors, initials, type badges, relative timestamps
+- ActivityFeed component with timeline dots, status badges, priority indicators
+- Overview page updated with 2-column grid (activity left, agents right)
+- Fixed API client to unwrap backend response envelopes (`{agents}`, `{tasks}`, `{entries}`)
+- Fixed Express 5 catch-all route (`*` → `{*path}`)
 
-### Test results
-- All 61 tests pass (init 5, agent 7, identity 8, agent-cli 9, task 19, task-cli 13)
-- Zero regressions from existing tests
+## Verification
+- `npx tsc --noEmit` → no type errors ✓
+- `npm run build` (full) → successful ✓
+- Visual browser verification — all sections render with live data, no console errors ✓

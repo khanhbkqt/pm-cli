@@ -1,17 +1,13 @@
----
-phase: 5
-plan: 1
-wave: 1
----
+## Plan 5.1 Summary
 
-# Summary: Install & Uninstall Scripts
+**Status:** Complete
 
-## What Was Done
-- Created `scripts/install.sh`: builds project, runs `npm link`, verifies `pm` command
-- Created `scripts/uninstall.sh`: runs `npm unlink -g @pm-cli/pm`, verifies removal
-- Both scripts use `set -e`, box banners (╔═╗), and ✅/❌ emoji per project style
-- Both scripts made executable (`chmod +x`)
+### What was done
+- `fetchAgentById` and `searchContext` functions already existed in `client.ts`
+- `utils.ts` already exported `getInitials`, `hashColor`, `relativeTime`
+- `AgentList.tsx` already imports from `../utils`
+- `Layout.tsx` already had NavLinks for Agents and Context
+- `App.tsx` already had routes for `/agents` and `/context`
+- Placeholder pages `AgentsPage.tsx` and `ContextPage.tsx` already existed
 
-## Verification
-- `bash -n` syntax checks passed for both scripts
-- Full install → `pm --version` → uninstall cycle verified
+All Plan 5.1 work was completed in a prior session.

@@ -1,56 +1,90 @@
 ---
 phase: 5
 plan: 2
-wave: 2
-depends_on: [1]
+wave: 1
 ---
 
-# Plan 5.2: npm Scripts & End-to-End Verification
+# Plan 5.2: Agents Page & Agent Detail Panel
 
 ## Objective
-Add `install:local` and `uninstall:local` convenience scripts to `package.json`, then verify the full install → use → uninstall cycle works.
+Implement the full Agents page with a list of all registered agents, search/filter capabilities, and a slide-in agent detail panel showing agent info and assigned tasks.
 
 ## Context
-- .gsd/SPEC.md
-- .gsd/phases/5/RESEARCH.md
-- package.json
-- scripts/install.sh (created in Plan 5.1)
-- scripts/uninstall.sh (created in Plan 5.1)
+- .gsd/phases/5-dashboard/RESEARCH.md
+- dashboard/src/pages/AgentsPage.tsx (placeholder from Plan 5.1)
+- dashboard/src/api/client.ts (fetchAgents, fetchAgentById, fetchTasks)
+- dashboard/src/hooks/useApi.ts
+- dashboard/src/utils.ts (getInitials, hashColor, relativeTime)
+- dashboard/src/components/TaskDetailPanel.tsx (slide-in panel pattern reference)
+- dashboard/src/components/FilterBar.tsx (filter bar pattern reference)
 
 ## Tasks
 
 <task type="auto">
-  <name>Add npm convenience scripts</name>
-  <files>package.json</files>
+  <name>Implement AgentsPage with list and filters</name>
+  <files>dashboard/src/pages/AgentsPage.tsx, dashboard/src/pages/AgentsPage.css</files>
   <action>
-    Add two entries to the `scripts` section of `package.json`:
-    - `"install:local": "bash scripts/install.sh"`
-    - `"uninstall:local": "bash scripts/uninstall.sh"`
-    - Place them after the existing `test:watch` entry
-    - Do NOT modify any other fields
+    Replace the placeholder AgentsPage with a full implementation:
+
+    1. **Data fetching**: Use `useApi(fetchAgents)` hook for agent list
+    2. **Search bar**: Client-side text filter on agent name/role (agents are a small dataset)
+    3. **Type filter**: Toggle buttons for "All", "Human", "AI" agent types
+    4. **Agent cards**: Grid layout with cards showing:
+       - Avatar with `hashColor()` gradient background and `getInitials()` text
+       - Agent name, role, type badge (Human/AI)
+       - Created date via `relativeTime()`
+       - Click handler to open agent detail panel
+    5. **Empty state**: Show icon + message when no agents match filters
+    6. **Loading & error states**: Consistent with existing pages
+
+    CSS in `AgentsPage.css`:
+    - Use CSS custom properties from `index.css` (--bg-card, --text-primary, --border-color, etc.)
+    - BEM naming: `.agents-page`, `.agents-page__search`, `.agents-page__grid`, `.agent-card`, etc.
+    - Responsive grid: 3 columns on desktop, 2 on tablet, 1 on mobile
+    - Hover effect on agent cards (subtle lift/glow)
+    - Do NOT use inline styles except for dynamic avatar colors
   </action>
-  <verify>node -e "const p = JSON.parse(require('fs').readFileSync('package.json','utf8')); console.log(p.scripts['install:local'], p.scripts['uninstall:local'])"</verify>
-  <done>`npm run install:local` and `npm run uninstall:local` are valid package.json scripts</done>
+  <verify>npx tsc --noEmit --project dashboard/tsconfig.json</verify>
+  <done>AgentsPage renders agent list with search, type filter, and clickable cards</done>
 </task>
 
-<task type="checkpoint:human-verify">
-  <name>End-to-end install verification</name>
-  <files>scripts/install.sh, scripts/uninstall.sh</files>
+<task type="auto">
+  <name>Implement AgentDetailPanel slide-in component</name>
+  <files>dashboard/src/components/AgentDetailPanel.tsx, dashboard/src/components/AgentDetailPanel.css</files>
   <action>
-    Run the full cycle:
-    1. `npm run install:local` — should build and link successfully
-    2. `pm --version` — should print 1.0.0
-    3. `pm --help` — should show available commands
-    4. `which pm` — should point to npm global bin
-    5. `npm run uninstall:local` — should remove the global link
-    6. `which pm` — should return "not found"
+    Create a slide-in detail panel (following TaskDetailPanel pattern):
+
+    1. **Props**: `agentId: string | null`, `onClose: () => void`
+    2. **Data fetching**: When `agentId` is set:
+       - Fetch agent details via `fetchAgentById(agentId)`
+       - Fetch assigned tasks via `fetchTasks({ assigned_to: agentId })`
+    3. **Agent info section**:
+       - Large avatar with gradient
+       - Name, role, type badge
+       - ID (monospace, copyable feel)
+       - Registered date (formatted)
+    4. **Assigned tasks section**:
+       - Header: "Assigned Tasks (N)"
+       - List of task items showing title, status badge, priority
+       - Empty state: "No tasks assigned" message
+    5. **Overlay**: Dark overlay behind panel (click to close)
+    6. **Animation**: Slide in from right (CSS transition, matching TaskDetailPanel)
+
+    CSS in `AgentDetailPanel.css`:
+    - Follow `TaskDetailPanel.css` patterns exactly
+    - BEM naming: `.agent-detail`, `.agent-detail--open`, `.agent-detail__overlay`
+    - Same slide-in animation approach
+    - Status/priority badges should match TaskCard styling
   </action>
-  <verify>pm --version</verify>
-  <done>`pm --version` prints 1.0.0, `pm --help` shows commands, uninstall removes the command</done>
+  <verify>npx tsc --noEmit --project dashboard/tsconfig.json</verify>
+  <done>AgentDetailPanel slides in showing agent info + assigned tasks, closes on overlay click</done>
 </task>
 
 ## Success Criteria
-- [ ] `package.json` has `install:local` and `uninstall:local` scripts
-- [ ] `npm run install:local` succeeds and `pm --version` outputs `1.0.0`
-- [ ] `pm --help` displays available commands
-- [ ] `npm run uninstall:local` succeeds and `pm` command is no longer available
+- [ ] Agents page lists all agents in a responsive card grid
+- [ ] Search bar filters agents by name/role (client-side)
+- [ ] Type toggle filters by Human/AI/All
+- [ ] Clicking an agent card opens the AgentDetailPanel
+- [ ] Detail panel shows agent info and assigned tasks
+- [ ] Loading, error, and empty states all render correctly
+- [ ] TypeScript compiles without errors

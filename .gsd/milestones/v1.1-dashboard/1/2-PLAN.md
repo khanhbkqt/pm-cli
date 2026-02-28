@@ -4,121 +4,94 @@ plan: 2
 wave: 1
 ---
 
-# Plan 1.2: SQLite Database Layer
+# Plan 1.2: Express Server Module
 
 ## Objective
-Create the database module with schema definition (4 tables: agents, tasks, task_comments, context), connection management with WAL mode, and schema initialization function.
+Create the `src/server/` module with an Express app factory, port discovery utility, and static file serving. This is the core server infrastructure that the `pm dashboard` command will use.
 
 ## Context
-- .gsd/SPEC.md — SQLite with WAL mode, 4 tables
-- .gsd/DECISIONS.md — DECISION-008 (better-sqlite3 + plain SQL), DECISION-012 (all tables upfront)
-- docs/design/final-design.md — Section 3: Data Model (full column definitions)
+- .gsd/SPEC.md
+- .gsd/phases/1-dashboard/RESEARCH.md
+- src/db/connection.ts — database creation pattern
+- src/core/identity.ts — `findProjectRoot()`, `getProjectDb()` reusable helpers
 
 ## Tasks
 
 <task type="auto">
-  <name>Create database connection and schema module</name>
-  <files>src/db/connection.ts, src/db/schema.ts</files>
+  <name>Create server utilities</name>
+  <files>src/server/utils.ts</files>
   <action>
-    1. Create `src/db/schema.ts`:
-       - Export a constant `SCHEMA_SQL` containing CREATE TABLE statements for all 4 tables:
-
-       **agents table:**
-       - id TEXT PRIMARY KEY (UUID)
-       - name TEXT UNIQUE NOT NULL
-       - role TEXT NOT NULL
-       - type TEXT NOT NULL CHECK(type IN ('human', 'ai'))
-       - created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-
-       **tasks table:**
-       - id INTEGER PRIMARY KEY AUTOINCREMENT
-       - title TEXT NOT NULL
-       - description TEXT
-       - status TEXT DEFAULT 'todo'
-       - priority TEXT DEFAULT 'medium' CHECK(priority IN ('low', 'medium', 'high', 'urgent'))
-       - assigned_to TEXT REFERENCES agents(id)
-       - created_by TEXT NOT NULL REFERENCES agents(id)
-       - parent_id INTEGER REFERENCES tasks(id)
-       - created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-       - updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-
-       **task_comments table:**
-       - id INTEGER PRIMARY KEY AUTOINCREMENT
-       - task_id INTEGER NOT NULL REFERENCES tasks(id)
-       - agent_id TEXT NOT NULL REFERENCES agents(id)
-       - content TEXT NOT NULL
-       - created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-
-       **context table:**
-       - id INTEGER PRIMARY KEY AUTOINCREMENT
-       - key TEXT UNIQUE NOT NULL
-       - value TEXT NOT NULL
-       - category TEXT DEFAULT 'note' CHECK(category IN ('decision', 'spec', 'note', 'constraint'))
-       - created_by TEXT NOT NULL REFERENCES agents(id)
-       - created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-       - updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-
-    2. Create `src/db/connection.ts`:
-       - Export function `createDatabase(dbPath: string): Database`
-         - Opens better-sqlite3 connection at dbPath
-         - Enables WAL mode: `db.pragma('journal_mode = WAL')`
-         - Enables foreign keys: `db.pragma('foreign_keys = ON')`
-         - Returns db instance
-       - Export function `initializeSchema(db: Database): void`
-         - Runs SCHEMA_SQL via `db.exec()`
-       - Export function `getDatabase(dbPath: string): Database`
-         - Convenience: creates + initializes in one call
-
-    **Avoid**: Don't add query functions yet — those come in Phase 2-4.
-    **Avoid**: Don't use ORM — plain SQL per DECISION-008.
+    Create `src/server/utils.ts` with two utility functions:
+    
+    1. `getAvailablePort(preferred: number = 4000): Promise<number>`
+       - Try to listen on `preferred` port using Node.js `net.createServer()`
+       - On success, close the test server and return `preferred`
+       - On error (port busy), listen on port 0 to let OS assign, return that port
+       - Use `import net from 'net'` (ESM)
+    
+    2. `openBrowser(url: string): void`
+       - Use `import { exec } from 'child_process'`
+       - Switch on `process.platform`: `darwin` → `open`, `win32` → `start`, default → `xdg-open`
+       - Execute the command (fire-and-forget, ignore errors)
+    
+    - Do NOT install any external packages for these
+    - Export both functions
   </action>
   <verify>
-    npx tsx -e "
-      import { getDatabase } from './src/db/connection.ts';
-      import { existsSync, unlinkSync } from 'fs';
-      const testDb = '/tmp/pm-test.db';
-      if (existsSync(testDb)) unlinkSync(testDb);
-      const db = getDatabase(testDb);
-      const tables = db.prepare(\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\").all();
-      console.log('Tables:', tables.map(t => t.name));
-      const walMode = db.pragma('journal_mode');
-      console.log('WAL:', walMode);
-      db.close();
-      unlinkSync(testDb);
-    "
-    # Should output: Tables: ['agents', 'context', 'task_comments', 'tasks']
-    # WAL: [{ journal_mode: 'wal' }]
+    npx tsx -e "import { getAvailablePort } from './src/server/utils.js'; getAvailablePort().then(p => console.log('Port:', p))"
   </verify>
-  <done>4 tables created in SQLite, WAL mode enabled, foreign keys on, schema matches design doc</done>
+  <done>Both functions exist, getAvailablePort returns a valid port number</done>
 </task>
 
 <task type="auto">
-  <name>Create database module index with type exports</name>
-  <files>src/db/index.ts, src/db/types.ts</files>
+  <name>Create Express app factory</name>
+  <files>src/server/app.ts, src/server/index.ts</files>
   <action>
-    1. Create `src/db/types.ts`:
-       - Export TypeScript interfaces matching the schema:
-         - Agent { id, name, role, type, created_at }
-         - Task { id, title, description, status, priority, assigned_to, created_by, parent_id, created_at, updated_at }
-         - TaskComment { id, task_id, agent_id, content, created_at }
-         - ContextEntry { id, key, value, category, created_by, created_at, updated_at }
-
-    2. Create `src/db/index.ts`:
-       - Re-export everything from connection.ts
-       - Re-export types from types.ts
-
-    **Avoid**: Don't add repository/query classes — keep minimal.
+    Create `src/server/app.ts`:
+    
+    1. `createApp(db: Database.Database): express.Express`
+       - Create Express app with `express.json()` middleware
+       - Mount a health check: `GET /api/health` → `{ status: 'ok' }`
+       - Serve static files from the dashboard directory:
+         ```
+         const dashboardPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'dashboard');
+         if (fs.existsSync(dashboardPath)) {
+           app.use(express.static(dashboardPath));
+           app.get('*', (req, res) => {
+             if (!req.path.startsWith('/api')) {
+               res.sendFile(path.join(dashboardPath, 'index.html'));
+             }
+           });
+         }
+         ```
+       - Return the app instance (do NOT call `.listen()` here)
+       - Accept `db` parameter for future API routes (Phase 2)
+    
+    2. Import `express`, `path`, `fs`, `fileURLToPath` from `url`
+    
+    Create `src/server/index.ts`:
+    - Re-export from `./app.js` and `./utils.js`
+    
+    - Do NOT write API route handlers yet (Phase 2)
+    - Do NOT hardcode file paths — use `import.meta.url` for resolution
+    - The `db` parameter is stored but not used until Phase 2 adds API routes
   </action>
   <verify>
-    npx tsx -e "import { getDatabase, type Agent, type Task } from './src/db/index.ts'; console.log('DB module exports OK');"
-    # Should print: DB module exports OK
+    npx tsx -e "
+      import { createApp } from './src/server/app.js';
+      import Database from 'better-sqlite3';
+      const db = new Database(':memory:');
+      const app = createApp(db);
+      console.log('App created:', typeof app.listen === 'function');
+      db.close();
+    "
   </verify>
-  <done>Clean db module public API with type exports and connection functions</done>
+  <done>Express app factory creates a valid Express app; health endpoint is registered; static serving is configured</done>
 </task>
 
 ## Success Criteria
-- [ ] `src/db/schema.ts` contains CREATE TABLE for agents, tasks, task_comments, context
-- [ ] `src/db/connection.ts` creates database with WAL mode and foreign keys
-- [ ] Schema creates all 4 tables matching design doc columns
-- [ ] TypeScript types match schema definitions
-- [ ] Module exports cleanly from `src/db/index.ts`
+- [ ] `src/server/utils.ts` exports `getAvailablePort` and `openBrowser`
+- [ ] `src/server/app.ts` exports `createApp(db)` returning an Express app
+- [ ] `src/server/index.ts` re-exports all server modules
+- [ ] Health check at `GET /api/health` returns `{ status: 'ok' }`
+- [ ] Static dashboard directory is served if it exists

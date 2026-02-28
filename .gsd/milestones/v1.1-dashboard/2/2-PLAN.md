@@ -4,71 +4,76 @@ plan: 2
 wave: 1
 ---
 
-# Plan 2.2: Identity Resolution System
+# Plan 2.2: Agent, Context & Status API Routes
 
 ## Objective
-Create the identity resolution layer that enforces mandatory agent identity on every command. This resolves the `--agent` flag or `PM_AGENT` env var into a validated Agent record. Phase 3+ commands will use this as a prerequisite.
+Create REST API endpoints for agents, context entries, and project status overview. These complete the API layer that the dashboard UI will consume.
 
 ## Context
-- .gsd/SPEC.md — "Identity required: `--agent` flag / `PM_AGENT` env var"
-- .gsd/DECISIONS.md — DECISION-005 (Mandatory Agent Identity)
-- src/core/agent.ts — getAgentByName function (from Plan 2.1)
-- src/cli/program.ts — Commander program setup
-- src/cli/commands/init.ts — reference for command registration pattern
+- .gsd/SPEC.md
+- src/server/app.ts
+- src/core/agent.ts
+- src/core/context.ts
+- src/core/task.ts
+- src/db/types.ts
 
 ## Tasks
 
 <task type="auto">
-  <name>Create identity resolution module</name>
-  <files>src/core/identity.ts</files>
+  <name>Create agent and context routes modules</name>
+  <files>src/server/routes/agents.ts, src/server/routes/context.ts</files>
   <action>
-    Create `src/core/identity.ts` with:
+    **src/server/routes/agents.ts** — export `createAgentRoutes(db): Router`:
+    1. `GET /api/agents` — calls `listAgents(db)`. Returns `{ agents: Agent[] }`.
+    2. `GET /api/agents/:id` — calls `getAgentById(db, id)`. Returns `{ agent: Agent }`. Returns 404 if not found.
 
-    1. `resolveIdentity(db, options: { agent?: string })` — Resolution logic:
-       - Priority 1: `options.agent` (from --agent flag)
-       - Priority 2: `process.env.PM_AGENT`
-       - If neither provided: throw Error with message "Agent identity required. Use --agent <name> or set PM_AGENT env var."
-       - Look up agent name via `getAgentByName(db, name)`
-       - If agent not found: throw Error with message "Agent '<name>' not registered. Run: pm agent register <name>"
-       - Return the validated Agent object
+    **src/server/routes/context.ts** — export `createContextRoutes(db): Router`:
+    1. `GET /api/context` — calls `listContext(db, { category })` with optional `?category=` query param. Returns `{ entries: ContextEntry[] }`.
+    2. `GET /api/context/search` — calls `searchContext(db, query)` with `?q=` query param. Returns 400 if `q` missing. Returns `{ entries: ContextEntry[] }`.
 
-    2. `findProjectRoot(startDir?: string)` — Walk up from startDir (default: cwd) looking for `.pm/` directory
-       - Return the directory containing `.pm/` or throw if not found
-       - Error message: "Not a PM project. Run: pm init"
-       - This is needed by all commands that access the database
-
-    3. `getProjectDb(startDir?: string)` — Convenience function
-       - Uses findProjectRoot() to locate .pm/
-       - Returns Database instance from getDatabase(path.join(root, '.pm', 'data.db'))
-
-    Do NOT modify existing files in this task.
+    Same error-handling pattern as task routes: try/catch, 400 for validation errors, 404 for not found.
+    
+    - Import core functions from `src/core/agent.ts` and `src/core/context.ts`
+    - Do NOT write any SQL
   </action>
-  <verify>npx tsx -e "import { resolveIdentity, findProjectRoot, getProjectDb } from './src/core/identity.js'; console.log('✓ identity module compiles')"</verify>
-  <done>src/core/identity.ts exists with 3 exported functions: resolveIdentity, findProjectRoot, getProjectDb</done>
+  <verify>npx tsx -e "import { createAgentRoutes } from './src/server/routes/agents.js'; import { createContextRoutes } from './src/server/routes/context.js'; console.log(typeof createAgentRoutes, typeof createContextRoutes)"</verify>
+  <done>Both files exist, export factory functions, have all specified endpoints</done>
 </task>
 
 <task type="auto">
-  <name>Create identity resolution tests</name>
-  <files>tests/identity.test.ts</files>
+  <name>Create status route and mount all routes</name>
+  <files>src/server/routes/status.ts, src/server/app.ts</files>
   <action>
-    Create `tests/identity.test.ts`:
-    - Setup: temp dir with pm init + register a test agent
+    **src/server/routes/status.ts** — export `createStatusRoutes(db): Router`:
+    1. `GET /api/status` — build a project overview object using direct SQL queries on `db`:
+       ```
+       {
+         tasks: { total, by_status: { todo, in_progress, done, blocked }, by_priority: { low, medium, high, urgent } },
+         agents: { total, by_type: { human, ai } },
+         context: { total },
+         recent_tasks: Task[] (last 5, ordered by updated_at DESC)
+       }
+       ```
+       Use `db.prepare('SELECT COUNT(*) as count FROM tasks WHERE status = ?').get(status)` pattern for counts.
+       This is the ONE route that uses direct SQL — it's an aggregation endpoint not covered by existing core functions.
 
-    Test cases:
-    1. `resolveIdentity` with --agent flag resolves correct agent
-    2. `resolveIdentity` with PM_AGENT env var resolves correct agent
-    3. `resolveIdentity` with --agent flag takes priority over PM_AGENT
-    4. `resolveIdentity` throws when neither flag nor env var set
-    5. `resolveIdentity` throws when agent name not registered
-    6. `findProjectRoot` finds .pm/ in current directory
-    7. `findProjectRoot` finds .pm/ in parent directory
-    8. `findProjectRoot` throws when no .pm/ found
+    **src/server/app.ts** — mount ALL new routes:
+    1. Import `createAgentRoutes`, `createContextRoutes`, `createStatusRoutes`
+    2. Mount each router after task routes, before static file catch-all:
+       - `app.use(createAgentRoutes(db))`
+       - `app.use(createContextRoutes(db))`
+       - `app.use(createStatusRoutes(db))`
+    
+    Also create `src/server/routes/index.ts` barrel export for all route factories.
   </action>
-  <verify>npx vitest run tests/identity.test.ts</verify>
-  <done>All 8 test cases pass with `npx vitest run tests/identity.test.ts`</done>
+  <verify>npx tsx -e "import { createStatusRoutes } from './src/server/routes/status.js'; console.log(typeof createStatusRoutes)"</verify>
+  <done>Status route returns aggregated project stats, all 4 route modules mounted in app.ts, barrel export exists</done>
 </task>
 
 ## Success Criteria
-- [ ] `src/core/identity.ts` exports 3 functions
-- [ ] 8 tests pass in `tests/identity.test.ts`
-- [ ] --agent flag has priority over PM_AGENT env var
+- [ ] `GET /api/agents` returns agent list
+- [ ] `GET /api/agents/:id` returns agent or 404
+- [ ] `GET /api/context` returns context entries with optional category filter
+- [ ] `GET /api/context/search?q=` returns search results
+- [ ] `GET /api/status` returns project overview with task/agent/context counts
+- [ ] All routes mounted in `createApp` correctly

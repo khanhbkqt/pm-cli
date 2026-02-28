@@ -1,93 +1,109 @@
 ---
-phase: 3
+phase: 3-dashboard
 plan: 3
-wave: 3
+wave: 2
 ---
 
-# Plan 3.3: Task Management Tests
+# Plan 3.3: Agent List Panel & Recent Activity Feed
 
 ## Objective
-Write comprehensive unit tests for `core/task.ts` and CLI integration tests for `pm task` commands. Follow the exact patterns established in `tests/agent.test.ts` and `tests/agent-cli.test.ts`.
+Complete the Overview page with an agent list panel and a recent activity feed, plus visual verification that the full dashboard renders correctly against the live API.
 
 ## Context
-- tests/agent.test.ts — Unit test pattern (in-memory DB, beforeEach/afterEach)
-- tests/agent-cli.test.ts — CLI integration test pattern (run/runExpectFail helpers, tempDir)
-- src/core/task.ts — Functions under test
-- src/cli/commands/task.ts — CLI commands under test
+- .gsd/SPEC.md
+- .gsd/ROADMAP.md (Phase 3 deliverables)
+- dashboard/src/api/client.ts (fetchAgents, fetchStatus from Plan 3.1)
+- dashboard/src/api/types.ts (Agent, Task types)
+- dashboard/src/pages/Overview.tsx (from Plan 3.2)
+- src/server/routes/agents.ts (GET /api/agents response)
+- src/server/routes/status.ts (recent_tasks in GET /api/status)
 
 ## Tasks
 
 <task type="auto">
-  <name>Create tests/task.test.ts — unit tests for core/task.ts</name>
-  <files>tests/task.test.ts</files>
+  <name>Agent list and activity feed components</name>
+  <files>
+    dashboard/src/components/AgentList.tsx
+    dashboard/src/components/AgentList.css
+    dashboard/src/components/ActivityFeed.tsx
+    dashboard/src/components/ActivityFeed.css
+    dashboard/src/pages/Overview.tsx (update)
+    dashboard/src/pages/Overview.css (update)
+  </files>
   <action>
-    Create `tests/task.test.ts` following `tests/agent.test.ts` pattern:
+    1. Create `dashboard/src/components/AgentList.tsx`:
+       - Accept `agents: Agent[]` prop
+       - Render list of agents with:
+         - Avatar circle (initials from agent name, hashed color)
+         - Agent name and role
+         - Type badge: "Human" (blue) or "AI" (purple)
+         - Created date in relative format ("2h ago", "3d ago")
+       - Empty state message if no agents registered
+       - Card container with section title "Agents"
 
-    Setup: tempDir + getDatabase + register a test agent ("tester") in beforeEach
+    2. Create `dashboard/src/components/AgentList.css`:
+       - List item: flex row, padding, hover background
+       - Avatar: 36px circle, centered initials, gradient background
+       - Type badge: pill shape, small font
+       - Transitions on hover
 
-    Test cases:
-    1. `addTask` creates task with correct fields (title, status=todo, priority=medium, created_by)
-    2. `addTask` with all optional fields (description, priority, parent_id)
-    3. `addTask` throws if created_by agent doesn't exist
-    4. `addTask` throws if parent_id task doesn't exist
-    5. `listTasks` returns all tasks sorted by created_at DESC
-    6. `listTasks` with status filter returns only matching tasks
-    7. `listTasks` with assigned_to filter
-    8. `getTaskById` returns task when found
-    9. `getTaskById` returns undefined when not found
-    10. `updateTask` updates title and bumps updated_at
-    11. `updateTask` updates status
-    12. `updateTask` throws if task doesn't exist
-    13. `assignTask` sets assigned_to correctly
-    14. `assignTask` throws if agent name doesn't exist
-    15. `addComment` creates comment linked to task
-    16. `addComment` throws if task doesn't exist
-    17. `getComments` returns comments in chronological order
-    18. `getComments` returns empty array for task with no comments
-    19. Subtask: addTask with parent_id links to parent
+    3. Create `dashboard/src/components/ActivityFeed.tsx`:
+       - Accept `tasks: Task[]` prop (recent_tasks from status API)
+       - Render timeline-style feed:
+         - Each entry: task title, status badge (colored), updated timestamp
+         - Status badges: todo (gray), in-progress (blue), done (green), blocked (red)
+         - Priority indicator dot (low=green, medium=yellow, high=orange, urgent=red)
+       - Empty state message if no recent activity
+       - Section title "Recent Activity"
+
+    4. Create `dashboard/src/components/ActivityFeed.css`:
+       - Timeline: vertical line left side, dots on line
+       - Feed item: flex row, gap between elements
+       - Status badge: pill, colored per status
+       - Timestamp: muted text, right-aligned
+
+    5. Update `dashboard/src/pages/Overview.tsx`:
+       - Add `useApi(fetchAgents)` call
+       - Render below stats cards in a 2-column grid:
+         - Left (wider): ActivityFeed with recent_tasks
+         - Right: AgentList with agents
+       - Both sections in glass-morphism card containers
+       - Responsive: stack to single column below 1024px
+
+    6. Update `dashboard/src/pages/Overview.css`:
+       - Two-column grid: `grid-template-columns: 1.5fr 1fr`
+       - Gap between sections
+       - Media query for stacking
   </action>
-  <verify>npx vitest run tests/task.test.ts</verify>
-  <done>
-    - All 19 test cases pass
-    - Tests cover happy paths + error paths
-    - Tests follow same setup/teardown pattern as agent.test.ts
-  </done>
+  <verify>cd dashboard && npx tsc --noEmit && npm run build && echo "Components OK"</verify>
+  <done>Overview page shows agent list panel and activity feed timeline with all styling</done>
 </task>
 
-<task type="auto">
-  <name>Create tests/task-cli.test.ts — CLI integration tests</name>
-  <files>tests/task-cli.test.ts</files>
+<task type="checkpoint:human-verify">
+  <name>Visual verification of full dashboard</name>
+  <files>
+    dashboard/src/**
+  </files>
   <action>
-    Create `tests/task-cli.test.ts` following `tests/agent-cli.test.ts` pattern:
-
-    Setup: tempDir + pm init + register agent "alice" in beforeEach
-    Use same run() / runExpectFail() helpers
-
-    Test cases:
-    1. `pm task add "My task" --agent alice` creates task
-    2. `pm task add` without --agent shows identity error
-    3. `pm task list` shows created tasks (no identity required)
-    4. `pm task list --json` outputs valid JSON array
-    5. `pm task list --status todo` filters correctly
-    6. `pm task show 1` shows task details
-    7. `pm task show 999` shows not found error
-    8. `pm task update 1 --status done --agent alice` updates task
-    9. `pm task assign 1 --to alice --agent alice` assigns task
-    10. `pm task comment 1 "Great work" --agent alice` adds comment
-    11. `pm task show 1` after comment shows the comment
-    12. `pm task add "Subtask" --parent 1 --agent alice` creates subtask
-    13. `pm task list --json --assigned alice` filters by assigned agent
+    1. Build the full project: `npm run build` (root)
+    2. Start the dashboard: `pm dashboard` (or `tsx src/index.ts dashboard`)
+    3. Open browser to verify:
+       - Dark theme renders correctly
+       - Stats cards show real data from SQLite
+       - Agent list shows registered agents
+       - Activity feed shows recent tasks
+       - Layout is responsive (resize window)
+       - No console errors
+    4. Test with empty database (fresh `pm init`) to verify empty states
   </action>
-  <verify>npx vitest run tests/task-cli.test.ts</verify>
-  <done>
-    - All 13 CLI integration tests pass
-    - Tests verify both human-readable and JSON output
-    - Tests verify identity enforcement on write ops
-    - Tests verify error handling
-  </done>
+  <verify>Manual browser inspection — all sections render, no console errors, responsive layout works</verify>
+  <done>Dashboard overview page visually verified with live data, responsive design confirmed</done>
 </task>
 
 ## Success Criteria
-- [ ] `npx vitest run tests/task.test.ts` — all 19 tests pass
-- [ ] `npx vitest run tests/task-cli.test.ts` — all 13 tests pass
-- [ ] `npx vitest run` — all existing + new tests pass (no regressions)
+- [ ] Agent list panel renders with avatars, type badges, relative dates
+- [ ] Activity feed shows recent tasks with status badges and priority dots
+- [ ] Overview page has 2-column layout (feed + agents) below stats
+- [ ] Empty states handled gracefully for all sections
+- [ ] Full dashboard builds and serves via `pm dashboard`
+- [ ] Responsive: mobile single-column, desktop two-column

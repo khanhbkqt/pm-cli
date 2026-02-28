@@ -1,116 +1,102 @@
 ---
-phase: 3
+phase: 3-dashboard
 plan: 1
 wave: 1
 ---
 
-# Plan 3.1: Task CRUD Core Logic + Formatters
+# Plan 3.1: React App Scaffolding & Build Integration
 
 ## Objective
-Implement the core task management logic (add, list, get, update, assign, comment) and corresponding output formatters. This is the data/logic layer — no CLI wiring yet.
+Scaffold a Vite + React + TypeScript frontend inside the CLI project, configure the build pipeline so `npm run build:dashboard` outputs to `dist/dashboard/`, and set up the API client layer with shared TypeScript types.
 
 ## Context
 - .gsd/SPEC.md
-- src/db/schema.ts — `tasks` and `task_comments` tables already exist
-- src/db/types.ts — `Task` and `TaskComment` interfaces already defined
-- src/core/agent.ts — Reference pattern for core logic (parameterized `db`, plain SQL, typed returns)
-- src/output/formatter.ts — Reference pattern for formatters (`formatTable`, JSON toggle)
+- .gsd/ROADMAP.md (Phase 3 deliverables)
+- src/server/app.ts (static serving from `dist/dashboard/`)
+- src/db/types.ts (Task, Agent, ContextEntry, TaskComment interfaces)
+- package.json (current scripts and deps)
+- tsup.config.ts (CLI build — separate from dashboard build)
 
 ## Tasks
 
 <task type="auto">
-  <name>Create core/task.ts — task CRUD functions</name>
-  <files>src/core/task.ts</files>
+  <name>Scaffold React app with Vite</name>
+  <files>
+    dashboard/package.json
+    dashboard/tsconfig.json
+    dashboard/vite.config.ts
+    dashboard/index.html
+    dashboard/src/main.tsx
+    dashboard/src/App.tsx
+    dashboard/src/vite-env.d.ts
+  </files>
   <action>
-    Create `src/core/task.ts` following the `core/agent.ts` pattern:
+    Create a `dashboard/` subdirectory at project root.
+    Initialize a minimal Vite + React + TypeScript project:
+    - `dashboard/package.json` with react, react-dom, typescript, @vitejs/plugin-react, vite
+    - `dashboard/vite.config.ts` with:
+      - `base: './'` (relative paths for static serving)
+      - `build.outDir: '../dist/dashboard'` (output alongside CLI dist)
+      - `build.emptyOutDir: true`
+      - `server.proxy: { '/api': 'http://localhost:4000' }` (dev proxy to Express)
+    - `dashboard/tsconfig.json` with strict mode, JSX react-jsx
+    - `dashboard/index.html` — entry point loading `/src/main.tsx`
+    - `dashboard/src/main.tsx` — ReactDOM.createRoot render
+    - `dashboard/src/App.tsx` — simple placeholder component
+    - `dashboard/src/vite-env.d.ts` — Vite type reference
 
-    1. `addTask(db, params: { title, description?, priority?, assigned_to?, parent_id?, created_by })` → Task
-       - `created_by` is the resolved agent ID (mandatory)
-       - Validate `created_by` agent exists in DB, throw if not
-       - If `assigned_to` provided, validate agent exists
-       - If `parent_id` provided, validate parent task exists
-       - INSERT into tasks, return the created row
-       - Default status='todo', priority='medium'
-
-    2. `listTasks(db, filters?: { status?, assigned_to?, parent_id? })` → Task[]
-       - Build WHERE clause dynamically from filters
-       - ORDER BY created_at DESC
-       - If no filters, return all tasks
-
-    3. `getTaskById(db, id: number)` → Task | undefined
-       - SELECT * FROM tasks WHERE id = ?
-
-    4. `updateTask(db, id: number, updates: { title?, description?, status?, priority?, assigned_to? })` → Task
-       - Validate task exists, throw if not
-       - If `assigned_to` provided, validate agent exists
-       - Build SET clause dynamically from non-undefined fields
-       - Always SET updated_at = CURRENT_TIMESTAMP
-       - Return updated row
-
-    5. `assignTask(db, id: number, agentName: string, assignedBy: string)` → Task
-       - Convenience wrapper: resolve agent by name, call updateTask
-       - Validate both agent (assignee) and assigner exist
-
-    6. `addComment(db, params: { task_id, agent_id, content })` → TaskComment
-       - Validate task exists
-       - Validate agent exists
-       - INSERT into task_comments, return created row
-
-    7. `getComments(db, taskId: number)` → TaskComment[]
-       - SELECT * FROM task_comments WHERE task_id = ? ORDER BY created_at ASC
-       - Validate task exists
-
-    **What to avoid and WHY:**
-    - Do NOT validate status transitions (DECISION-004: data integrity only)
-    - Do NOT add permission checks (out of scope per SPEC)
-    - Do NOT use an ORM (DECISION-008: plain SQL)
+    DO NOT install deps yet (that's in verify step).
+    DO NOT modify the root `package.json` scripts yet (next task).
   </action>
-  <verify>npx vitest run tests/task.test.ts</verify>
-  <done>
-    - All 7 functions exported from core/task.ts
-    - Functions accept db as first param (consistent with agent.ts pattern)
-    - Foreign key validations throw descriptive errors
-    - Dynamic WHERE/SET clause building works correctly
-  </done>
+  <verify>cd dashboard && npm install && npm run build && test -f ../dist/dashboard/index.html && echo "OK"</verify>
+  <done>dashboard/ folder exists with Vite config, React entry point, and build outputs to dist/dashboard/index.html</done>
 </task>
 
 <task type="auto">
-  <name>Add task & comment formatters to output/formatter.ts</name>
-  <files>src/output/formatter.ts</files>
+  <name>API client and shared types</name>
+  <files>
+    dashboard/src/api/client.ts
+    dashboard/src/api/types.ts
+    dashboard/src/api/index.ts
+    package.json (root — add build:dashboard script)
+    .gitignore (add dashboard/node_modules)
+  </files>
   <action>
-    Extend `src/output/formatter.ts` with task formatting functions:
+    1. Create `dashboard/src/api/types.ts` mirroring the DB types from `src/db/types.ts`:
+       - Task, Agent, ContextEntry, TaskComment interfaces
+       - StatusResponse type matching GET /api/status response shape:
+         ```ts
+         interface StatusResponse {
+           tasks: { total: number; by_status: Record<string, number>; by_priority: Record<string, number> };
+           agents: { total: number; by_type: Record<string, number> };
+           context: { total: number };
+           recent_tasks: Task[];
+         }
+         ```
 
-    1. `formatTask(task: Task, json: boolean)` → string
-       - JSON mode: JSON.stringify
-       - Human mode: Key-value display like formatAgent
-       - Show: ID, Title, Status, Priority, Assigned To (or "unassigned"), Created By, Parent (or "none"), Created, Updated
+    2. Create `dashboard/src/api/client.ts`:
+       - `fetchStatus(): Promise<StatusResponse>` — GET /api/status
+       - `fetchTasks(filters?): Promise<Task[]>` — GET /api/tasks
+       - `fetchAgents(): Promise<Agent[]>` — GET /api/agents
+       - `fetchContext(filters?): Promise<ContextEntry[]>` — GET /api/context
+       - Base `apiFetch(path)` helper wrapping `fetch()` with error handling
+       - All functions use relative URLs (`/api/...`) — works in both dev proxy and production
 
-    2. `formatTaskList(tasks: Task[], json: boolean)` → string
-       - JSON mode: JSON.stringify array
-       - Human mode: table using existing formatTable()
-       - Columns: ID, Title, Status, Priority, Assigned To
-       - Empty state: "No tasks found."
+    3. Create `dashboard/src/api/index.ts` — barrel export
 
-    3. `formatComment(comment: TaskComment, json: boolean)` → string
-       - JSON mode: JSON.stringify
-       - Human mode: `[timestamp] agent: content`
+    4. Add to root `package.json` scripts:
+       - `"build:dashboard": "cd dashboard && npm run build"`
+       - Update `"build"` to: `"tsup && cd dashboard && npm run build"`
 
-    4. `formatCommentList(comments: TaskComment[], json: boolean)` → string
-       - JSON mode: JSON.stringify array
-       - Human mode: sequential comment display
-       - Empty state: "No comments."
-
-    Import `Task` and `TaskComment` from `../db/types.js`.
+    5. Add `dashboard/node_modules` to root `.gitignore`
   </action>
-  <verify>npx tsx -e "import { formatTask, formatTaskList } from './src/output/formatter.js'; console.log('OK')"</verify>
-  <done>
-    - 4 new formatter functions exported
-    - Both JSON and human-readable modes work
-    - Consistent style with existing formatAgent/formatAgentList
-  </done>
+  <verify>cd dashboard && npx tsc --noEmit && echo "Types OK"</verify>
+  <done>API client module compiles, root build script includes dashboard, .gitignore updated</done>
 </task>
 
 ## Success Criteria
-- [ ] `core/task.ts` exports all 7 CRUD functions
-- [ ] `output/formatter.ts` exports 4 new task/comment formatters
-- [ ] All functions follow established patterns (db first param, typed returns, descriptive errors)
+- [ ] `dashboard/` directory created with Vite + React + TS setup
+- [ ] `npm run build` in `dashboard/` produces `dist/dashboard/index.html`
+- [ ] API client typed with StatusResponse, Task, Agent, ContextEntry
+- [ ] Root `package.json` has `build:dashboard` script
+- [ ] Dashboard code compiles without type errors

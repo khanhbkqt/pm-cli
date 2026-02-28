@@ -1,13 +1,21 @@
-# Plan 4.1 Summary: Context CRUD Core + Formatters
+---
+phase: 4-dashboard
+plan: 1
+status: complete
+---
 
-## Completed
-- Created `src/core/context.ts` with 4 exported functions:
-  - `setContext` — upsert with ON CONFLICT, agent validation, default category 'note'
-  - `getContext` — SELECT by key, returns undefined if not found
-  - `listContext` — SELECT all with optional category filter, ORDER BY key ASC
-  - `searchContext` — LIKE query on key and value columns
-- Added `formatContext` and `formatContextList` to `src/output/formatter.ts`
-- Both formatters support json=true and json=false modes
+# Plan 4.1 Summary: Routing & API Mutations
+
+## What Was Done
+- Installed `react-router-dom` in dashboard
+- Updated `App.tsx` with `BrowserRouter` and routes for `/` (Overview) and `/tasks` (TasksBoard)
+- Created `TasksBoard.tsx` placeholder page
+- Updated `Layout.tsx` sidebar with `NavLink` components for active route highlighting
+- Added dynamic page title using `useLocation()` hook
+- Extended `api/client.ts` with `apiPost` and `apiPut` helpers
+- Added mutation functions: `createTask`, `updateTask`, `assignTask`, `fetchTaskComments`, `addTaskComment`
+- Added input types to `api/types.ts`: `CreateTaskInput`, `UpdateTaskInput`, `AddCommentInput`
 
 ## Verification
-- `npx tsc --noEmit` — PASS
+- `npx tsc --noEmit` — ✅ no type errors
+- `npm run build` — ✅ builds successfully
