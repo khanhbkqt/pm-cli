@@ -27,9 +27,9 @@ Implement the context sharing core logic (`src/core/context.ts`) and output form
 
     1. `setContext(db, params: { key: string, value: string, category?: string, created_by: string }): ContextEntry`
        - Validate `created_by` agent exists (reuse the requireAgent pattern from task.ts or call getAgentById directly)
-       - Use INSERT OR REPLACE to support upsert (key is UNIQUE)
+       - Use `INSERT INTO context ... ON CONFLICT(key) DO UPDATE SET value=excluded.value, category=excluded.category, created_by=excluded.created_by, updated_at=CURRENT_TIMESTAMP` for upsert — this preserves the original `id` and `created_at` (do NOT use INSERT OR REPLACE, it destroys row identity)
        - Default category to 'note' if not provided
-       - Return the inserted/updated row
+       - Return the inserted/updated row by selecting WHERE key = ?
 
     2. `getContext(db, key: string): ContextEntry | undefined`
        - Simple SELECT by key
