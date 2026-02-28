@@ -1,10 +1,16 @@
 {
   "name": "@pm-cli/pm",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Project Management CLI for Humans & AI Agents",
   "type": "module",
   "bin": {
     "pm": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",
