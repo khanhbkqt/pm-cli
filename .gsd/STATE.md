@@ -1,5 +1,5 @@
 ---
-updated: 2026-02-28T21:05:00+07:00
+updated: 2026-02-28T21:07:00+07:00
 ---
 
 # Project State
@@ -20,7 +20,9 @@ Phase 7 executed successfully. 3 plans, 4 tasks completed across 2 waves.
 
 ## Next Steps
 
-1. Phase 6 (Polish & Integration) remains — or proceed to next milestone
+1. Phase 6 (Polish & Integration) remains — complete v1.1-dashboard
+2. v2.0-agent-workflow — Create agent instruction guides for `pm` CLI
+3. v2.1-multi-client — Install guides on Antigravity, Claude Code, Cursor, Codex, OpenCode
 
 ## Active Decisions
 

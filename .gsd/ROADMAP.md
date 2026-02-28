@@ -177,3 +177,87 @@ updated: 2026-02-28T19:20:00+07:00
 | 5 | ✅ | 3 | 3 |
 | 6 | ⬜ | — | — |
 | 7 | ✅ | 3 | 3 |
+
+---
+
+## Upcoming Milestones
+
+<details>
+<summary>🔜 v2.0-agent-workflow — Agent Workflow Guide</summary>
+
+### Goal
+
+Create comprehensive workflow guides and instruction documents that teach AI coding agents how to use `pm` CLI effectively — command reference, usage patterns, best practices, and integration examples.
+
+### Must-Haves
+
+- [ ] Agent instruction document — full `pm` CLI reference with `--json` output schemas
+- [ ] Workflow guide — step-by-step patterns (init → register → pick task → execute → comment → update status)
+- [ ] Agent onboarding flow — how a new agent bootstraps itself with `pm`
+- [ ] Error handling guide — common errors and how agents should recover
+- [ ] Multi-agent collaboration patterns — coordination via context sharing and task assignment
+- [ ] Template instructions file — canonical source that per-client adapters derive from
+
+### Nice-to-Haves
+
+- [ ] Example session transcripts (agent using `pm` end-to-end)
+- [ ] Quick-reference cheat sheet for agents
+- [ ] Context-aware prompts (suggest next `pm` command based on state)
+
+### Phases
+
+| Phase | Name | Objective |
+|-------|------|-----------|
+| 1 | Agent Instruction Doc | Full CLI reference with `--json` examples, output schemas, identity setup |
+| 2 | Workflow Patterns | Step-by-step usage patterns: task lifecycle, context sharing, collaboration |
+| 3 | Onboarding & Error Handling | Agent bootstrap flow, common error recovery, best practices |
+| 4 | Template & Verification | Canonical template file, E2E test that an agent can follow the guide |
+
+</details>
+
+---
+
+<details>
+<summary>🔜 v2.1-multi-client — Multi-Client Installation</summary>
+
+### Goal
+
+Make the agent workflow guide installable on multiple AI coding clients, translating the canonical instructions into each client's native configuration format.
+
+### Target Clients
+
+| Client | Config Format | Location |
+|--------|--------------|----------|
+| **Antigravity** | `.agent/workflows/*.md` + `.gemini/` | MD + YAML frontmatter |
+| **Claude Code** | `CLAUDE.md` (root) | Markdown with project rules |
+| **Cursor** | `.cursor/rules/*.mdc` | MD with YAML frontmatter + globs |
+| **Codex** | `AGENTS.md` (root) | Markdown with commands, style |
+| **OpenCode** | `AGENTS.md` + `opencode.json` | MD + JSON config |
+
+### Must-Haves
+
+- [ ] Per-client adapter that generates native config from the canonical template
+- [ ] `pm install <client>` CLI command to install config for a specific client
+- [ ] `pm install --all` to install for all detected clients
+- [ ] Client detection (identify which AI clients are present in a project)
+- [ ] `/install` workflow updated with client selection
+- [ ] Each generated config respects the client's rules (frontmatter, globs, file structure)
+
+### Nice-to-Haves
+
+- [ ] Auto-detect and suggest clients on `pm init`
+- [ ] Config sync (update client configs when canonical template changes)
+- [ ] Client-specific skill adapters
+- [ ] Uninstall / cleanup per client
+
+### Phases
+
+| Phase | Name | Objective |
+|-------|------|-----------|
+| 1 | Architecture & Detection | Client detection logic, adapter interface design |
+| 2 | Antigravity & Claude Code | Generate `.agent/` files and `CLAUDE.md` |
+| 3 | Cursor & Codex | Generate `.cursor/rules/*.mdc` and `AGENTS.md` |
+| 4 | OpenCode & CLI Command | Generate `opencode.json`, add `pm install <client>` command |
+| 5 | Install Workflow & Testing | Update `/install` workflow, E2E tests, documentation |
+
+</details>
