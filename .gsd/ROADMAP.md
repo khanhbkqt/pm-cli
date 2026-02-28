@@ -1,13 +1,13 @@
 ---
 milestone: (none active)
-version: 1.1.0
-updated: 2026-02-28T21:20:00+07:00
+version: 2.0.0
+updated: 2026-03-01T06:29:00+07:00
 ---
 
 # Roadmap
 
 > **Current Milestone**: None — ready for next milestone
-> **Last Completed**: v1.1-dashboard
+> **Last Completed**: v2.0-agent-workflow
 
 ## Previous Milestones
 
@@ -71,12 +71,8 @@ updated: 2026-02-28T21:20:00+07:00
 
 </details>
 
----
-
-## Upcoming Milestones
-
 <details>
-<summary>🔜 v2.0-agent-workflow — Agent Workflow Guide</summary>
+<summary>✅ v2.0-agent-workflow — Agent Workflow Guide (Complete)</summary>
 
 ### Goal
 
@@ -84,18 +80,12 @@ Create comprehensive workflow guides and instruction documents that teach AI cod
 
 ### Must-Haves
 
-- [ ] Agent instruction document — full `pm` CLI reference with `--json` output schemas
-- [ ] Workflow guide — step-by-step patterns (init → register → pick task → execute → comment → update status)
-- [ ] Agent onboarding flow — how a new agent bootstraps itself with `pm`
-- [ ] Error handling guide — common errors and how agents should recover
-- [ ] Multi-agent collaboration patterns — coordination via context sharing and task assignment
-- [ ] Template instructions file — canonical source that per-client adapters derive from
-
-### Nice-to-Haves
-
-- [ ] Example session transcripts (agent using `pm` end-to-end)
-- [ ] Quick-reference cheat sheet for agents
-- [ ] Context-aware prompts (suggest next `pm` command based on state)
+- [x] Agent instruction document — full `pm` CLI reference with `--json` output schemas
+- [x] Workflow guide — step-by-step patterns (init → register → pick task → execute → comment → update status)
+- [x] Agent onboarding flow — how a new agent bootstraps itself with `pm`
+- [x] Error handling guide — common errors and how agents should recover
+- [x] Multi-agent collaboration patterns — coordination via context sharing and task assignment
+- [x] Template instructions file — canonical source that per-client adapters derive from
 
 ### Phases
 
@@ -105,6 +95,8 @@ Create comprehensive workflow guides and instruction documents that teach AI cod
 | 2 | Workflow Patterns | ✅ Complete | 2 |
 | 3 | Onboarding & Error Handling | ✅ Complete | 1 |
 | 4 | Template & Verification | ✅ Complete | 2 |
+
+**Summary**: `.gsd/milestones/v2.0-agent-workflow/SUMMARY.md`
 
 </details>
 

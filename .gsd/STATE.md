@@ -1,29 +1,26 @@
 ---
-updated: 2026-03-01T06:30:00+07:00
+updated: 2026-03-01T06:29:00+07:00
 ---
 
 # Project State
 
 ## Current Position
 
-**Milestone:** v2.0-agent-workflow
-**Phase:** 4 (completed)
-**Task:** All tasks complete
-**Status:** Verified
+**Milestone:** v2.0-agent-workflow (COMPLETE)
+**Phase:** All 4 phases complete
+**Task:** Milestone finalized
+**Status:** Complete
 
 ## Last Session Summary
 
-Phase 4 executed successfully. 2 plans across 2 waves completed.
-- `docs/agent-guide/AGENT_INSTRUCTIONS.md` — 508-line canonical template, self-contained
-- `docs/agent-guide/README.md` — Index linking all 8 guide documents
-- `docs/agent-guide/tests/e2e-smoke-test.sh` — 15-step E2E smoke test, all steps pass
-
-All 4 phases of v2.0-agent-workflow milestone complete.
+Milestone v2.0-agent-workflow completed and archived.
+- 4 phases, 6 plans, 12 commits, 27 files, 3,965 lines added
+- All must-have deliverables verified
+- Summary: `.gsd/milestones/v2.0-agent-workflow/SUMMARY.md`
 
 ## Next Steps
 
-1. `/complete-milestone` → Mark v2.0-agent-workflow as complete
-2. `/plan` v2.1-multi-client → Plan per-client adapter milestone
+1. `/plan` v2.1-multi-client → Plan per-client adapter milestone
 
 ## Active Decisions
 
