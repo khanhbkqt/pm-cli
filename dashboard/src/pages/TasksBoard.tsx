@@ -5,6 +5,8 @@ import type { Task } from '../api/types';
 import { FilterBar } from '../components/FilterBar';
 import { KanbanBoard } from '../components/KanbanBoard';
 import { ListView } from '../components/ListView';
+import { TaskDetailPanel } from '../components/TaskDetailPanel';
+import { CreateTaskModal } from '../components/CreateTaskModal';
 import './TasksBoard.css';
 
 export function TasksBoard() {
@@ -14,9 +16,8 @@ export function TasksBoard() {
     const [agentFilter, setAgentFilter] = useState('all');
     const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
 
-    // Selected task for detail panel (Wave 3)
+    // CRUD state
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-    // Create modal toggle (Wave 3)
     const [showCreateModal, setShowCreateModal] = useState(false);
 
     // Data fetching
@@ -45,6 +46,15 @@ export function TasksBoard() {
 
     const handleTaskClick = (task: Task) => {
         setSelectedTask(task);
+    };
+
+    const handleTaskUpdate = () => {
+        setSelectedTask(null);
+        refetchTasks();
+    };
+
+    const handleTaskCreated = () => {
+        refetchTasks();
     };
 
     if (tasksLoading || agentsLoading) {
@@ -115,9 +125,22 @@ export function TasksBoard() {
                 <ListView tasks={filteredTasks} onTaskClick={handleTaskClick} />
             )}
 
-            {/* TaskDetailPanel and CreateTaskModal will be added in Wave 3 */}
-            {selectedTask && null}
-            {showCreateModal && null}
+            {selectedTask && (
+                <TaskDetailPanel
+                    task={selectedTask}
+                    agents={agents || []}
+                    onClose={() => setSelectedTask(null)}
+                    onUpdate={handleTaskUpdate}
+                />
+            )}
+
+            {showCreateModal && (
+                <CreateTaskModal
+                    agents={agents || []}
+                    onClose={() => setShowCreateModal(false)}
+                    onCreate={handleTaskCreated}
+                />
+            )}
         </div>
     );
 }
