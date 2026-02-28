@@ -58,7 +58,7 @@ updated: 2026-02-28T19:20:00+07:00
 ## Phases
 
 ### Phase 1: Web Server Foundation
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Objective:** Add Express HTTP server to `pm`, serve static files, create `pm dashboard` command to launch
 **Depends on:** v1.0-mvp
 
@@ -136,7 +136,7 @@ updated: 2026-02-28T19:20:00+07:00
 
 | Phase | Status | Plans | Complete |
 |-------|--------|-------|----------|
-| 1 | ⬜ | — | — |
+| 1 | ✅ | 3 | 3 |
 | 2 | ⬜ | — | — |
 | 3 | ⬜ | — | — |
 | 4 | ⬜ | — | — |
