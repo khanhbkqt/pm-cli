@@ -1,5 +1,5 @@
 ---
-updated: 2026-02-28T20:05:00+07:00
+updated: 2026-02-28T20:10:00+07:00
 ---
 
 # Project State
@@ -7,23 +7,20 @@ updated: 2026-02-28T20:05:00+07:00
 ## Current Position
 
 **Milestone:** v1.1-dashboard
-**Phase:** 3 — Dashboard UI — Projects Overview (completed)
-**Task:** All tasks complete
-**Status:** Verified
+**Phase:** 4 — Dashboard UI — Tasks Board (planned)
+**Task:** Planning complete
+**Status:** Ready for execution
 
 ## Last Session Summary
 
-Phase 3 executed successfully. 3 plans, 5 tasks completed across 2 waves.
-- Plan 3.1: React app scaffolding & API client (wave 1)
-- Plan 3.2: Design system, layout, stats cards (wave 2)
-- Plan 3.3: Agent list, activity feed, visual verification (wave 2)
-
-Also fixed: API client response unwrapping, Express 5 catch-all route.
+Phase 3 executed successfully. Phase 4 planned with 3 plans across 3 waves:
+- Plan 4.1: Routing & API mutations (wave 1)
+- Plan 4.2: Kanban board, task cards, filters, list view (wave 2)
+- Plan 4.3: Task CRUD UI, detail panel, create modal, visual verification (wave 3)
 
 ## Next Steps
 
-1. /plan 4-dashboard — create plans for Tasks Board UI
-2. /execute 4-dashboard — execute directly (if plans exist)
+1. /execute 4-dashboard — run all plans
 
 ## Active Decisions
 
@@ -34,6 +31,8 @@ Also fixed: API client response unwrapping, Express 5 catch-all route.
 | Frontend framework | React (Vite + TS) | 2026-02-28 | Phases 3-5 |
 | HTTP server | Express.js | 2026-02-28 | Phases 1-2 |
 | Dashboard scope | Read + Write (actions) | 2026-02-28 | Phases 2-4 |
+| Client-side routing | react-router-dom | 2026-02-28 | Phase 4+ |
+| Drag-and-drop | Native HTML5 DnD (no lib) | 2026-02-28 | Phase 4 |
 
 ## Blockers
 
