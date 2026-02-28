@@ -185,6 +185,8 @@ The web dashboard provides a local browser-based view of your project:
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup, code standards, and pull request guidelines.
 
+For a deep dive into the codebase structure, see [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
+
 ## License
 
 This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
