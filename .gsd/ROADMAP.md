@@ -1,12 +1,12 @@
 ---
-milestone: (none active)
+milestone: v2.1-multi-client
 version: 2.0.0
-updated: 2026-03-01T06:29:00+07:00
+updated: 2026-03-01T06:30:00+07:00
 ---
 
 # Roadmap
 
-> **Current Milestone**: None — ready for next milestone
+> **Current Milestone**: v2.1-multi-client — Multi-Client Installation
 > **Last Completed**: v2.0-agent-workflow
 
 ## Previous Milestones
@@ -102,8 +102,10 @@ Create comprehensive workflow guides and instruction documents that teach AI cod
 
 ---
 
-<details>
-<summary>🔜 v2.1-multi-client — Multi-Client Installation</summary>
+## Active Milestone
+
+<details open>
+<summary>🚧 v2.1-multi-client — Multi-Client Installation</summary>
 
 ### Goal
 
@@ -127,6 +129,7 @@ Make the agent workflow guide installable on multiple AI coding clients, transla
 - [ ] Client detection (identify which AI clients are present in a project)
 - [ ] `/install` workflow updated with client selection
 - [ ] Each generated config respects the client's rules (frontmatter, globs, file structure)
+- [ ] Integration tests for all adapters
 
 ### Nice-to-Haves
 
@@ -137,12 +140,12 @@ Make the agent workflow guide installable on multiple AI coding clients, transla
 
 ### Phases
 
-| Phase | Name | Objective |
-|-------|------|-----------|
-| 1 | Architecture & Detection | Client detection logic, adapter interface design |
-| 2 | Antigravity & Claude Code | Generate `.agent/` files and `CLAUDE.md` |
-| 3 | Cursor & Codex | Generate `.cursor/rules/*.mdc` and `AGENTS.md` |
-| 4 | OpenCode & CLI Command | Generate `opencode.json`, add `pm install <client>` command |
-| 5 | Install Workflow & Testing | Update `/install` workflow, E2E tests, documentation |
+| Phase | Name | Status | Plans |
+|-------|------|--------|-------|
+| 1 | Architecture & Detection | Not Started | 1 |
+| 2 | Antigravity & Claude Code | Not Started | 1 |
+| 3 | Cursor & Codex | Not Started | 1 |
+| 4 | OpenCode & CLI Command | Not Started | 1 |
+| 5 | Tests & Documentation | Not Started | 1 |
 
 </details>
