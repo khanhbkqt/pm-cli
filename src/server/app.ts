@@ -3,10 +3,11 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import type Database from 'better-sqlite3';
+import { createTaskRoutes, createAgentRoutes, createContextRoutes, createStatusRoutes } from './routes/index.js';
 
 /**
  * Create an Express app for the dashboard.
- * Accepts a database connection for future API routes (Phase 2).
+ * Accepts a database connection for API routes and static file serving.
  */
 export function createApp(db: Database.Database): express.Express {
     const app = express();
@@ -16,6 +17,12 @@ export function createApp(db: Database.Database): express.Express {
     app.get('/api/health', (_req, res) => {
         res.json({ status: 'ok' });
     });
+
+    // API routes
+    app.use(createTaskRoutes(db));
+    app.use(createAgentRoutes(db));
+    app.use(createContextRoutes(db));
+    app.use(createStatusRoutes(db));
 
     // Serve static dashboard files if the directory exists
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
