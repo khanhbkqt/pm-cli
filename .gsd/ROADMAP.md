@@ -1,15 +1,20 @@
 ---
-milestone: v1.0-mvp
-version: 1.0.0
-updated: 2026-02-28T19:06:00+07:00
+milestone: v1.1-dashboard
+version: 1.1.0
+updated: 2026-02-28T19:20:00+07:00
 ---
 
 # Roadmap
 
-> **Current Phase:** 5
-> **Status:** ✅ Complete
+> **Current Milestone**: v1.1-dashboard
+> **Goal**: Local browser-based dashboard for viewing projects, managing tasks, and monitoring agent activity
 
-## Must-Haves (from SPEC)
+## Previous Milestones
+
+<details>
+<summary>✅ v1.0-mvp — CLI Foundation (Complete)</summary>
+
+### Must-Haves (from SPEC)
 
 - [x] Project scaffolding (`pm init`)
 - [x] Task CRUD (add, list, show, update, assign, comment)
@@ -18,81 +23,112 @@ updated: 2026-02-28T19:06:00+07:00
 - [x] Agent identity on every command
 - [x] `--json` output support
 
+### Phases
+
+| Phase | Name | Status | Completed |
+|-------|------|--------|-----------|
+| 1 | Project Foundation | ✅ | 2026-02-28 |
+| 2 | Agent System | ✅ | 2026-02-28 |
+| 3 | Task Management | ✅ | 2026-02-28 |
+| 4 | Context & Polish | ✅ | 2026-02-28 |
+| 5 | Installation Script | ✅ | 2026-02-28 |
+
+</details>
+
+---
+
+## Must-Haves
+
+- [ ] `pm dashboard` command to launch local webview
+- [ ] Express HTTP server serving React frontend
+- [ ] Projects overview page (stats, agents, recent activity)
+- [ ] Tasks board UI (Kanban/list, filters, status columns)
+- [ ] CRUD actions from UI (create, update, assign tasks)
+- [ ] REST API layer reusing existing core logic
+
+## Nice-to-Haves
+
+- [ ] Agent activity timeline
+- [ ] Dark/light theme toggle
+- [ ] Task detail modal with comments
+- [ ] Live reload / auto-refresh
+
 ---
 
 ## Phases
 
-### Phase 1: Project Foundation
-**Status:** ✅ Complete
-**Objective:** Setup TypeScript project, SQLite schema, CLI framework, and `pm init` command
-**Requirements:** Project scaffolding, database schema, CLI infrastructure
+### Phase 1: Web Server Foundation
+**Status:** ⬜ Not Started
+**Objective:** Add Express HTTP server to `pm`, serve static files, create `pm dashboard` command to launch
+**Depends on:** v1.0-mvp
 
 **Deliverables:**
-- TypeScript project with build pipeline
-- SQLite database schema (agents, tasks, task_comments, context tables)
-- CLI framework (Commander.js)
-- `pm init` command creating `.pm/` directory with `data.db` + `config.yaml`
+- Express server integrated into the CLI codebase
+- `pm dashboard` command (opens browser, starts server on available port)
+- Static file serving for React build output
+- Graceful shutdown handling
 
 ---
 
-### Phase 2: Agent System
-**Status:** ✅ Complete
-**Objective:** Agent registration, identity enforcement, and management commands
+### Phase 2: API Layer
+**Status:** ⬜ Not Started
+**Objective:** REST endpoints exposing projects, tasks, agents, context data from SQLite
 **Depends on:** Phase 1
 
 **Deliverables:**
-- `pm agent register <name> --role <role> --type <human|ai>`
-- `pm agent list`
-- `pm agent show <name>`
-- `pm agent whoami`
-- Identity enforcement (`--agent` flag / `PM_AGENT` env var)
+- `GET/POST /api/tasks` — list & create tasks
+- `GET/PUT /api/tasks/:id` — show & update task
+- `POST /api/tasks/:id/assign` — assign agent
+- `POST /api/tasks/:id/comment` — add comment
+- `GET /api/agents` — list agents
+- `GET /api/context` — list context entries
+- `GET /api/status` — project overview stats
+- Error handling & JSON responses
 
 ---
 
-### Phase 3: Task Management
-**Status:** ✅ Complete
-**Objective:** Full task CRUD with assignment, comments, and subtasks
+### Phase 3: Dashboard UI — Projects Overview
+**Status:** ⬜ Not Started
+**Objective:** React frontend with project overview page showing stats, agents, and recent activity
 **Depends on:** Phase 2
 
 **Deliverables:**
-- `pm task add "title"` — tạo task mới
-- `pm task list` — filter by status, agent
-- `pm task show <id>` — chi tiết task
-- `pm task update <id> --status <status>` — cập nhật
-- `pm task assign <id> --agent <name>` — gán agent
-- `pm task comment <id> "note"` — thêm comment
-- Subtask support via `parent_id`
-- Output: human-readable default, `--json` flag
+- React app scaffolding (Vite + React + TypeScript)
+- Project overview dashboard page
+- Stats cards (total tasks, by status, by agent)
+- Agent list panel
+- Recent activity feed
+- Responsive layout with modern design
 
 ---
 
-### Phase 4: Context & Polish
-**Status:** ✅ Complete
-**Objective:** Context sharing system, scaffold command, and final polish
+### Phase 4: Dashboard UI — Tasks Board
+**Status:** ⬜ Not Started
+**Objective:** Kanban/list board with full task management capabilities
 **Depends on:** Phase 3
 
 **Deliverables:**
-- `pm context set <key> <value>` — lưu context
-- `pm context get <key>` — đọc context
-- `pm context list` — liệt kê
-- `pm context search <query>` — tìm kiếm
-- `pm scaffold <template>` — tạo structure
-- `pm status` — project overview dashboard
-- End-to-end testing
-- npm package preparation
+- Kanban board view with status columns (todo, in-progress, done, blocked)
+- List view alternative
+- Task creation form
+- Task detail panel (edit, assign, comment)
+- Filters by status, agent, priority
+- Drag-and-drop status updates (Kanban)
 
 ---
 
-### Phase 5: Installation Script
-**Status:** ✅ Complete
-**Objective:** Create local install/uninstall scripts so `pm` CLI can be used globally without npm publish
+### Phase 5: Polish & Integration
+**Status:** ⬜ Not Started
+**Objective:** Theme support, responsive design, error handling, testing, and documentation
 **Depends on:** Phase 4
 
 **Deliverables:**
-- `scripts/install.sh` — build + npm link for global `pm` command
-- `scripts/uninstall.sh` — npm unlink cleanup
-- `npm run install:local` / `npm run uninstall:local` convenience scripts
-- Verify `pm --version` works globally after install
+- Dark/light theme toggle
+- Responsive design (mobile-friendly)
+- Error handling & loading states
+- E2E testing
+- README documentation for dashboard feature
+- Production build integration with `pm dashboard`
 
 ---
 
@@ -100,20 +136,8 @@ updated: 2026-02-28T19:06:00+07:00
 
 | Phase | Status | Plans | Complete |
 |-------|--------|-------|----------|
-| 1 | ✅ | 3/3 | 2026-02-28 |
-| 2 | ✅ | 3/3 | 2026-02-28 |
-| 3 | ✅ | 3/3 | 2026-02-28 |
-| 4 | ✅ | 3/3 | 2026-02-28 |
-| 5 | ✅ | 2/2 | 2026-02-28 |
-
----
-
-## Timeline
-
-| Phase | Started | Completed | Duration |
-|-------|---------|-----------|----------|
-| 1 | 2026-02-28 | 2026-02-28 | ~10 min |
-| 2 | 2026-02-28 | 2026-02-28 | ~10 min |
-| 3 | 2026-02-28 | 2026-02-28 | ~10 min |
-| 4 | 2026-02-28 | 2026-02-28 | ~10 min |
-| 5 | 2026-02-28 | 2026-02-28 | ~10 min |
+| 1 | ⬜ | — | — |
+| 2 | ⬜ | — | — |
+| 3 | ⬜ | — | — |
+| 4 | ⬜ | — | — |
+| 5 | ⬜ | — | — |

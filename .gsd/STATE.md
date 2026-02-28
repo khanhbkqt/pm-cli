@@ -1,24 +1,25 @@
 ---
-updated: 2026-02-28T19:16:00+07:00
+updated: 2026-02-28T19:20:00+07:00
 ---
 
 # Project State
 
 ## Current Position
 
-**Milestone:** v1.0-mvp
-**Phase:** 5 (completed)
-**Task:** All tasks complete
-**Status:** Verified
+**Milestone:** v1.1-dashboard
+**Phase:** Not started
+**Task:** —
+**Status:** Milestone planned
 
 ## Last Session Summary
 
-Phase 5 executed successfully. 2 plans, 3 tasks completed.
-Install/uninstall scripts created and verified end-to-end.
+v1.0-mvp milestone completed (all 5 phases done).
+New milestone v1.1-dashboard created — local dashboard webview with React + Express.
 
 ## Next Steps
 
-All phases complete — milestone v1.0-mvp is done.
+- `/discuss-phase 1` or `/research-phase 1` — explore Web Server Foundation
+- `/plan 1` — create Phase 1 execution plans
 
 ## Active Decisions
 
@@ -26,8 +27,9 @@ All phases complete — milestone v1.0-mvp is done.
 |----------|--------|------|---------|
 | Tech stack | Node.js/TypeScript | 2026-02-28 | All phases |
 | Database | SQLite (WAL mode) | 2026-02-28 | All phases |
-| CLI-only, no server | Accepted | 2026-02-28 | Architecture |
-| Identity required | `--agent` flag / `PM_AGENT` env | 2026-02-28 | All commands |
+| Frontend framework | React (Vite + TS) | 2026-02-28 | Phases 3-5 |
+| HTTP server | Express.js | 2026-02-28 | Phases 1-2 |
+| Dashboard scope | Read + Write (actions) | 2026-02-28 | Phases 2-4 |
 
 ## Blockers
 
@@ -36,6 +38,7 @@ None
 ## Concerns
 
 - CLI name `pm` may conflict with other tools — verify before publishing
+- Dashboard bundle size should be kept reasonable for local-only tool
 
 ## Session Context
 
