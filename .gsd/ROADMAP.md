@@ -6,7 +6,7 @@ updated: 2026-02-28T18:12:00+07:00
 
 # Roadmap
 
-> **Current Phase:** 2 - Agent System
+> **Current Phase:** 3 - Task Management
 > **Status:** not started — next up
 
 ## Must-Haves (from SPEC)
@@ -36,7 +36,7 @@ updated: 2026-02-28T18:12:00+07:00
 ---
 
 ### Phase 2: Agent System
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Objective:** Agent registration, identity enforcement, and management commands
 **Depends on:** Phase 1
 
@@ -88,7 +88,7 @@ updated: 2026-02-28T18:12:00+07:00
 | Phase | Status | Plans | Complete |
 |-------|--------|-------|----------|
 | 1 | ✅ | 3/3 | 2026-02-28 |
-| 2 | 📋 Planned | 3/3 | — |
+| 2 | ✅ | 3/3 | 2026-02-28 |
 | 3 | ⬜ | 0/0 | — |
 | 4 | ⬜ | 0/0 | — |
 
@@ -99,6 +99,6 @@ updated: 2026-02-28T18:12:00+07:00
 | Phase | Started | Completed | Duration |
 |-------|---------|-----------|----------|
 | 1 | 2026-02-28 | 2026-02-28 | ~10 min |
-| 2 | — | — | — |
+| 2 | 2026-02-28 | 2026-02-28 | ~10 min |
 | 3 | — | — | — |
 | 4 | — | — | — |
