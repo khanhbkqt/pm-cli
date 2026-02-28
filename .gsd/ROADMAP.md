@@ -147,6 +147,25 @@ updated: 2026-02-28T19:20:00+07:00
 
 ---
 
+### Phase 7: Open-Source README & Guide
+**Status:** ⬜ Not Started
+**Objective:** Create a polished open-source README, contributor guide, and documentation for public release
+**Depends on:** Phase 6
+
+**Deliverables:**
+- Professional README.md (badges, features, screenshots, install instructions)
+- CONTRIBUTING.md (setup, code standards, PR workflow)
+- LICENSE file selection and addition
+- Architecture overview for contributors
+- Usage examples and quick-start guide
+
+**Verification:**
+- README renders correctly on GitHub
+- All links and badges resolve
+- Installation steps work from scratch
+
+---
+
 ## Progress Summary
 
 | Phase | Status | Plans | Complete |
@@ -157,3 +176,4 @@ updated: 2026-02-28T19:20:00+07:00
 | 4 | ✅ | 3 | 3 |
 | 5 | ✅ | 3 | 3 |
 | 6 | ⬜ | — | — |
+| 7 | ⬜ | — | — |

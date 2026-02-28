@@ -21,6 +21,7 @@ Phase 5 executed successfully. 3 plans, 7 tasks completed.
 ## Next Steps
 
 1. /execute 6 — execute Polish & Integration (Phase 6)
+2. /plan 7 — plan Open-Source README & Guide (Phase 7)
 
 ## Active Decisions
 
