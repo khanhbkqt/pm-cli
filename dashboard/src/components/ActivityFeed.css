@@ -1,0 +1,118 @@
+/* ─── Activity Panel ───────────────────────────────── */
+.activity-panel {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.activity-feed {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ─── Activity Item ────────────────────────────────── */
+.activity-item {
+    display: flex;
+    gap: 14px;
+    padding: 8px 0;
+}
+
+.activity-item__timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 12px;
+    padding-top: 6px;
+}
+
+.activity-item__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.activity-item__line {
+    width: 2px;
+    flex: 1;
+    background: var(--border-color);
+    margin-top: 4px;
+    border-radius: 1px;
+    min-height: 20px;
+}
+
+.activity-item:last-child .activity-item__line {
+    display: none;
+}
+
+.activity-item__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.activity-item__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.activity-item__priority {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.activity-item__title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.activity-item__footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.activity-item__status {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: capitalize;
+}
+
+.activity-item__time {
+    font-size: 11px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin-left: auto;
+}
+
+/* ─── Empty State ──────────────────────────────────── */
+.activity__empty {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--text-secondary);
+}
+
+.activity__empty-icon {
+    font-size: 28px;
+    display: block;
+    margin-bottom: 8px;
+    opacity: 0.5;
+}
+
+.activity__empty p {
+    font-size: 13px;
+}
