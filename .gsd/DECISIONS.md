@@ -114,4 +114,78 @@ Mọi thao tác cần biết ai thực hiện. Core requirement cho collaboratio
 
 ---
 
+## Phase 1 Decisions
+
+**Date:** 2026-02-28
+
+### [DECISION-006] CLI Framework — Commander.js
+
+**Status**: Accepted
+
+**Decision:** Use Commander.js as the CLI framework.
+
+**Rationale:** Most mature, simplest API, excellent docs, perfect for MVP. Alternatives (oclif, yargs, citty) are either too heavy or too young.
+
+---
+
+### [DECISION-007] Project Structure — Domain-Layered
+
+**Status**: Accepted
+
+**Decision:** Use domain-layered structure: `cli/`, `core/`, `db/`, `output/`.
+
+**Rationale:** Small upfront cost vs flat structure, but pays off immediately as Phase 2–4 add commands. Keeps command parsing separated from domain logic.
+
+---
+
+### [DECISION-008] SQLite Driver — better-sqlite3 + Plain SQL
+
+**Status**: Accepted
+
+**Decision:** Use `better-sqlite3` with hand-written SQL. No ORM.
+
+**Rationale:** Schema is small (4 tables) and fixed for MVP. ORM (drizzle) adds type safety but also complexity, dependencies, and migration tooling overhead that isn't justified.
+
+---
+
+### [DECISION-009] Build Pipeline — tsup + tsx
+
+**Status**: Accepted
+
+**Decision:** `tsup` for production builds, `tsx` for development.
+
+**Rationale:** `tsup` (esbuild-based) is fast and bundles to a single file for npm distribution. `tsx` provides instant dev feedback with watch mode.
+
+---
+
+### [DECISION-010] CLI Name — Keep `pm`
+
+**Status**: Accepted (provisional)
+
+**Decision:** Keep `pm` as CLI name. Revisit before npm publish.
+
+**Rationale:** Short and clean. Potential conflict with `pm2` is low-risk for local use. Can rename before publishing if needed.
+
+---
+
+### [DECISION-011] Testing — vitest
+
+**Status**: Accepted
+
+**Decision:** Use `vitest` with integration tests for `pm init`.
+
+**Rationale:** Fast, ESM-native, great TypeScript support. Integration tests for `pm init` verify the critical bootstrapping flow (directory creation, DB schema, config file).
+
+---
+
+### [DECISION-012] Schema Scope — All Tables Upfront
+
+**Status**: Accepted
+
+**Decision:** `pm init` creates all 4 tables (agents, tasks, task_comments, context) immediately.
+
+**Rationale:** Schema is already fully designed. No reason to defer table creation per phase — it simplifies the migration story and avoids "add table" steps in later phases.
+
+---
+
 *Last updated: 2026-02-28*

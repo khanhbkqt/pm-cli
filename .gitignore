@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# PM CLI data directory
+.pm/
+
+# OS files
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
+*.swo

@@ -1,0 +1,35 @@
+{
+  "name": "@pm-cli/pm",
+  "version": "0.1.0",
+  "description": "Project Management CLI for Humans & AI Agents",
+  "type": "module",
+  "bin": {
+    "pm": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "cli",
+    "project-management",
+    "ai-agents"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.3.2",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.6.2",
+    "commander": "^14.0.3",
+    "yaml": "^2.8.2"
+  }
+}
