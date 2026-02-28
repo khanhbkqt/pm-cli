@@ -1,13 +1,13 @@
 ---
 milestone: v1.0-mvp
 version: 1.0.0
-updated: 2026-02-28T18:55:00+07:00
+updated: 2026-02-28T19:06:00+07:00
 ---
 
 # Roadmap
 
-> **Current Phase:** All Complete
-> **Status:** ✅ Milestone v1.0-mvp complete
+> **Current Phase:** 5
+> **Status:** 🔵 In Progress
 
 ## Must-Haves (from SPEC)
 
@@ -83,6 +83,19 @@ updated: 2026-02-28T18:55:00+07:00
 
 ---
 
+### Phase 5: Installation Script
+**Status:** ⬜ Not Started
+**Objective:** Create local install/uninstall scripts so `pm` CLI can be used globally without npm publish
+**Depends on:** Phase 4
+
+**Deliverables:**
+- `scripts/install.sh` — build + npm link for global `pm` command
+- `scripts/uninstall.sh` — npm unlink cleanup
+- `npm run install:local` / `npm run uninstall:local` convenience scripts
+- Verify `pm --version` works globally after install
+
+---
+
 ## Progress Summary
 
 | Phase | Status | Plans | Complete |
@@ -91,6 +104,7 @@ updated: 2026-02-28T18:55:00+07:00
 | 2 | ✅ | 3/3 | 2026-02-28 |
 | 3 | ✅ | 3/3 | 2026-02-28 |
 | 4 | ✅ | 3/3 | 2026-02-28 |
+| 5 | ⬜ | 0/0 | — |
 
 ---
 
@@ -102,3 +116,4 @@ updated: 2026-02-28T18:55:00+07:00
 | 2 | 2026-02-28 | 2026-02-28 | ~10 min |
 | 3 | 2026-02-28 | 2026-02-28 | ~10 min |
 | 4 | 2026-02-28 | 2026-02-28 | ~10 min |
+| 5 | — | — | — |

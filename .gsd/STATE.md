@@ -1,5 +1,5 @@
 ---
-updated: 2026-02-28T18:55:00+07:00
+updated: 2026-02-28T19:06:00+07:00
 ---
 
 # Project State
@@ -7,20 +7,18 @@ updated: 2026-02-28T18:55:00+07:00
 ## Current Position
 
 **Milestone:** v1.0-mvp
-**Phase:** 4 (completed)
-**Task:** All tasks complete
-**Status:** Verified
+**Phase:** 5 (added)
+**Task:** Installation Script
+**Status:** Not Started
 
 ## Last Session Summary
 
-Phase 4 executed successfully. 3 plans, 6 tasks completed.
-All context commands implemented and tested (23 tests).
-Status dashboard and npm package polished to v1.0.0.
+Phase 5 added to roadmap — local install/uninstall scripts.
 
 ## Next Steps
 
-1. Milestone v1.0-mvp complete 🎉
-2. `npm publish` when ready
+1. `/plan 5` — Create execution plans for Phase 5
+2. `/execute 5` — Build the install scripts
 
 ## Active Decisions
 
