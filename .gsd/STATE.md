@@ -1,5 +1,5 @@
 ---
-updated: 2026-03-01T06:25:00+07:00
+updated: 2026-03-01T06:30:00+07:00
 ---
 
 # Project State
@@ -7,19 +7,23 @@ updated: 2026-03-01T06:25:00+07:00
 ## Current Position
 
 **Milestone:** v2.0-agent-workflow
-**Phase:** 3 (completed)
+**Phase:** 4 (completed)
 **Task:** All tasks complete
 **Status:** Verified
 
 ## Last Session Summary
 
-Phase 3 executed successfully. 1 plan, 2 tasks completed.
-- `docs/agent-guide/onboarding.md` — 232 lines, 6-step onboarding flow with quick-start script
-- `docs/agent-guide/error-handling.md` — 236 lines, 10+ real error messages, recovery strategies, defensive patterns
+Phase 4 executed successfully. 2 plans across 2 waves completed.
+- `docs/agent-guide/AGENT_INSTRUCTIONS.md` — 508-line canonical template, self-contained
+- `docs/agent-guide/README.md` — Index linking all 8 guide documents
+- `docs/agent-guide/tests/e2e-smoke-test.sh` — 15-step E2E smoke test, all steps pass
+
+All 4 phases of v2.0-agent-workflow milestone complete.
 
 ## Next Steps
 
-1. `/execute 4` → Create template instructions and final verification
+1. `/complete-milestone` → Mark v2.0-agent-workflow as complete
+2. `/plan` v2.1-multi-client → Plan per-client adapter milestone
 
 ## Active Decisions
 
