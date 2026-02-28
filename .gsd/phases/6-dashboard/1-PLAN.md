@@ -4,7 +4,7 @@ plan: 1
 wave: 1
 ---
 
-# Plan 5.1: Theme Toggle & Responsive Design
+# Plan 6.1: Theme Toggle & Responsive Design
 
 ## Objective
 Add dark/light theme support with a toggle button in the sidebar, and make the dashboard fully responsive for mobile/tablet screens. Currently the dashboard is dark-only with no media queries.

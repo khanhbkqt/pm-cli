@@ -4,7 +4,7 @@ plan: 3
 wave: 2
 ---
 
-# Plan 5.3: Build Integration, Documentation & Verification
+# Plan 6.3: Build Integration, Documentation & Verification
 
 ## Objective
 Wire up the production build pipeline so `pm dashboard` serves the built React app, add README documentation for the dashboard feature, and visually verify the complete polished dashboard.

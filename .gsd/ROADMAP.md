@@ -117,10 +117,25 @@ updated: 2026-02-28T19:20:00+07:00
 
 ---
 
-### Phase 5: Polish & Integration
+### Phase 5: Dashboard UI — Agents & Context Screens
+**Status:** ⬜ Not Started
+**Objective:** Add dedicated dashboard screens for viewing agents and context entries
+**Depends on:** Phase 4
+
+**Deliverables:**
+- Agents page — list all registered agents with details (name, role, status)
+- Agent detail view — show agent info, assigned tasks, activity
+- Context page — list all shared context entries
+- Context detail view — show full context value, metadata
+- Search & filter capabilities for both screens
+- Navigation updates (sidebar links to Agents & Context pages)
+
+---
+
+### Phase 6: Polish & Integration
 **Status:** ⬜ Not Started
 **Objective:** Theme support, responsive design, error handling, testing, and documentation
-**Depends on:** Phase 4
+**Depends on:** Phase 5
 
 **Deliverables:**
 - Dark/light theme toggle
@@ -141,3 +156,4 @@ updated: 2026-02-28T19:20:00+07:00
 | 3 | ✅ | 3 | 3 |
 | 4 | ✅ | 3 | 3 |
 | 5 | ⬜ | — | — |
+| 6 | ⬜ | — | — |

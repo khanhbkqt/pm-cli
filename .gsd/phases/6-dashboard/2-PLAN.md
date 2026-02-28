@@ -4,7 +4,7 @@ plan: 2
 wave: 1
 ---
 
-# Plan 5.2: Error Handling & Loading States
+# Plan 6.2: Error Handling & Loading States
 
 ## Objective
 Add a React error boundary, proper loading skeletons, inline error messages with retry, and empty-state illustrations so the dashboard handles all failure modes gracefully.

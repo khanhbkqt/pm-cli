@@ -7,20 +7,21 @@ updated: 2026-02-28T20:31:00+07:00
 ## Current Position
 
 **Milestone:** v1.1-dashboard
-**Phase:** 5 — Polish & Integration (planned)
-**Task:** Planning complete
-**Status:** Ready for execution
+**Phase:** 5 — Dashboard UI: Agents & Context Screens (not started)
+**Task:** Needs planning
+**Status:** Ready for research/planning
 
 ## Last Session Summary
 
-Phase 5 planned with 3 plans across 2 waves:
-- Plan 5.1: Theme toggle (dark/light) & responsive design (wave 1)
-- Plan 5.2: Error boundary, loading spinners, error messages, empty states (wave 1)
-- Plan 5.3: Production build pipeline, README docs, visual verification (wave 2)
+New Phase 5 (Agents & Context Screens) inserted before old Phase 5.
+Old Phase 5 (Polish & Integration) renumbered to Phase 6 with existing plans (6.1–6.3).
 
 ## Next Steps
 
-1. /execute 5-dashboard — execute all plans
+1. /research-phase 5 — research new phase
+2. /plan 5 — create plans for Agents & Context screens
+3. /execute 5 — execute the phase
+4. /execute 6 — execute Polish & Integration (formerly Phase 5)
 
 ## Active Decisions
 
