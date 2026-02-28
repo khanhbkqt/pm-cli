@@ -7,7 +7,7 @@ updated: 2026-02-28T19:06:00+07:00
 # Roadmap
 
 > **Current Phase:** 5
-> **Status:** 🔵 In Progress
+> **Status:** ✅ Complete
 
 ## Must-Haves (from SPEC)
 
@@ -84,7 +84,7 @@ updated: 2026-02-28T19:06:00+07:00
 ---
 
 ### Phase 5: Installation Script
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Objective:** Create local install/uninstall scripts so `pm` CLI can be used globally without npm publish
 **Depends on:** Phase 4
 
@@ -104,7 +104,7 @@ updated: 2026-02-28T19:06:00+07:00
 | 2 | ✅ | 3/3 | 2026-02-28 |
 | 3 | ✅ | 3/3 | 2026-02-28 |
 | 4 | ✅ | 3/3 | 2026-02-28 |
-| 5 | 🔵 | 0/2 | — |
+| 5 | ✅ | 2/2 | 2026-02-28 |
 
 ---
 
@@ -116,4 +116,4 @@ updated: 2026-02-28T19:06:00+07:00
 | 2 | 2026-02-28 | 2026-02-28 | ~10 min |
 | 3 | 2026-02-28 | 2026-02-28 | ~10 min |
 | 4 | 2026-02-28 | 2026-02-28 | ~10 min |
-| 5 | — | — | — |
+| 5 | 2026-02-28 | 2026-02-28 | ~10 min |
