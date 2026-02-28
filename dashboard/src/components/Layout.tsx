@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
 import './Layout.css';
 
 interface LayoutProps {
@@ -15,6 +16,7 @@ const pageTitles: Record<string, string> = {
 
 export function Layout({ children }: LayoutProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { theme, toggleTheme } = useTheme();
     const location = useLocation();
     const pageTitle = pageTitles[location.pathname] || 'PM Dashboard';
 
@@ -78,6 +80,15 @@ export function Layout({ children }: LayoutProps) {
                     </NavLink>
                 </nav>
                 <div className="sidebar__footer">
+                    <button
+                        className="sidebar__theme-toggle"
+                        onClick={toggleTheme}
+                        aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                        title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                    >
+                        {theme === 'dark' ? '☀️' : '🌙'}
+                        <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
+                    </button>
                     <span className="sidebar__version">v1.1.0</span>
                 </div>
             </aside>

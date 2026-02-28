@@ -7,6 +7,9 @@ import { KanbanBoard } from '../components/KanbanBoard';
 import { ListView } from '../components/ListView';
 import { TaskDetailPanel } from '../components/TaskDetailPanel';
 import { CreateTaskModal } from '../components/CreateTaskModal';
+import { LoadingSpinner } from '../components/LoadingSpinner';
+import { ErrorMessage } from '../components/ErrorMessage';
+import { EmptyState } from '../components/EmptyState';
 import './TasksBoard.css';
 
 export function TasksBoard() {
@@ -60,15 +63,7 @@ export function TasksBoard() {
     if (tasksLoading || agentsLoading) {
         return (
             <div className="tasks-board">
-                <div className="tasks-board__loading">
-                    <div className="skeleton tasks-board__skeleton-bar" />
-                    <div className="tasks-board__skeleton-cols">
-                        <div className="skeleton tasks-board__skeleton-col" />
-                        <div className="skeleton tasks-board__skeleton-col" />
-                        <div className="skeleton tasks-board__skeleton-col" />
-                        <div className="skeleton tasks-board__skeleton-col" />
-                    </div>
-                </div>
+                <LoadingSpinner message="Loading tasks..." />
             </div>
         );
     }
@@ -76,13 +71,7 @@ export function TasksBoard() {
     if (tasksError) {
         return (
             <div className="tasks-board">
-                <div className="tasks-board__error">
-                    <p>⚠ Failed to load tasks</p>
-                    <p className="tasks-board__error-detail">{tasksError}</p>
-                    <button className="tasks-board__retry" onClick={refetchTasks}>
-                        Retry
-                    </button>
-                </div>
+                <ErrorMessage message={tasksError} onRetry={refetchTasks} />
             </div>
         );
     }
@@ -103,14 +92,17 @@ export function TasksBoard() {
             />
 
             {filteredTasks.length === 0 && (
-                <div className="tasks-board__empty">
-                    <p>No tasks found</p>
-                    <p className="tasks-board__empty-hint">
-                        {tasks?.length === 0
-                            ? 'Create your first task to get started.'
-                            : 'Try adjusting the filters.'}
-                    </p>
-                </div>
+                <EmptyState
+                    icon="📋"
+                    title="No tasks found"
+                    description={tasks?.length === 0
+                        ? 'Create your first task to get started.'
+                        : 'Try adjusting the filters.'}
+                    action={tasks?.length === 0 ? {
+                        label: 'Create Task',
+                        onClick: () => setShowCreateModal(true),
+                    } : undefined}
+                />
             )}
 
             {filteredTasks.length > 0 && viewMode === 'kanban' && (

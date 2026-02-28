@@ -1,0 +1,67 @@
+/* ─── Error Message ────────────────────────────────── */
+.error-message {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    background: rgba(239, 83, 80, 0.08);
+    border: 1px solid rgba(239, 83, 80, 0.25);
+    border-radius: var(--radius);
+}
+
+.error-message__content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.error-message__icon {
+    font-size: 18px;
+    color: var(--accent-red);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.error-message__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.error-message__detail {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.error-message__retry {
+    background: transparent;
+    border: 1px solid var(--accent-red);
+    border-radius: var(--radius-sm);
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-red);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.error-message__retry:hover {
+    background: rgba(239, 83, 80, 0.12);
+}
+
+@media (max-width: 480px) {
+    .error-message {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .error-message__retry {
+        align-self: flex-end;
+    }
+}

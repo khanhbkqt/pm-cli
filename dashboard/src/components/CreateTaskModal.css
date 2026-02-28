@@ -178,7 +178,7 @@
     padding: 10px 24px;
     font-size: 13px;
     font-weight: 600;
-    color: #0f0f23;
+    color: var(--btn-active-text);
     cursor: pointer;
     transition: all 0.15s ease;
     font-family: inherit;
@@ -202,5 +202,18 @@
     to {
         opacity: 1;
         transform: translate(-50%, -50%);
+    }
+}
+
+/* ─── Responsive ──────────────────────────────────── */
+@media (max-width: 480px) {
+    .create-modal {
+        width: calc(100vw - 24px);
+        max-height: calc(100vh - 40px);
+    }
+
+    .create-modal__row {
+        flex-direction: column;
+        gap: 18px;
     }
 }

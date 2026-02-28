@@ -148,7 +148,7 @@
     padding: 10px 20px;
     font-size: 14px;
     font-weight: 600;
-    color: #0f0f23;
+    color: var(--btn-active-text);
     cursor: pointer;
     transition: all 0.15s ease;
     font-family: inherit;
@@ -240,7 +240,7 @@
     border-radius: var(--radius-sm);
     padding: 8px 14px;
     font-size: 16px;
-    color: #0f0f23;
+    color: var(--btn-active-text);
     cursor: pointer;
     transition: all 0.15s ease;
     flex-shrink: 0;
