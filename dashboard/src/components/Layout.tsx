@@ -1,12 +1,20 @@
 import { useState, type ReactNode } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import './Layout.css';
 
 interface LayoutProps {
     children: ReactNode;
 }
 
+const pageTitles: Record<string, string> = {
+    '/': 'Project Overview',
+    '/tasks': 'Tasks Board',
+};
+
 export function Layout({ children }: LayoutProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const location = useLocation();
+    const pageTitle = pageTitles[location.pathname] || 'PM Dashboard';
 
     return (
         <div className="layout">
@@ -25,14 +33,27 @@ export function Layout({ children }: LayoutProps) {
                     </button>
                 </div>
                 <nav className="sidebar__nav">
-                    <a href="#" className="sidebar__link sidebar__link--active">
+                    <NavLink
+                        to="/"
+                        end
+                        className={({ isActive }) =>
+                            `sidebar__link${isActive ? ' sidebar__link--active' : ''}`
+                        }
+                        onClick={() => setSidebarOpen(false)}
+                    >
                         <span className="sidebar__link-icon">📊</span>
                         Overview
-                    </a>
-                    <a href="#" className="sidebar__link sidebar__link--disabled">
+                    </NavLink>
+                    <NavLink
+                        to="/tasks"
+                        className={({ isActive }) =>
+                            `sidebar__link${isActive ? ' sidebar__link--active' : ''}`
+                        }
+                        onClick={() => setSidebarOpen(false)}
+                    >
                         <span className="sidebar__link-icon">📋</span>
                         Tasks
-                    </a>
+                    </NavLink>
                     <a href="#" className="sidebar__link sidebar__link--disabled">
                         <span className="sidebar__link-icon">👥</span>
                         Agents
@@ -58,7 +79,7 @@ export function Layout({ children }: LayoutProps) {
                     >
                         ☰
                     </button>
-                    <h1 className="main__title">Project Overview</h1>
+                    <h1 className="main__title">{pageTitle}</h1>
                 </header>
                 <div className="main__content">
                     {children}

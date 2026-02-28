@@ -56,3 +56,25 @@ export interface StatusResponse {
     };
     recent_tasks: Task[];
 }
+
+/* ─── Mutation input types ─────────────────────────── */
+
+export interface CreateTaskInput {
+    title: string;
+    description?: string;
+    priority?: string;
+    assigned_to?: string;
+    created_by: string;
+}
+
+export interface UpdateTaskInput {
+    title?: string;
+    description?: string;
+    status?: string;
+    priority?: string;
+}
+
+export interface AddCommentInput {
+    agent_id: string;
+    content: string;
+}
