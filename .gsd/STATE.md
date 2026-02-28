@@ -1,5 +1,5 @@
 ---
-updated: 2026-02-28T19:06:00+07:00
+updated: 2026-02-28T19:09:00+07:00
 ---
 
 # Project State
@@ -7,18 +7,17 @@ updated: 2026-02-28T19:06:00+07:00
 ## Current Position
 
 **Milestone:** v1.0-mvp
-**Phase:** 5 (added)
-**Task:** Installation Script
-**Status:** Not Started
+**Phase:** 5
+**Task:** Planning complete
+**Status:** Ready for execution
 
 ## Last Session Summary
 
-Phase 5 added to roadmap — local install/uninstall scripts.
+Phase 5 planned — 2 plans across 2 waves for install/uninstall scripts.
 
 ## Next Steps
 
-1. `/plan 5` — Create execution plans for Phase 5
-2. `/execute 5` — Build the install scripts
+1. `/execute 5` — Build the install scripts
 
 ## Active Decisions
 
