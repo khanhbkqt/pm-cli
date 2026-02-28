@@ -99,12 +99,12 @@ Create comprehensive workflow guides and instruction documents that teach AI cod
 
 ### Phases
 
-| Phase | Name | Objective |
-|-------|------|-----------|
-| 1 | Agent Instruction Doc | Full CLI reference with `--json` examples, output schemas, identity setup |
-| 2 | Workflow Patterns | Step-by-step usage patterns: task lifecycle, context sharing, collaboration |
-| 3 | Onboarding & Error Handling | Agent bootstrap flow, common error recovery, best practices |
-| 4 | Template & Verification | Canonical template file, E2E test that an agent can follow the guide |
+| Phase | Name | Status | Plans |
+|-------|------|--------|-------|
+| 1 | Agent Instruction Doc | 📋 Planned | 1 |
+| 2 | Workflow Patterns | 📋 Planned | 2 |
+| 3 | Onboarding & Error Handling | 📋 Planned | 1 |
+| 4 | Template & Verification | 📋 Planned | 2 |
 
 </details>
 
