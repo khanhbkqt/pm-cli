@@ -1,4 +1,4 @@
-import type { Agent } from '../db/types.js';
+import type { Agent, Task, TaskComment } from '../db/types.js';
 
 /**
  * Format a simple ASCII table from headers and rows.
@@ -64,3 +64,76 @@ export function formatAgentList(agents: Agent[], json: boolean): string {
 
     return formatTable(headers, rows);
 }
+
+/**
+ * Format a single task for display.
+ */
+export function formatTask(task: Task, json: boolean): string {
+    if (json) {
+        return JSON.stringify(task, null, 2);
+    }
+
+    return [
+        `ID:       #${task.id}`,
+        `Title:    ${task.title}`,
+        `Status:   ${task.status}`,
+        `Priority: ${task.priority}`,
+        `Assigned: ${task.assigned_to || 'unassigned'}`,
+        `Creator:  ${task.created_by}`,
+        `Parent:   ${task.parent_id ?? 'none'}`,
+        task.description ? `Desc:     ${task.description}` : null,
+        `Created:  ${task.created_at}`,
+        `Updated:  ${task.updated_at}`,
+    ].filter(Boolean).join('\n');
+}
+
+/**
+ * Format a list of tasks for display.
+ */
+export function formatTaskList(tasks: Task[], json: boolean): string {
+    if (json) {
+        return JSON.stringify(tasks, null, 2);
+    }
+
+    if (tasks.length === 0) {
+        return 'No tasks found.';
+    }
+
+    const headers = ['ID', 'Title', 'Status', 'Priority', 'Assigned'];
+    const rows = tasks.map(t => [
+        String(t.id),
+        t.title,
+        t.status,
+        t.priority,
+        t.assigned_to || '-',
+    ]);
+
+    return formatTable(headers, rows);
+}
+
+/**
+ * Format a single comment for display.
+ */
+export function formatComment(comment: TaskComment, json: boolean): string {
+    if (json) {
+        return JSON.stringify(comment, null, 2);
+    }
+
+    return `[${comment.created_at}] ${comment.agent_id}: ${comment.content}`;
+}
+
+/**
+ * Format a list of comments for display.
+ */
+export function formatCommentList(comments: TaskComment[], json: boolean): string {
+    if (json) {
+        return JSON.stringify(comments, null, 2);
+    }
+
+    if (comments.length === 0) {
+        return 'No comments.';
+    }
+
+    return comments.map(c => formatComment(c, false)).join('\n');
+}
+
