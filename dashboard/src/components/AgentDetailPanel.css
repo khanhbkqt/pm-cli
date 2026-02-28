@@ -1,0 +1,314 @@
+/* ─── Agent Detail Panel ───────────────────────────── */
+.agent-detail__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 200;
+    animation: agentDetailFadeIn 0.2s ease;
+}
+
+.agent-detail {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 420px;
+    max-width: 100vw;
+    height: 100vh;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border-color);
+    z-index: 201;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+}
+
+.agent-detail--open {
+    transform: translateX(0);
+}
+
+.agent-detail__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.agent-detail__label-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.agent-detail__close {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 14px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.agent-detail__close:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.agent-detail__body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex: 1;
+}
+
+/* ─── Loading & Error ──────────────────────────────── */
+.agent-detail__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.agent-detail__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+    text-align: center;
+    gap: 8px;
+}
+
+.agent-detail__error span {
+    font-size: 32px;
+}
+
+.agent-detail__error p {
+    font-size: 13px;
+    color: var(--accent-red);
+}
+
+/* ─── Profile Section ──────────────────────────────── */
+.agent-detail__profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.agent-detail__avatar-lg {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    margin-bottom: 12px;
+}
+
+.agent-detail__name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.agent-detail__role {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.agent-detail__badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 16px;
+}
+
+.agent-detail__badge--human {
+    background: rgba(171, 71, 188, 0.15);
+    color: var(--accent-purple);
+}
+
+.agent-detail__badge--ai {
+    background: rgba(79, 195, 247, 0.15);
+    color: var(--accent-blue);
+}
+
+/* ─── Metadata Section ─────────────────────────────── */
+.agent-detail__meta-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.agent-detail__meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.agent-detail__meta-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+}
+
+.agent-detail__meta-value {
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.agent-detail__meta-value--mono {
+    font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+    font-size: 12px;
+    background: var(--bg-tertiary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ─── Tasks Section ────────────────────────────────── */
+.agent-detail__tasks-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.agent-detail__tasks-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.agent-detail__no-tasks {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 20px 0;
+    opacity: 0.6;
+}
+
+.agent-detail__tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.agent-detail__task-item {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.agent-detail__task-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.agent-detail__task-id {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-right: 6px;
+    font-weight: 600;
+}
+
+.agent-detail__task-badges {
+    display: flex;
+    gap: 6px;
+}
+
+.agent-detail__status-badge,
+.agent-detail__priority-badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+/* Status badges */
+.agent-detail__status-badge--todo {
+    background: rgba(136, 136, 170, 0.15);
+    color: var(--text-secondary);
+}
+
+.agent-detail__status-badge--in-progress {
+    background: rgba(79, 195, 247, 0.15);
+    color: var(--accent-blue);
+}
+
+.agent-detail__status-badge--done {
+    background: rgba(102, 187, 106, 0.15);
+    color: var(--accent-green);
+}
+
+.agent-detail__status-badge--blocked {
+    background: rgba(239, 83, 80, 0.15);
+    color: var(--accent-red);
+}
+
+/* Priority badges */
+.agent-detail__priority-badge--low {
+    background: rgba(136, 136, 170, 0.1);
+    color: var(--text-secondary);
+}
+
+.agent-detail__priority-badge--medium {
+    background: rgba(79, 195, 247, 0.1);
+    color: var(--accent-blue);
+}
+
+.agent-detail__priority-badge--high {
+    background: rgba(255, 167, 38, 0.15);
+    color: var(--accent-orange);
+}
+
+.agent-detail__priority-badge--urgent {
+    background: rgba(239, 83, 80, 0.15);
+    color: var(--accent-red);
+}
+
+@keyframes agentDetailFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .agent-detail {
+        width: 100vw;
+    }
+}

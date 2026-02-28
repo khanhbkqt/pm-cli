@@ -1,3 +1,257 @@
+/* ─── Agents Page ──────────────────────────────────── */
 .agents-page {
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ─── Toolbar ──────────────────────────────────────── */
+.agents-page__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.agents-page__search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.agents-page__search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.agents-page__search {
+    width: 100%;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px 10px 40px;
+    font-size: 14px;
+    color: var(--text-primary);
+    font-family: inherit;
+    transition: border-color 0.15s ease;
+}
+
+.agents-page__search:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+.agents-page__search::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+/* ─── Type Filter ──────────────────────────────────── */
+.agents-page__type-filter {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    border: 1px solid var(--border-color);
+}
+
+.agents-page__type-btn {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.agents-page__type-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.agents-page__type-btn--active {
+    background: var(--accent-blue);
+    color: #0f0f23;
+    font-weight: 600;
+}
+
+.agents-page__type-btn--active:hover {
+    background: var(--accent-blue);
+    color: #0f0f23;
+}
+
+/* ─── Grid ─────────────────────────────────────────── */
+.agents-page__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+/* ─── Agent Card ───────────────────────────────────── */
+.agent-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+    width: 100%;
+}
+
+.agent-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.agent-card--skeleton {
+    pointer-events: none;
+}
+
+.agent-card__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.agent-card__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.agent-card__name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.agent-card__role {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.agent-card__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.agent-card__badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.agent-card__badge--human {
+    background: rgba(171, 71, 188, 0.15);
+    color: var(--accent-purple);
+}
+
+.agent-card__badge--ai {
+    background: rgba(79, 195, 247, 0.15);
+    color: var(--accent-blue);
+}
+
+.agent-card__time {
+    font-size: 11px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* ─── Empty & Error States ─────────────────────────── */
+.agents-page__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.agents-page__empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.4;
+}
+
+.agents-page__empty-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.agents-page__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.agents-page__error-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.agents-page__error p {
+    font-size: 14px;
+    color: var(--accent-red);
+}
+
+/* ─── Responsive ───────────────────────────────────── */
+@media (max-width: 1024px) {
+    .agents-page__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .agents-page__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .agents-page__toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .agents-page__type-filter {
+        justify-content: center;
+    }
 }
