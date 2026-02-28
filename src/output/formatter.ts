@@ -1,4 +1,4 @@
-import type { Agent, Task, TaskComment } from '../db/types.js';
+import type { Agent, Task, TaskComment, ContextEntry } from '../db/types.js';
 
 /**
  * Format a simple ASCII table from headers and rows.
@@ -135,5 +135,46 @@ export function formatCommentList(comments: TaskComment[], json: boolean): strin
     }
 
     return comments.map(c => formatComment(c, false)).join('\n');
+}
+
+/**
+ * Format a single context entry for display.
+ */
+export function formatContext(entry: ContextEntry, json: boolean): string {
+    if (json) {
+        return JSON.stringify(entry, null, 2);
+    }
+
+    return [
+        `Key:      ${entry.key}`,
+        `Value:    ${entry.value}`,
+        `Category: ${entry.category}`,
+        `Creator:  ${entry.created_by}`,
+        `Created:  ${entry.created_at}`,
+        `Updated:  ${entry.updated_at}`,
+    ].join('\n');
+}
+
+/**
+ * Format a list of context entries for display.
+ */
+export function formatContextList(entries: ContextEntry[], json: boolean): string {
+    if (json) {
+        return JSON.stringify(entries, null, 2);
+    }
+
+    if (entries.length === 0) {
+        return 'No context entries.';
+    }
+
+    const headers = ['Key', 'Value', 'Category', 'Creator'];
+    const rows = entries.map(e => [
+        e.key,
+        e.value,
+        e.category,
+        e.created_by,
+    ]);
+
+    return formatTable(headers, rows);
 }
 
