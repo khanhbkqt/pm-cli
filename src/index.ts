@@ -15,5 +15,5 @@ registerStatusCommand(program);
 registerDashboardCommand(program);
 
 // Parse and execute
-program.parse(process.argv);
+program.parseAsync(process.argv);
 
