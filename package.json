@@ -16,7 +16,9 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsup",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "install:local": "bash scripts/install.sh",
+    "uninstall:local": "bash scripts/uninstall.sh"
   },
   "keywords": [
     "cli",
