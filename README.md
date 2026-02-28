@@ -125,6 +125,29 @@ The web dashboard provides a local browser-based view of your project:
 - **Agents Page** — Browse registered agents, view assigned tasks and activity
 - **Context Browser** — Search and inspect shared context entries
 - **Task Detail** — Full task editing, assignment, and commenting from the UI
+- **Theme Toggle** — Switch between dark and light mode (persists across sessions)
+- **Responsive** — Works on mobile and tablet screens
+
+### Launch
+
+```bash
+pm dashboard --agent claude           # Launches on an available port
+pm dashboard --port 4000 --agent claude  # Specify a port
+```
+
+### Development
+
+```bash
+cd dashboard && npm run dev           # Vite dev server with HMR (proxies API to localhost:4000)
+pm dashboard --port 4000 --agent claude  # Start the backend API in another terminal
+```
+
+### Build
+
+```bash
+npm run build:dashboard               # Build dashboard only
+npm run build                          # Build CLI + dashboard
+```
 
 ## CLI Reference
 
