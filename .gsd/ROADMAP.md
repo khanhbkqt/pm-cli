@@ -1,17 +1,17 @@
 ---
 milestone: v1.0-mvp
 version: 1.0.0
-updated: 2026-02-28T09:50:00+07:00
+updated: 2026-02-28T18:12:00+07:00
 ---
 
 # Roadmap
 
-> **Current Phase:** 1 - Project Foundation
-> **Status:** planned — ready for execution
+> **Current Phase:** 2 - Agent System
+> **Status:** not started — next up
 
 ## Must-Haves (from SPEC)
 
-- [ ] Project scaffolding (`pm init`)
+- [x] Project scaffolding (`pm init`)
 - [ ] Task CRUD (add, list, show, update, assign, comment)
 - [ ] Agent management (register, list, show, whoami)
 - [ ] Context sharing (set, get, list, search)
@@ -23,14 +23,14 @@ updated: 2026-02-28T09:50:00+07:00
 ## Phases
 
 ### Phase 1: Project Foundation
-**Status:** 📋 Planned (3 plans, 2 waves)
+**Status:** ✅ Complete
 **Objective:** Setup TypeScript project, SQLite schema, CLI framework, and `pm init` command
 **Requirements:** Project scaffolding, database schema, CLI infrastructure
 
 **Deliverables:**
 - TypeScript project with build pipeline
 - SQLite database schema (agents, tasks, task_comments, context tables)
-- CLI framework (Commander.js or similar)
+- CLI framework (Commander.js)
 - `pm init` command creating `.pm/` directory with `data.db` + `config.yaml`
 
 ---
@@ -87,7 +87,7 @@ updated: 2026-02-28T09:50:00+07:00
 
 | Phase | Status | Plans | Complete |
 |-------|--------|-------|----------|
-| 1 | 📋 | 3/0 | — |
+| 1 | ✅ | 3/3 | 2026-02-28 |
 | 2 | ⬜ | 0/0 | — |
 | 3 | ⬜ | 0/0 | — |
 | 4 | ⬜ | 0/0 | — |
@@ -98,7 +98,7 @@ updated: 2026-02-28T09:50:00+07:00
 
 | Phase | Started | Completed | Duration |
 |-------|---------|-----------|----------|
-| 1 | — | — | — |
+| 1 | 2026-02-28 | 2026-02-28 | ~10 min |
 | 2 | — | — | — |
 | 3 | — | — | — |
 | 4 | — | — | — |
