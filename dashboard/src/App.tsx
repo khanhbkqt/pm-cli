@@ -1,9 +1,12 @@
+import './index.css';
+import { Layout } from './components/Layout';
+import { Overview } from './pages/Overview';
+
 function App() {
     return (
-        <div>
-            <h1>PM Dashboard</h1>
-            <p>Dashboard is loading…</p>
-        </div>
+        <Layout>
+            <Overview />
+        </Layout>
     );
 }
 

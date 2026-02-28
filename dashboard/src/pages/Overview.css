@@ -1,0 +1,74 @@
+/* ─── Overview Page ─────────────────────────────────── */
+.overview {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+/* ─── Loading Skeletons ────────────────────────────── */
+.stat-skeleton {
+    height: 100px;
+    border-radius: var(--radius);
+}
+
+.panel-skeleton {
+    height: 300px;
+    border-radius: var(--radius);
+}
+
+.panel-skeleton--sm {
+    height: 260px;
+}
+
+/* ─── Error State ──────────────────────────────────── */
+.overview__error {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+}
+
+.overview__error-icon {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.overview__error h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.overview__error p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.overview__error-hint {
+    margin-top: 16px;
+    font-size: 13px;
+}
+
+.overview__error code {
+    background: var(--bg-tertiary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+}
+
+/* ─── Panels Grid (for agent list + activity feed) ── */
+.overview__panels {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 1024px) {
+    .overview__panels {
+        grid-template-columns: 1fr;
+    }
+}
