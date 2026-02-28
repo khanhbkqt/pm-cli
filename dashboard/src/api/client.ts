@@ -80,6 +80,18 @@ export async function fetchContext(filters?: Record<string, string>): Promise<Co
     return res.entries;
 }
 
+/** Fetch a single agent by ID. */
+export async function fetchAgentById(id: string): Promise<Agent> {
+    const res = await apiFetch<{ agent: Agent }>(`/api/agents/${id}`);
+    return res.agent;
+}
+
+/** Search context entries by query string. */
+export async function searchContext(query: string): Promise<ContextEntry[]> {
+    const res = await apiFetch<{ entries: ContextEntry[] }>(`/api/context/search?q=${encodeURIComponent(query)}`);
+    return res.entries;
+}
+
 /* ─── Mutation endpoints ───────────────────────────── */
 
 /** Create a new task. */

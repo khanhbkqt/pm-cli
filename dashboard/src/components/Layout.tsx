@@ -9,6 +9,8 @@ interface LayoutProps {
 const pageTitles: Record<string, string> = {
     '/': 'Project Overview',
     '/tasks': 'Tasks Board',
+    '/agents': 'Agents',
+    '/context': 'Context',
 };
 
 export function Layout({ children }: LayoutProps) {
@@ -54,14 +56,26 @@ export function Layout({ children }: LayoutProps) {
                         <span className="sidebar__link-icon">📋</span>
                         Tasks
                     </NavLink>
-                    <a href="#" className="sidebar__link sidebar__link--disabled">
+                    <NavLink
+                        to="/agents"
+                        className={({ isActive }) =>
+                            `sidebar__link${isActive ? ' sidebar__link--active' : ''}`
+                        }
+                        onClick={() => setSidebarOpen(false)}
+                    >
                         <span className="sidebar__link-icon">👥</span>
                         Agents
-                    </a>
-                    <a href="#" className="sidebar__link sidebar__link--disabled">
+                    </NavLink>
+                    <NavLink
+                        to="/context"
+                        className={({ isActive }) =>
+                            `sidebar__link${isActive ? ' sidebar__link--active' : ''}`
+                        }
+                        onClick={() => setSidebarOpen(false)}
+                    >
                         <span className="sidebar__link-icon">📦</span>
                         Context
-                    </a>
+                    </NavLink>
                 </nav>
                 <div className="sidebar__footer">
                     <span className="sidebar__version">v1.1.0</span>
