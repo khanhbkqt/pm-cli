@@ -6,6 +6,7 @@ export default defineConfig({
     target: 'node18',
     clean: true,
     shims: true,
+    external: ['better-sqlite3', 'express'],
     banner: {
         js: '#!/usr/bin/env node',
     },
