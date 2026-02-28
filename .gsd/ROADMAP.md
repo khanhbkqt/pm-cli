@@ -7,7 +7,7 @@ updated: 2026-02-28T18:12:00+07:00
 # Roadmap
 
 > **Current Phase:** 3 - Task Management
-> **Status:** not started — next up
+> **Status:** planned — ready for execution
 
 ## Must-Haves (from SPEC)
 
@@ -89,7 +89,7 @@ updated: 2026-02-28T18:12:00+07:00
 |-------|--------|-------|----------|
 | 1 | ✅ | 3/3 | 2026-02-28 |
 | 2 | ✅ | 3/3 | 2026-02-28 |
-| 3 | ⬜ | 0/0 | — |
+| 3 | 📋 Planned | 3/3 | — |
 | 4 | ⬜ | 0/0 | — |
 
 ---
