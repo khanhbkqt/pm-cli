@@ -1,5 +1,5 @@
 ---
-updated: 2026-02-28T20:31:00+07:00
+updated: 2026-02-28T20:40:00+07:00
 ---
 
 # Project State
@@ -7,21 +7,20 @@ updated: 2026-02-28T20:31:00+07:00
 ## Current Position
 
 **Milestone:** v1.1-dashboard
-**Phase:** 5 — Dashboard UI: Agents & Context Screens (not started)
-**Task:** Needs planning
-**Status:** Ready for research/planning
+**Phase:** 5 — Dashboard UI: Agents & Context Screens
+**Task:** Planning complete
+**Status:** Ready for execution
 
 ## Last Session Summary
 
-New Phase 5 (Agents & Context Screens) inserted before old Phase 5.
-Old Phase 5 (Polish & Integration) renumbered to Phase 6 with existing plans (6.1–6.3).
+Phase 5 planned with 3 plans across 2 waves:
+- Wave 1: Plan 5.1 (API client, utils, navigation), Plan 5.2 (Agents page + detail panel)
+- Wave 2: Plan 5.3 (Context page + search + expandable detail)
 
 ## Next Steps
 
-1. /research-phase 5 — research new phase
-2. /plan 5 — create plans for Agents & Context screens
-3. /execute 5 — execute the phase
-4. /execute 6 — execute Polish & Integration (formerly Phase 5)
+1. /execute 5 — run all plans
+2. /execute 6 — execute Polish & Integration (Phase 6)
 
 ## Active Decisions
 
@@ -34,6 +33,10 @@ Old Phase 5 (Polish & Integration) renumbered to Phase 6 with existing plans (6.
 | Dashboard scope | Read + Write (actions) | 2026-02-28 | Phases 2-4 |
 | Client-side routing | react-router-dom | 2026-02-28 | Phase 4+ |
 | Drag-and-drop | Native HTML5 DnD (no lib) | 2026-02-28 | Phase 4 |
+| Agent detail panel | Slide-in (like TaskDetailPanel) | 2026-02-28 | Phase 5 |
+| Context detail | Inline expand/collapse | 2026-02-28 | Phase 5 |
+| Agent search | Client-side (small dataset) | 2026-02-28 | Phase 5 |
+| Context search | Server-side (existing endpoint) | 2026-02-28 | Phase 5 |
 
 ## Blockers
 
