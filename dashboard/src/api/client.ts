@@ -18,18 +18,21 @@ export function fetchStatus(): Promise<StatusResponse> {
 }
 
 /** Fetch tasks with optional query filters. */
-export function fetchTasks(filters?: Record<string, string>): Promise<Task[]> {
+export async function fetchTasks(filters?: Record<string, string>): Promise<Task[]> {
     const params = filters ? '?' + new URLSearchParams(filters).toString() : '';
-    return apiFetch<Task[]>(`/api/tasks${params}`);
+    const res = await apiFetch<{ tasks: Task[] }>(`/api/tasks${params}`);
+    return res.tasks;
 }
 
 /** Fetch all registered agents. */
-export function fetchAgents(): Promise<Agent[]> {
-    return apiFetch<Agent[]>('/api/agents');
+export async function fetchAgents(): Promise<Agent[]> {
+    const res = await apiFetch<{ agents: Agent[] }>('/api/agents');
+    return res.agents;
 }
 
 /** Fetch context entries with optional query filters. */
-export function fetchContext(filters?: Record<string, string>): Promise<ContextEntry[]> {
+export async function fetchContext(filters?: Record<string, string>): Promise<ContextEntry[]> {
     const params = filters ? '?' + new URLSearchParams(filters).toString() : '';
-    return apiFetch<ContextEntry[]>(`/api/context${params}`);
+    const res = await apiFetch<{ entries: ContextEntry[] }>(`/api/context${params}`);
+    return res.entries;
 }

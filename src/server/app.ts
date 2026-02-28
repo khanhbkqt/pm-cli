@@ -29,7 +29,7 @@ export function createApp(db: Database.Database): express.Express {
     const dashboardPath = path.join(__dirname, 'dashboard');
     if (fs.existsSync(dashboardPath)) {
         app.use(express.static(dashboardPath));
-        app.get('*', (req, res) => {
+        app.get('{*path}', (req, res) => {
             if (!req.path.startsWith('/api')) {
                 res.sendFile(path.join(dashboardPath, 'index.html'));
             }
