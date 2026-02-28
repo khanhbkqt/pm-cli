@@ -1,5 +1,5 @@
 ---
-updated: 2026-03-01T06:50:00+07:00
+updated: 2026-03-01T06:55:00+07:00
 ---
 
 # Project State
@@ -7,18 +7,18 @@ updated: 2026-03-01T06:50:00+07:00
 ## Current Position
 
 **Milestone:** v2.1-multi-client
-**Phase:** 2 (completed)
+**Phase:** 3 (completed)
 **Task:** All tasks complete
 **Status:** Verified
 
 ## Last Session Summary
 
-Phase 2 executed successfully. 1 plan, 2 tasks completed. Created Antigravity adapter (`.agent/workflows/pm-guide.md` with YAML frontmatter) and Claude Code adapter (`CLAUDE.md` with section markers for safe update/removal).
+Phase 3 executed successfully. 1 plan, 2 tasks completed. Created Cursor adapter (`.cursor/rules/pm-guide.mdc` with MDC frontmatter) and Codex adapter (`AGENTS.md` with section markers, disambiguated from OpenCode).
 
 ## Next Steps
 
-1. `/execute 3` → Cursor & Codex adapters
-2. `/execute 4` → OpenCode & CLI Command
+1. `/execute 4` → OpenCode & CLI Command
+2. `/execute 5` → Tests & Documentation
 
 ## Active Decisions
 

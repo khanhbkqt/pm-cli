@@ -144,7 +144,7 @@ Make the agent workflow guide installable on multiple AI coding clients, transla
 |-------|------|--------|-------|
 | 1 | Architecture & Detection | ✅ Complete | 1 |
 | 2 | Antigravity & Claude Code | ✅ Complete | 1 |
-| 3 | Cursor & Codex | Not Started | 1 |
+| 3 | Cursor & Codex | ✅ Complete | 1 |
 | 4 | OpenCode & CLI Command | Not Started | 1 |
 | 5 | Tests & Documentation | Not Started | 1 |
 
