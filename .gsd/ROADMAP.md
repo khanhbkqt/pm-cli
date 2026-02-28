@@ -6,13 +6,13 @@ updated: 2026-02-28T18:12:00+07:00
 
 # Roadmap
 
-> **Current Phase:** 3 - Task Management
-> **Status:** planned — ready for execution
+> **Current Phase:** 4 - Context & Polish
+> **Status:** not started — next up
 
 ## Must-Haves (from SPEC)
 
 - [x] Project scaffolding (`pm init`)
-- [ ] Task CRUD (add, list, show, update, assign, comment)
+- [x] Task CRUD (add, list, show, update, assign, comment)
 - [ ] Agent management (register, list, show, whoami)
 - [ ] Context sharing (set, get, list, search)
 - [ ] Agent identity on every command
@@ -50,7 +50,7 @@ updated: 2026-02-28T18:12:00+07:00
 ---
 
 ### Phase 3: Task Management
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Objective:** Full task CRUD with assignment, comments, and subtasks
 **Depends on:** Phase 2
 
@@ -89,7 +89,7 @@ updated: 2026-02-28T18:12:00+07:00
 |-------|--------|-------|----------|
 | 1 | ✅ | 3/3 | 2026-02-28 |
 | 2 | ✅ | 3/3 | 2026-02-28 |
-| 3 | 📋 Planned | 3/3 | — |
+| 3 | ✅ | 3/3 | 2026-02-28 |
 | 4 | ⬜ | 0/0 | — |
 
 ---
@@ -100,5 +100,5 @@ updated: 2026-02-28T18:12:00+07:00
 |-------|---------|-----------|----------|
 | 1 | 2026-02-28 | 2026-02-28 | ~10 min |
 | 2 | 2026-02-28 | 2026-02-28 | ~10 min |
-| 3 | — | — | — |
+| 3 | 2026-02-28 | 2026-02-28 | ~10 min |
 | 4 | — | — | — |
