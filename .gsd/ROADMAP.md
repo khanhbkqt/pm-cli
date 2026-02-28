@@ -7,7 +7,7 @@ updated: 2026-02-28T09:50:00+07:00
 # Roadmap
 
 > **Current Phase:** 1 - Project Foundation
-> **Status:** planning
+> **Status:** planned — ready for execution
 
 ## Must-Haves (from SPEC)
 
@@ -23,7 +23,7 @@ updated: 2026-02-28T09:50:00+07:00
 ## Phases
 
 ### Phase 1: Project Foundation
-**Status:** ⬜ Not Started
+**Status:** 📋 Planned (3 plans, 2 waves)
 **Objective:** Setup TypeScript project, SQLite schema, CLI framework, and `pm init` command
 **Requirements:** Project scaffolding, database schema, CLI infrastructure
 
@@ -87,7 +87,7 @@ updated: 2026-02-28T09:50:00+07:00
 
 | Phase | Status | Plans | Complete |
 |-------|--------|-------|----------|
-| 1 | ⬜ | 0/0 | — |
+| 1 | 📋 | 3/0 | — |
 | 2 | ⬜ | 0/0 | — |
 | 3 | ⬜ | 0/0 | — |
 | 4 | ⬜ | 0/0 | — |
