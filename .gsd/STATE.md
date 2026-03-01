@@ -3,29 +3,30 @@
 ## Current Position
 
 - **Milestone**: v3.1-dashboard-upgrade — Dashboard Upgrade
-- **Phase**: 5 (completed)
+- **Phase**: 6 (completed)
 - **Task**: All tasks complete
 - **Status**: Verified
 
 ## Last Session Summary
 
-Phase 5 executed successfully. 2 plans, 5 tasks completed across 2 waves.
+Phase 6 executed successfully. 2 plans, all tasks completed in 1 wave.
 
-### Wave 1 (Plan 5.1) — Markdown Rendering Foundation
-- Installed react-markdown, remark-gfm, rehype-highlight, highlight.js
-- Created MarkdownView.tsx component with styled CSS
-- Added fetchPlanById to API client
+### Wave 1
 
-### Wave 2 (Plan 5.2) — Plan Detail Page & Navigation
-- Created PlanDetailPage with breadcrumb, metadata header, markdown rendering
-- Added route /plans/:planId in App.tsx
-- Made plan cards clickable with Link wrappers in PlansPage
+**Plan 6.1 — Remove Dead TasksBoard Code:**
+- Removed `TasksBoard` import and `/tasks` route from `App.tsx`
+- Deleted `TasksBoard.tsx` and `TasksBoard.css`
+
+**Plan 6.2 — Fix Flaky CLI Test Timeouts:**
+- Added `testTimeout: 30000` to `vitest.config.ts`
+- All 6 CLI test files (26 tests) now pass consistently
 
 ### Verification
-- `tsc --noEmit`: PASS
-- `vite build`: PASS (542 modules)
+- `tsc --noEmit` (dashboard): PASS
+- `vitest run`: 21/21 files, 253/253 tests PASS
 
 ## Next Steps
 
-1. `/plan 6` — Tests & Polish
-2. `/execute 6` — run all plans
+1. All phases complete — milestone ready for completion
+2. `/audit-milestone` — audit before closing
+3. `/complete-milestone` — finalize milestone
