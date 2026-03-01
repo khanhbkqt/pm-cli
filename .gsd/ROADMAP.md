@@ -176,7 +176,7 @@ Xây dựng workflow engine tương tự GSD methodology, tích hợp trực ti�
 | 5 | Progress & Dashboard | ✅ Complete | 2 |
 | 6 | Tests & Documentation | ⬜ Not Started | — |
 | 7 | Agent Workflow Templates | ✅ Complete | 3 |
-| 8 | Install System — Multi-file Workflows | ⬜ Not Started | — |
+| 8 | Install System — Multi-file Workflows | ✅ Complete | 5 |
 
 ---
 
@@ -199,14 +199,21 @@ Xây dựng workflow engine tương tự GSD methodology, tích hợp trực ti�
 ---
 
 ### Phase 8: Install System — Multi-file Workflows
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Update `pm install` to deploy multiple workflow instruction files (from Phase 7) into target client directories instead of a single monolithic `pm-guide.md`. Support client-specific path conventions (Antigravity, Cursor, Gemini CLI).
 **Depends on**: Phase 7 (Agent Workflow Templates)
 
-**Tasks**:
-- [ ] TBD (run /plan 8 to create)
+**Completed**:
+- [x] Template loader (`loadWorkflowTemplates`, `getWorkflowsDir`) and workflow-index utility (`buildWorkflowIndex`)
+- [x] Antigravity adapter writes 15 individual workflow files to `.agent/workflows/`
+- [x] Cursor adapter writes 15 `.mdc` workflow files to `.cursor/rules/`
+- [x] Section-based adapters (Claude Code, Codex, OpenCode, Gemini CLI) embed workflow index table
+- [x] Module exports updated in `src/core/install/index.ts`
+- [x] 19 new integration tests — all passing
 
 **Verification**:
-- `pm install antigravity` installs all workflow files to `.agent/workflows/`
-- `pm install cursor` installs all workflow files to `.cursor/rules/`
-- `pm uninstall` cleanly removes all workflow files
+- `npm run build` succeeds
+- 44 install tests pass (25 existing + 19 new)
+- Antigravity generates 17 files (pm-guide.md + pm-cli.md + 15 workflows)
+- Cursor generates 16 files (pm-guide.mdc + 15 .mdc workflows)
+- Claude Code's CLAUDE.md contains `## Available Workflows` with 15-row table
