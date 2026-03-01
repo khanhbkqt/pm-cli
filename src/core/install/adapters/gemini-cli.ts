@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { ClientAdapter, ClientConfig, GenerateResult, CleanResult } from '../types.js';
 import { registerAdapter } from '../registry.js';
-import { loadCanonicalTemplate } from '../template.js';
+import { loadCanonicalTemplate, loadWorkflowTemplates } from '../template.js';
+import { buildWorkflowIndex } from '../workflow-index.js';
 
 const GEMINI_FILE = 'GEMINI.md';
 
@@ -41,7 +42,10 @@ export class GeminiCliAdapter implements ClientAdapter {
 
         const templateContent = loadCanonicalTemplate(projectRoot);
         const geminiPath = path.join(projectRoot, GEMINI_FILE);
-        const pmBlock = [SECTION_START, SECTION_HEADER + templateContent, SECTION_END].join('\n');
+
+        const workflows = loadWorkflowTemplates(projectRoot);
+        const workflowIndex = buildWorkflowIndex(workflows);
+        const pmBlock = [SECTION_START, SECTION_HEADER + templateContent + '\n\n' + workflowIndex, SECTION_END].join('\n');
 
         if (fs.existsSync(geminiPath)) {
             const existing = fs.readFileSync(geminiPath, 'utf-8');

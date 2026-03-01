@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { ClientAdapter, ClientConfig, GenerateResult, CleanResult } from '../types.js';
 import { registerAdapter } from '../registry.js';
-import { loadCanonicalTemplate } from '../template.js';
+import { loadCanonicalTemplate, loadWorkflowTemplates } from '../template.js';
+import { buildWorkflowIndex } from '../workflow-index.js';
 
 const CLAUDE_FILE = 'CLAUDE.md';
 
@@ -42,7 +43,9 @@ export class ClaudeCodeAdapter implements ClientAdapter {
         const templateContent = loadCanonicalTemplate(projectRoot);
         const claudePath = path.join(projectRoot, CLAUDE_FILE);
 
-        const pmBlock = [SECTION_START, SECTION_HEADER + templateContent, SECTION_END].join('\n');
+        const workflows = loadWorkflowTemplates(projectRoot);
+        const workflowIndex = buildWorkflowIndex(workflows);
+        const pmBlock = [SECTION_START, SECTION_HEADER + templateContent + '\n\n' + workflowIndex, SECTION_END].join('\n');
 
         if (fs.existsSync(claudePath)) {
             // Update existing CLAUDE.md — replace PM section if present, append otherwise

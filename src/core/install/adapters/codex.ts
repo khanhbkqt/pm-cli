@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { ClientAdapter, ClientConfig, GenerateResult, CleanResult } from '../types.js';
 import { registerAdapter } from '../registry.js';
-import { loadCanonicalTemplate } from '../template.js';
+import { loadCanonicalTemplate, loadWorkflowTemplates } from '../template.js';
+import { buildWorkflowIndex } from '../workflow-index.js';
 
 const AGENTS_FILE = 'AGENTS.md';
 
@@ -43,7 +44,9 @@ export class CodexAdapter implements ClientAdapter {
         const templateContent = loadCanonicalTemplate(projectRoot);
         const agentsPath = path.join(projectRoot, AGENTS_FILE);
 
-        const pmBlock = [SECTION_START, SECTION_HEADER + templateContent, SECTION_END].join('\n');
+        const workflows = loadWorkflowTemplates(projectRoot);
+        const workflowIndex = buildWorkflowIndex(workflows);
+        const pmBlock = [SECTION_START, SECTION_HEADER + templateContent + '\n\n' + workflowIndex, SECTION_END].join('\n');
 
         if (fs.existsSync(agentsPath)) {
             // Update existing AGENTS.md — replace PM section if present, append otherwise

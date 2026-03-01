@@ -22,7 +22,10 @@ export { detectClients, detectClient } from './detect.js';
 export { registerAdapter, getAdapter, getAllAdapters } from './registry.js';
 
 // Template
-export { getTemplatePath, loadCanonicalTemplate } from './template.js';
+export { getTemplatePath, loadCanonicalTemplate, getWorkflowsDir, loadWorkflowTemplates } from './template.js';
+
+// Workflow Index
+export { buildWorkflowIndex } from './workflow-index.js';
 
 // Adapters — side-effect imports to trigger self-registration
 import './adapters/antigravity.js';
