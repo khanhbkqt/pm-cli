@@ -1,7 +1,7 @@
 ---
 milestone: v3.1-dashboard-upgrade
 version: 3.1.0
-updated: 2026-03-01T14:55:00+07:00
+updated: 2026-03-01T18:46:00+07:00
 ---
 
 # Roadmap
@@ -207,4 +207,5 @@ Fix dashboard loading bugs caused by stale task-based types/components (backend 
 | 2 | Fix Overview & StatsCards | ✅ Complete | 2 |
 | 3 | Milestones & Phases API Routes | ✅ Complete | 2 |
 | 4 | Dashboard Pages — Milestones, Phases, Plans | ✅ Complete | 3 |
-| 5 | Tests & Polish | ⬜ Not Started | — |
+| 5 | Markdown Content View | ⬜ Not Started | — |
+| 6 | Tests & Polish | ⬜ Not Started | — |

@@ -24,4 +24,5 @@ Phase 4 executed successfully. 3 plans, 6 tasks across 2 waves completed.
 
 ## Next Steps
 
-1. `/plan 5` — Tests & Polish
+1. `/plan 5` — Markdown Content View
+2. `/plan 6` — Tests & Polish
