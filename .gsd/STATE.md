@@ -3,8 +3,8 @@
 ## Current Position
 
 - **Milestone**: v3.3-board-redesign — Plans Board Redesign
-- **Phase**: 1 — Design System & Hierarchy Layout (✅ Completed)
-- **Status**: Phase 1 verified and committed
+- **Phase**: 2 — Tree Rows & Progress Indicators
+- **Status**: Planning complete, ready for execution
 
 ## Last Session Summary
 
@@ -19,7 +19,4 @@ Commits:
 
 ## Next Steps
 
-1. `/plan 2` — Plan Phase 2: Tree Rows & Progress Indicators
-   - Add progress bars per milestone and phase (completion %)
-   - Implement milestone, phase, and plan rows as indented tree items
-2. `/execute 2` — Execute Phase 2 plans
+1. `/execute 2` — Execute Phase 2 plans
