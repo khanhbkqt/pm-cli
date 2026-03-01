@@ -70,5 +70,11 @@ export async function fetchPhasePlans(phaseId: number): Promise<Plan[]> {
     return res.plans;
 }
 
+/** Fetch a single plan by ID. */
+export async function fetchPlanById(id: number): Promise<Plan> {
+    const res = await apiFetch<{ plan: Plan }>(`/api/plans/${id}`);
+    return res.plan;
+}
+
 // Re-export Plan for downstream consumers
 export type { Plan };
