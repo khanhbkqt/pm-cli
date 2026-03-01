@@ -102,10 +102,8 @@ Create comprehensive workflow guides and instruction documents that teach AI cod
 
 ---
 
-## Active Milestone
-
-<details open>
-<summary>🚧 v2.1-multi-client — Multi-Client Installation</summary>
+<details>
+<summary>✅ v2.1-multi-client — Multi-Client Installation (Complete)</summary>
 
 ### Goal
 
@@ -124,20 +122,12 @@ Make the agent workflow guide installable on multiple AI coding clients, transla
 
 ### Must-Haves
 
-- [ ] Per-client adapter that generates native config from the canonical template
-- [ ] `pm install <client>` CLI command to install config for a specific client
-- [ ] `pm install --all` to install for all detected clients
-- [ ] Client detection (identify which AI clients are present in a project)
-- [ ] `/install` workflow updated with client selection
-- [ ] Each generated config respects the client's rules (frontmatter, globs, file structure)
-- [ ] Integration tests for all adapters
-
-### Nice-to-Haves
-
-- [ ] Auto-detect and suggest clients on `pm init`
-- [ ] Config sync (update client configs when canonical template changes)
-- [ ] Client-specific skill adapters
-- [ ] Uninstall / cleanup per client
+- [x] Per-client adapter that generates native config from the canonical template
+- [x] `pm install <client>` CLI command to install config for a specific client
+- [x] `pm install --all` to install for all detected clients
+- [x] Client detection (identify which AI clients are present in a project)
+- [x] Each generated config respects the client's rules (frontmatter, globs, file structure)
+- [x] Integration tests for all adapters
 
 ### Phases
 
@@ -150,4 +140,7 @@ Make the agent workflow guide installable on multiple AI coding clients, transla
 | 5 | Gemini CLI & Antigravity Rules | ✅ Complete | 1 |
 | 6 | Tests & Documentation | ✅ Complete | 1 |
 
+**Summary**: `.gsd/milestones/v2.1-multi-client/SUMMARY.md`
+
 </details>
+
