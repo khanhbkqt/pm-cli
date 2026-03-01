@@ -17,6 +17,20 @@ After a milestone and phases exist, and you're ready to break a phase into concr
 
 ---
 
+## Step 0: Quick Trace (Context Recovery)
+
+Before planning, you must understand the wider context:
+
+1. **Read `.gsd/ROADMAP.md`**
+   - Identify the active milestone's goal and must-haves
+   - Read the current phase's objective and dependencies
+2. **Read `.gsd/STATE.md`**
+   - Check where the last session left off
+
+_This ensures your plans align with the overall project direction._
+
+---
+
 ## Step 1: Validate Phase
 
 ```bash

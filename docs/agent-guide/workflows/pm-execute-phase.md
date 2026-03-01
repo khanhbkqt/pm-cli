@@ -17,6 +17,20 @@ After plans have been created for a phase (via the Plan Phase workflow) and you'
 
 ---
 
+## Step 0: Quick Trace (Context Recovery)
+
+Before executing any plans, quickly understand the current state:
+
+1. **Read `.gsd/ROADMAP.md`**
+   - Identify the active milestone and its must-haves
+   - Identify the current phase and its objective
+2. **Read `.gsd/STATE.md`**
+   - Check where the last session left off
+
+_This ensures you don't execute plans blindly without understanding the wider phase goal._
+
+---
+
 ## Step 1: Review Plans and Wave Order
 
 ```bash

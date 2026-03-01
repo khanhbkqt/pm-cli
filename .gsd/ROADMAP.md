@@ -224,63 +224,63 @@ Update the pm-cli workflow documents to include ROADMAP and STATE context loadin
 
 ### Must-Haves
 
-- [ ] Review all `pm-*` workflow files in `docs/agent-guide/workflows`
-- [ ] Add a "Quick Trace" section to relevant workflows (execute, plan, evaluate, etc.)
-- [ ] Ensure the prompt clearly directs agents to read `.gsd/ROADMAP.md` and `.gsd/STATE.md` at the start of execution/planning.
-- [ ] Verify markdown formatting and consistency across modified files.
+- [x] Review all `pm-*` workflow files in `docs/agent-guide/workflows`
+- [x] Add a "Quick Trace" section to relevant workflows (execute, plan, evaluate, etc.)
+- [x] Ensure the prompt clearly directs agents to read `.gsd/ROADMAP.md` and `.gsd/STATE.md` at the start of execution/planning.
+- [x] Verify markdown formatting and consistency across modified files.
 
 ### Phases
 
 | Phase | Name | Status | Plans |
 |-------|------|--------|-------|
-| 1 | Sync Execute Workflows | ⬜ Not Started | 0 |
-| 2 | Sync Planning Workflows | ⬜ Not Started | 0 |
-| 3 | Sync Review & Misc Workflows | ⬜ Not Started | 0 |
+| 1 | Sync Execute Workflows | ✅ Complete | 1 |
+| 2 | Sync Planning Workflows | ✅ Complete | 1 |
+| 3 | Sync Review & Misc Workflows | ✅ Complete | 1 |
 
 ---
 
 ### Phase 1: Sync Execute Workflows
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Update the execution workflows (`pm-execute-phase.md` and related) to require reading ROADMAP/STATE.
 **Depends on**: None
 
 **Must-Haves**:
-- [ ] Update `pm-execute-phase.md`
-- [ ] Update `pm-debug.md` (if applicable)
+- [x] Update `pm-execute-phase.md`
+- [x] Update `pm-debug.md` (if applicable)
 
 **Verification**:
-- [ ] Markdown files render correctly
-- [ ] Manual review confirms "quick trace" pattern is present
+- [x] Markdown files render correctly
+- [x] Manual review confirms "quick trace" pattern is present
 
 ---
 
 ### Phase 2: Sync Planning Workflows
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Update the planning workflows (`pm-plan-phase.md`, `pm-discuss-phase.md`, `pm-research-phase.md`) to require reading ROADMAP/STATE.
 **Depends on**: None
 
 **Must-Haves**:
-- [ ] Update `pm-plan-phase.md`
-- [ ] Update `pm-discuss-phase.md`
-- [ ] Update `pm-research-phase.md`
+- [x] Update `pm-plan-phase.md`
+- [x] Update `pm-discuss-phase.md`
+- [x] Update `pm-research-phase.md`
 
 **Verification**:
-- [ ] Markdown files render correctly
-- [ ] Manual review confirms "quick trace" pattern is present
+- [x] Markdown files render correctly
+- [x] Manual review confirms "quick trace" pattern is present
 
 ---
 
 ### Phase 3: Sync Review & Misc Workflows
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Update verification and progress workflows (`pm-verify-work.md`, `pm-progress.md`, `pm-audit-milestone.md`) with the quick trace requirements.
 **Depends on**: None
 
 **Must-Haves**:
-- [ ] Update `pm-verify-work.md`
-- [ ] Update `pm-progress.md`
-- [ ] Update `pm-audit-milestone.md`
-- [ ] Check other workflows for applicability
+- [x] Update `pm-verify-work.md`
+- [x] Update `pm-progress.md`
+- [x] Update `pm-audit-milestone.md`
+- [x] Check other workflows for applicability
 
 **Verification**:
-- [ ] Markdown files render correctly
-- [ ] Manual review confirms "quick trace" pattern is present
+- [x] Markdown files render correctly
+- [x] Manual review confirms "quick trace" pattern is present
