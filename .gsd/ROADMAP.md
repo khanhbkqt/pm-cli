@@ -177,6 +177,7 @@ Xây dựng workflow engine tương tự GSD methodology, tích hợp trực ti�
 | 6 | Tests & Documentation | ✅ Complete | 3 |
 | 7 | Agent Workflow Templates | ✅ Complete | 3 |
 | 8 | Install System — Multi-file Workflows | ✅ Complete | 5 |
+| 9 | Gap Closure | ⬜ Not Started | 2 |
 
 ---
 
@@ -217,3 +218,13 @@ Xây dựng workflow engine tương tự GSD methodology, tích hợp trực ti�
 - Antigravity generates 17 files (pm-guide.md + pm-cli.md + 15 workflows)
 - Cursor generates 16 files (pm-guide.mdc + 15 .mdc workflows)
 - Claude Code's CLAUDE.md contains `## Available Workflows` with 15-row table
+
+---
+
+### Phase 9: Gap Closure
+**Status**: ⬜ Not Started
+**Objective**: Address gaps from milestone audit
+
+**Gaps to Close:**
+- [ ] Stale MVP items in `TODO.md`
+- [ ] Missing explicit `VERIFICATION.md` for Phases 1 & 3

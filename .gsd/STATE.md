@@ -3,9 +3,9 @@
 ## Current Position
 
 - **Milestone**: v3.0-workflow-engine — Workflow Engine
-- **Phase**: 6 — Tests & Documentation (completed)
-- **Task**: All tasks complete
-- **Status**: Verified
+- **Phase**: 9 — Gap Closure
+- **Task**: Creating plans
+- **Status**: Gap Closure Mode — Addressing 2 gaps from milestone audit.
 
 ## Active Milestone Phase Status
 
@@ -19,16 +19,15 @@
 | 6 | Tests & Documentation | ✅ Complete |
 | 7 | Agent Workflow Templates | ✅ Complete |
 | 8 | Install System | ✅ Complete |
+| 9 | Gap Closure | ⬜ Not Started |
 
 ## Last Session Summary
 
-Phase 6 executed successfully. 3 plans across 2 waves:
-- Wave 1: Plan 6.1 (fixed test timeouts — 25 tests pass); Plan 6.2 (ARCHITECTURE.md updated with workflow engine + install system)
-- Wave 2: Plan 6.3 (README.md updated with GSD methodology section and workflow CLI reference tables)
-
-All phases in v3.0-workflow-engine are now Complete.
+Gap closures identified from milestone audit (3d916602-74ac-4ac4-bbce-903c53601d45).
+Plan to address TODO.md tech debt and protocol hygiene debt (VERIFICATION.md missing).
 
 ## Next Steps
 
-1. `/audit-milestone` — audit and complete the v3.0-workflow-engine milestone
-2. `/complete-milestone` — finalize and archive the milestone
+1. `/execute 9 --gaps-only` — Execute gap closure plans
+2. `/audit-milestone` — review the gap closure
+3. `/complete-milestone` — finalize and archive the milestone
