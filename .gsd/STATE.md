@@ -3,9 +3,9 @@
 ## Current Position
 
 - **Milestone**: v3.1-dashboard-upgrade — Dashboard Upgrade
-- **Phase**: Not started
-- **Task**: Milestone planned
-- **Status**: Ready for planning
+- **Phase**: 1 — Fix API Types & Status Endpoint
+- **Task**: Planning complete
+- **Status**: Ready for execution
 
 ## Bug Analysis
 
@@ -17,4 +17,4 @@ Dashboard loading fails because:
 
 ## Next Steps
 
-1. `/plan 1` — Create Phase 1 execution plans (fix API types & status endpoint)
+1. `/execute 1` — Run Phase 1 plans (fix API types & components)
