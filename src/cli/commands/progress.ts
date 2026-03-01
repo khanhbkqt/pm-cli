@@ -1,4 +1,5 @@
 import type { Command } from 'commander';
+import { program } from '../program.js';
 import { getProjectDb } from '../../core/identity.js';
 import { getActiveMilestone, getMilestoneById } from '../../core/milestone.js';
 import { listPhases } from '../../core/phase.js';
@@ -14,10 +15,10 @@ export function registerProgressCommand(program: Command): void {
         .command('progress')
         .description('Show active milestone progress')
         .option('--milestone <id>', 'Show a specific milestone by slug/id')
-        .option('--json', 'Output JSON')
-        .action(async (opts: { milestone?: string; json?: boolean }) => {
+        .action(async (opts: { milestone?: string }) => {
             try {
                 const db = getProjectDb();
+                const json = program.opts().json;
 
                 // Resolve milestone
                 let milestone;
@@ -60,7 +61,7 @@ export function registerProgressCommand(program: Command): void {
                         phases: enrichedPhases,
                         summary: { phases_total, phases_complete, phases_pct },
                     },
-                    opts.json ?? false
+                    json
                 );
 
                 console.log(output);

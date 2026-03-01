@@ -223,3 +223,30 @@ describe('Status Endpoint', () => {
         expect(body.recent_tasks).toBeInstanceOf(Array);
     });
 });
+
+describe('Progress Endpoint', () => {
+    it('GET /api/progress — no active milestone returns 404', async () => {
+        const res = await fetch(`${baseUrl}/api/progress`);
+        expect(res.status).toBe(404);
+        const body = await res.json();
+        expect(body.error).toBeDefined();
+    });
+
+    it('GET /api/progress — with active milestone returns 200', async () => {
+        // Seed: create milestone and activate it
+        const { createMilestone, updateMilestone } = await import('../src/core/milestone.js');
+        createMilestone(db, { id: 'v-progress-test', name: 'Progress Test', created_by: testAgentId });
+        updateMilestone(db, 'v-progress-test', { status: 'active' });
+
+        const res = await fetch(`${baseUrl}/api/progress`);
+        expect(res.status).toBe(200);
+        const body = await res.json();
+        expect(body.milestone).toBeDefined();
+        expect(body.milestone.id).toBe('v-progress-test');
+        expect(body.phases).toBeInstanceOf(Array);
+        expect(body.summary).toBeDefined();
+        expect(typeof body.summary.phases_total).toBe('number');
+        expect(typeof body.summary.phases_complete).toBe('number');
+        expect(typeof body.summary.phases_pct).toBe('number');
+    });
+});
