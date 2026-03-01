@@ -3,20 +3,19 @@
 ## Current Position
 
 - **Milestone**: v3.1-dashboard-upgrade — Dashboard Upgrade
-- **Phase**: 1 — Fix API Types & Status Endpoint ✅ Complete
+- **Phase**: 2 — Fix Overview & StatsCards ✅ Complete
 - **Task**: All tasks complete
 - **Status**: Verified
 
-## Phase 1 Summary
+## Phase 2 Summary
 
-Executed 2 plans across 1 wave. All dashboard type/component bugs fixed:
-- `StatusResponse` updated to `plans`/`recent_plans`
-- `Plan` interface added, all `Task` dead code removed
-- `StatsCards`, `ActivityFeed`, `Overview`, `TasksBoard` updated
-- 5 task-only components deleted
-- 0 TypeScript errors, 10/10 backend tests pass
+Executed 2 plans across 1 wave. Enhanced dashboard Overview and StatsCards:
+- `/api/status` now returns milestone + phase progress data
+- StatsCards shows 5 cards: Milestone, Phases, Plans, In Progress, Agents
+- Overview shows MilestoneProgress banner with phase completion bar
+- Full build passes (tsup + vite), server tests 4/4 green
 
 ## Next Steps
 
-1. `/execute 2` — Phase 2: Fix Overview & StatsCards (or `/plan 2` if needed)
-2. Continue with Phase 3: Milestones & Phases API Routes
+1. `/plan 3` — Phase 3: Milestones & Phases API Routes
+2. `/execute 3` — Execute Phase 3 (if plans exist)
