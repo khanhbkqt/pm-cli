@@ -1,0 +1,279 @@
+/* ─── Board Page ───────────────────────────────────── */
+
+.board-page {
+    padding: 0;
+}
+
+.board-page__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.board-page__subtitle {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.board-page__milestones {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+/* ─── Status Badges ────────────────────────────────── */
+
+.board-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+}
+
+.status--active {
+    background: color-mix(in srgb, var(--accent-blue) 18%, transparent);
+    color: var(--accent-blue);
+    border: 1px solid color-mix(in srgb, var(--accent-blue) 35%, transparent);
+}
+
+.status--completed {
+    background: color-mix(in srgb, var(--accent-green) 18%, transparent);
+    color: var(--accent-green);
+    border: 1px solid color-mix(in srgb, var(--accent-green) 35%, transparent);
+}
+
+.status--planned,
+.status--planning {
+    background: color-mix(in srgb, var(--text-secondary) 12%, transparent);
+    color: var(--text-secondary);
+    border: 1px solid color-mix(in srgb, var(--text-secondary) 25%, transparent);
+}
+
+.status--archived,
+.status--failed {
+    background: color-mix(in srgb, var(--accent-red) 15%, transparent);
+    color: var(--accent-red);
+    border: 1px solid color-mix(in srgb, var(--accent-red) 30%, transparent);
+}
+
+/* ─── Milestone Section ────────────────────────────── */
+
+.board-milestone {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+}
+
+.board-milestone__header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    text-align: left;
+    transition: background 0.15s;
+}
+
+.board-milestone__header:hover {
+    background: var(--hover);
+}
+
+.board-milestone__toggle {
+    font-size: 0.65rem;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+    transition: transform 0.15s;
+}
+
+.board-milestone__icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.board-milestone__id {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono, monospace);
+    flex-shrink: 0;
+}
+
+.board-milestone__name {
+    font-weight: 700;
+    font-size: 1rem;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.board-milestone__meta {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.board-milestone__phases {
+    padding: var(--space-3) var(--space-4) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.board-milestone__empty {
+    padding: var(--space-4);
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-style: italic;
+}
+
+/* ─── Phase Section ────────────────────────────────── */
+
+.board-phase {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--surface);
+}
+
+.board-phase__header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    text-align: left;
+    transition: background 0.15s;
+}
+
+.board-phase__header:hover {
+    background: var(--hover);
+}
+
+.board-phase__toggle {
+    font-size: 0.6rem;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+    transition: transform 0.15s;
+}
+
+.board-phase__number {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.board-phase__name {
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.board-phase__count {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.board-phase__plans {
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.board-phase__empty {
+    padding: var(--space-2) var(--space-3);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-style: italic;
+    width: 100%;
+}
+
+/* ─── Plan Card ────────────────────────────────────── */
+
+.board-plan-card__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 260px;
+    max-width: 100%;
+}
+
+.board-plan-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+    cursor: pointer;
+}
+
+.board-plan-card:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 2px 12px color-mix(in srgb, var(--accent-blue) 15%, transparent);
+    transform: translateY(-1px);
+}
+
+.board-plan-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+}
+
+.board-plan-card__number {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono, monospace);
+    font-weight: 600;
+}
+
+.board-plan-card__name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+    margin-bottom: var(--space-2);
+}
+
+.board-plan-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.board-plan-card__wave {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1px 7px;
+}

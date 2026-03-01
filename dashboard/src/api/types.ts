@@ -86,6 +86,7 @@ export interface StatusResponse {
     context: {
         total: number;
     };
+    recent_plans: Plan[];
 }
 
 /** Board hierarchy types for /api/board */

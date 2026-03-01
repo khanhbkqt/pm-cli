@@ -10,7 +10,7 @@ interface LayoutProps {
 const pageTitles: Record<string, string> = {
     '/': 'Project Overview',
     '/milestones': 'Milestones',
-    '/tasks': 'Plans Board',
+    '/board': 'Plans Board',
     '/agents': 'Agents',
     '/context': 'Context',
 };
@@ -58,6 +58,16 @@ export function Layout({ children }: LayoutProps) {
                     >
                         <span className="sidebar__link-icon">🎯</span>
                         Milestones
+                    </NavLink>
+                    <NavLink
+                        to="/board"
+                        className={({ isActive }) =>
+                            `sidebar__link${isActive ? ' sidebar__link--active' : ''}`
+                        }
+                        onClick={() => setSidebarOpen(false)}
+                    >
+                        <span className="sidebar__link-icon">📋</span>
+                        Plans Board
                     </NavLink>
                     <NavLink
                         to="/agents"

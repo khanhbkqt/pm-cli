@@ -9,6 +9,7 @@ import { MilestonesPage } from './pages/MilestonesPage';
 import { PhasesPage } from './pages/PhasesPage';
 import { PlansPage } from './pages/PlansPage';
 import { PlanDetailPage } from './pages/PlanDetailPage';
+import { BoardPage } from './pages/BoardPage';
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                         <Route path="/plans/:planId" element={<PlanDetailPage />} />
                         <Route path="/agents" element={<AgentsPage />} />
                         <Route path="/context" element={<ContextPage />} />
+                        <Route path="/board" element={<BoardPage />} />
                     </Routes>
                 </Layout>
             </ErrorBoundary>
