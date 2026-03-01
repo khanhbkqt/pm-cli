@@ -132,4 +132,27 @@ describe('phase CLI commands', () => {
         const parsed = JSON.parse(show);
         expect(parsed.status).toBe('in_progress');
     });
+
+    it('pm phase update --status completed from not_started fails (invalid transition)', { timeout: 15000 }, () => {
+        run('--agent alice phase add "Bad Jump" --number 1', tempDir);
+        const json = run('--json phase list', tempDir);
+        const phaseId = JSON.parse(json)[0].id;
+
+        // not_started -> completed is not a valid transition
+        const output = runExpectFail(`--agent alice phase update ${phaseId} --status completed`, tempDir);
+        expect(output).toMatch(/invalid.*transition|cannot.*transition|not.*allow/i);
+    });
+
+    it('pm phase update --status in_progress --force transitions successfully', { timeout: 15000 }, () => {
+        run('--agent alice phase add "Force Phase" --number 1', tempDir);
+        const json = run('--json phase list', tempDir);
+        const phaseId = JSON.parse(json)[0].id;
+
+        // not_started -> in_progress is allowed anyway, --force ensures it works
+        const output = run(`--agent alice phase update ${phaseId} --status in_progress --force`, tempDir);
+        expect(output).toContain(`Phase #${phaseId} updated`);
+
+        const show = run(`--json phase show ${phaseId}`, tempDir);
+        expect(JSON.parse(show).status).toBe('in_progress');
+    });
 });

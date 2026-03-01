@@ -88,8 +88,8 @@ export function transitionMilestone(
         }
     }
 
-    // Completion guard: all phases must be completed or skipped
-    if (newStatus === 'completed') {
+    // Completion guard: all phases must be completed or skipped (unless --force)
+    if (newStatus === 'completed' && !opts?.force) {
         const phases = listPhases(db, id);
         const incomplete = phases.filter(
             (p) => p.status !== 'completed' && p.status !== 'skipped',

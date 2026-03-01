@@ -124,4 +124,27 @@ describe('milestone CLI commands', () => {
         expect(output).toContain('Setup');
         expect(output).toContain('Phases:');
     });
+
+    it('pm milestone update --status completed with pending phases fails (workflow guard)', { timeout: 20000 }, () => {
+        run('--agent alice milestone create v1 "Version 1"', tempDir);
+        run('--agent alice milestone update v1 --status active', tempDir);
+        run('--agent alice phase add "Pending Phase" --number 1 --milestone v1', tempDir);
+
+        // Cannot complete milestone when a phase is not completed
+        const output = runExpectFail('--agent alice milestone update v1 --status completed', tempDir);
+        expect(output).toMatch(/cannot complete|phase.*not completed|not completed/i);
+    });
+
+    it('pm milestone update --status completed --force bypasses phase guard', { timeout: 20000 }, () => {
+        run('--agent alice milestone create v1 "Version 1"', tempDir);
+        run('--agent alice milestone update v1 --status active', tempDir);
+        run('--agent alice phase add "Pending Phase" --number 1 --milestone v1', tempDir);
+
+        // --force should bypass the phase completion guard
+        const output = run('--agent alice milestone update v1 --status completed --force', tempDir);
+        expect(output).toContain("Milestone 'v1' updated");
+
+        const show = run('--json milestone show v1', tempDir);
+        expect(JSON.parse(show).status).toBe('completed');
+    });
 });
