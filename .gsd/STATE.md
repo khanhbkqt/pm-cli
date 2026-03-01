@@ -1,5 +1,5 @@
 ---
-updated: 2026-03-01T06:55:00+07:00
+updated: 2026-03-01T07:10:00+07:00
 ---
 
 # Project State
@@ -7,18 +7,17 @@ updated: 2026-03-01T06:55:00+07:00
 ## Current Position
 
 **Milestone:** v2.1-multi-client
-**Phase:** 3 (completed)
+**Phase:** 4 (completed)
 **Task:** All tasks complete
 **Status:** Verified
 
 ## Last Session Summary
 
-Phase 3 executed successfully. 1 plan, 2 tasks completed. Created Cursor adapter (`.cursor/rules/pm-guide.mdc` with MDC frontmatter) and Codex adapter (`AGENTS.md` with section markers, disambiguated from OpenCode).
+Phase 4 executed successfully. 1 plan, 2 tasks completed. Created OpenCode adapter (`AGENTS.md` + `opencode.json`) and `pm install` CLI command with `--all`, `--detect`, `--json`, `--force` flags.
 
 ## Next Steps
 
-1. `/execute 4` → OpenCode & CLI Command
-2. `/execute 5` → Tests & Documentation
+1. `/execute 5` → Tests & Documentation
 
 ## Active Decisions
 
