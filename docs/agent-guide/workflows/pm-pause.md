@@ -1,63 +1,65 @@
 ---
-description: Save session state before stopping work
+description: Context hygiene — dump state for clean session handoff
 ---
 
 # Pause Work Workflow
 
-Capture your current position and context so you (or another agent) can resume later without losing progress.
+Safely pause work with complete state preservation for session handoff.
 
 ## When to Use
 
-When ending a work session — switching tasks, running out of context, or stopping for the day. This ensures nothing is lost between sessions.
-
-## Prerequisites
-
-- Work is in progress on some phase/plan
-
----
-
-## Step 1: Check Current State
-
-```bash
-pm progress
-```
-
-Note which phase and plan you were working on.
+- Ending a work session
+- Context getting heavy (many failed attempts)
+- Switching to a different task
+- After 3+ debugging failures (Context Hygiene rule)
 
 ---
 
-## Step 2: Save Session Context
+## Step 1: Capture Current State
 
-Record your current position:
+Record your position and all critical context:
 
 ```bash
-pm context set session:last-phase <phase-id>
+pm context set session:phase "<phase number and name>"
+pm context set session:plan "<plan ID or description>"
+pm context set session:status "Paused at <timestamp>"
 ```
 
+---
+
+## Step 2: Save Context Dump
+
+Save everything that would be lost without this capture:
+
 ```bash
-pm context set session:last-plan <plan-id>
+pm context set session:summary "<what was accomplished this session>"
+pm context set session:in-progress "<uncommitted changes, partial work>"
+pm context set session:blockers "<what was preventing progress>"
 ```
 
+### Decisions and Approaches
+
 ```bash
-pm context set session:notes "<summary of where you left off and what to do next>"
+pm context set session:decisions "<decision 1: rationale, decision 2: rationale>"
+pm context set session:approaches-tried "<approach 1: outcome, approach 2: outcome>"
+pm context set session:hypothesis "<best guess at solution/issue>"
+pm context set session:files-of-interest "<file1: what's relevant, file2: what's relevant>"
 ```
 
-**Example:**
+### Next Steps
 
 ```bash
-pm context set session:last-phase 12
-pm context set session:last-plan 34
-pm context set session:notes "Finished implementing API routes in plan 2. Next: write integration tests in plan 3."
+pm context set session:next-steps "<1. specific first action, 2. second priority, 3. third priority>"
 ```
 
 ---
 
 ## Step 3: Clean Up In-Progress Plans
 
-If you have plans in `in_progress` status that won't be resumed soon, consider leaving them as-is with a note, or resetting to `pending`:
+If you have plans in `in_progress` that won't be resumed soon:
 
 - **Resuming soon** — Leave as `in_progress`
-- **Not resuming soon** — Reset to `pending` so another agent can pick it up
+- **Not resuming** — Reset to `pending`
 
 ```bash
 pm plan update <plan-id> --status pending
@@ -65,17 +67,58 @@ pm plan update <plan-id> --status pending
 
 ---
 
-## Tips
+## Step 4: Commit State
 
-- Be specific in session notes — include file names, function names, and next actions
-- Don't leave plans as `in_progress` indefinitely without context
-- Save context before your context window fills up
+```bash
+git add -A
+git commit -m "docs: pause session - <brief reason>"
+```
 
-## Success Criteria
+---
 
-- [ ] Current phase/plan IDs saved via `pm context set`
-- [ ] Session notes capture what was done and what's next
-- [ ] No orphaned `in_progress` plans without context
+## Context Hygiene (Debugging Failures)
+
+If pausing due to repeated debugging failures:
+
+1. Be explicit about what failed
+2. Document exact error messages
+3. List files that were touched
+4. State your hypothesis clearly
+5. Suggest a different approach for next session
+
+A fresh context often sees solutions that a polluted context missed.
+
+---
+
+## Proactive Auto-Save
+
+**Problem:** If a session terminates unexpectedly, `/pause` becomes unreachable.
+
+**Solution:** Auto-save state BEFORE limits are hit.
+
+| Trigger | Action |
+|---------|--------|
+| Context usage ~50-70% | Save lightweight state via `pm context set` |
+| 3-strike debugging rule fires | Save state dump BEFORE recommending pause |
+| Extended session detected | Periodic state checkpoints |
+
+**Key principle:** Save first, recommend second. Never rely on being able to issue `/pause`.
+
+---
+
+## Git Rules
+
+| When | Command |
+|------|---------|
+| After state saved | `git add -A && git commit -m "docs: pause session - <reason>"` |
+
+## Related Workflows
+
+| Workflow | Relationship |
+|----------|-------------|
+| Resume | Restore context from this pause |
+| Debug | Use before pause when debugging fails |
+| Progress | Check milestone state before pausing |
 
 ## Next Steps
 

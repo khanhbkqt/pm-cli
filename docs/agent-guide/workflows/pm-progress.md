@@ -1,10 +1,10 @@
 ---
-description: Check milestone and phase progress
+description: Show current position in roadmap and next steps
 ---
 
 # Check Progress Workflow
 
-View the current state of your milestone, including phase completion percentages and plan statuses.
+Quick status check — where are we and what's next?
 
 ## When to Use
 
@@ -22,80 +22,62 @@ At any point during project work when you need to understand overall progress, i
 pm progress
 ```
 
-This shows the active milestone's progress breakdown by phase.
-
 For a specific milestone:
 
 ```bash
 pm progress --milestone <milestone-id>
 ```
 
-**JSON output for programmatic use:**
-
-```bash
-pm progress --milestone <milestone-id> --json
-```
-
 ---
 
 ## Step 2: Review Phase Details
-
-List all phases to see their statuses:
 
 ```bash
 pm phase list --json
 ```
 
-For details on a specific phase (using DB integer ID):
+For a specific phase:
 
 ```bash
 pm phase show <phase-id>
 ```
 
-> **Note:** `pm phase show` takes the DB integer ID, not the phase number. Use `pm phase list --json` to find the correct ID.
-
 ---
 
 ## Step 3: Drill Into Plans
-
-List plans for a specific phase:
 
 ```bash
 pm plan list --phase <phase-id> --json
 ```
 
-Filter by status to find incomplete work:
+Or use the kanban board view:
 
 ```bash
-pm plan list --phase <phase-id> --status pending
-```
-
-Filter by wave:
-
-```bash
-pm plan list --phase <phase-id> --wave 1
+pm plan board --phase <phase-id>
 ```
 
 ---
 
-## Step 4: Review Milestone Details
+## Step 4: Suggest Next Action
 
-For full milestone information:
+Based on state, recommend the next action:
 
-```bash
-pm milestone show <milestone-id> --json
-```
-
-This shows the milestone goal, status, and associated phases.
+| State | Recommendation |
+|-------|----------------|
+| Phase in progress | Execute Phase — continue working |
+| Phase done, not verified | Verify Work |
+| Verification failed | Execute Phase (gap closure) |
+| All phases complete | Audit Milestone or Complete Milestone |
+| No phases started | Plan Phase to begin |
+| SPEC not finalized | Complete SPEC.md first |
 
 ---
 
-## Success Criteria
+## Related Workflows
 
-- [ ] Current progress is understood
-- [ ] Next action is clear (which plan/phase to work on)
-
-## Next Steps
-
-→ [Execute Phase](pm-execute-phase.md) — continue working on incomplete plans
-→ [Audit Milestone](pm-audit-milestone.md) — if all phases look done
+| Workflow | Relationship |
+|----------|-------------|
+| Execute Phase | Continue working on plans |
+| Verify Work | Validate completed phase |
+| Audit Milestone | Review milestone quality |
+| Complete Milestone | Archive completed milestone |

@@ -1,14 +1,14 @@
 ---
-description: Restore context and resume from a previous session
+description: Restore context from previous session
 ---
 
 # Resume Work Workflow
 
-Pick up where a previous session left off by restoring saved context and finding the next plan to work on.
+Start a new session with full context from where you left off.
 
 ## When to Use
 
-When starting a new session and previous work was paused with the Pause Work workflow (or you need to understand current project state).
+When starting a new session after a previous pause, or when you need to understand the current project state.
 
 ## Prerequisites
 
@@ -17,25 +17,36 @@ When starting a new session and previous work was paused with the Pause Work wor
 
 ---
 
-## Step 1: Check Saved Context
+## Step 1: Load Saved State
 
 ```bash
-pm context get session:last-phase
-```
-
-```bash
-pm context get session:last-plan
-```
-
-```bash
-pm context get session:notes
+pm context get session:phase
+pm context get session:plan
+pm context get session:status
+pm context get session:summary
+pm context get session:next-steps
 ```
 
 If no saved context exists, skip to Step 2.
 
 ---
 
-## Step 2: Review Overall Progress
+## Step 2: Check for Uncommitted Changes
+
+```bash
+git status --porcelain
+```
+
+**If changes found:**
+```
+⚠️ UNCOMMITTED CHANGES DETECTED
+{list of modified files}
+These may be from the previous session. Review before proceeding.
+```
+
+---
+
+## Step 3: Review Overall Progress
 
 ```bash
 pm progress
@@ -45,49 +56,70 @@ Understand where the project stands — which phases are done, in progress, or p
 
 ---
 
-## Step 3: Find Pending Work
+## Step 4: Load Previous Context
 
-List plans for the active phase:
+If debugging context was saved:
+
+```bash
+pm context get session:blockers
+pm context get session:approaches-tried
+pm context get session:hypothesis
+pm context get session:files-of-interest
+```
+
+Review what was tried and what failed — avoid repeating failed approaches.
+
+---
+
+## Step 5: Find Pending Work
 
 ```bash
 pm plan list --phase <phase-id> --json
 ```
 
 Look for:
-1. Plans in `in_progress` status — resume these first
-2. Plans in `pending` status — start the next one
-3. Plans in `failed` status — consider retrying
+1. Plans in `in_progress` — resume these first
+2. Plans in `pending` — start the next one
+3. Plans in `failed` — consider retrying with fresh perspective
 
 ---
 
-## Step 4: Resume or Start Next Plan
+## Step 6: Suggest Action
 
-**If resuming an in-progress plan:**
-Review what was done previously (check session notes) and continue the work.
+Based on state, recommend the next action:
 
-**If starting a new plan:**
-
-```bash
-pm plan update <plan-id> --status in_progress
-```
-
-Then follow the [Execute Phase](pm-execute-phase.md) workflow.
+| State | Recommendation |
+|-------|----------------|
+| Phase in progress | Execute Phase to continue |
+| Phase done, not verified | Verify Work |
+| Verification failed | Execute Phase (gaps only) |
+| All phases complete | Complete Milestone or celebrate 🎉 |
+| No phases started | Plan Phase to begin |
 
 ---
 
-## Tips
+## Fresh Context Advantage
 
-- Always check `pm progress` first to orient yourself
-- Read session notes carefully to avoid redoing work
-- If context is missing, review git history for recent commits
+A resumed session has advantages:
+1. **No accumulated confusion** — see the problem clearly
+2. **Documented failures** — know what NOT to try
+3. **Hypothesis preserved** — pick up where logic left off
+4. **Full context budget** — fresh capacity for new approaches
 
-## Success Criteria
+Often the first thing a fresh context sees is the obvious solution that a tired context missed.
 
-- [ ] Current project state is understood
-- [ ] Next task is identified
-- [ ] Work is resumed (plan is `in_progress`)
+---
+
+## Related Workflows
+
+| Workflow | Relationship |
+|----------|-------------|
+| Pause | Creates the state restored here |
+| Execute Phase | Continue phase execution |
+| Verify Work | Validate completed phase |
+| Progress | Check overall milestone state |
 
 ## Next Steps
 
 → [Execute Phase](pm-execute-phase.md) — continue executing plans
-→ [Check Progress](pm-progress.md) — if you need more context
+→ [Progress](pm-progress.md) — if you need more context

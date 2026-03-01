@@ -1,5 +1,5 @@
 ---
-description: Create and activate a new milestone
+description: Create and activate a new milestone with phases
 ---
 
 # New Milestone Workflow
@@ -8,45 +8,35 @@ Create a new milestone, set its goal, activate it, and add initial phases.
 
 ## When to Use
 
-When starting a new body of work — a feature set, a version release, or a major initiative. Each milestone is a container for phases and plans.
+When starting a new body of work — a feature set, version release, or major initiative.
 
 ## Prerequisites
 
 - Project initialized (`pm init` has been run)
+- Requirements clarified (SPEC.md exists or equivalent)
 
 ---
 
-## Step 1: Brainstorm & Clarify Requirements
+## Step 1: Clarify Requirements
 
-Before creating a new milestone, you must define what features you are building.
+Before creating a milestone, define what you're building:
 
-→ **Run the [Brainstorm Phase](pm-brainstorm.md)** workflow to clarify requirements, map user flows, and draft your `SPEC.md` for this milestone.
+→ **Run the [Brainstorm](pm-brainstorm.md) workflow** if requirements are unclear.
 
-_Do not proceed to the next step until your `SPEC.md` has `Status: FINALIZED`._
+*Do not proceed until SPEC.md has Status: FINALIZED.*
 
 ---
 
 ## Step 2: Create the Milestone
-
-Based on the finalized `SPEC.md`, create the milestone.
 
 ```bash
 pm milestone create <slug> "<name>" --goal "<goal description from SPEC>"
 ```
 
 **Example:**
-
 ```bash
-pm milestone create v2.0-auth "Authentication System" --goal "Add user authentication defined in the Spec"
+pm milestone create v2.0-auth "Authentication System" --goal "Add user authentication per Spec"
 ```
-
-**JSON output:**
-
-```bash
-pm milestone create v2.0-auth "Authentication System" --goal "Add auth" --json
-```
-
-The `<slug>` is a unique identifier (e.g., `v2.0-auth`) and `<name>` is the display name.
 
 ---
 
@@ -56,68 +46,58 @@ The `<slug>` is a unique identifier (e.g., `v2.0-auth`) and `<name>` is the disp
 pm milestone update <slug> --status active
 ```
 
-**Cascading behavior:** Activating a milestone automatically deactivates any currently-active milestone. Only one milestone can be active at a time (single-active rule).
+**Cascading:** Activating a milestone deactivates any currently-active milestone (single-active rule).
 
 ---
 
 ## Step 4: Add Phases
 
-Add high-level phases to structure the work based on the Core Features defined in your `SPEC.md`:
+Break the milestone into 3-5 phases based on SPEC goals:
 
 ```bash
 pm phase add "Database Schema" --number 1 --description "Create auth tables and models"
-```
-
-```bash
-pm phase add "API Endpoints" --number 2 --description "Build login, register, and token refresh endpoints"
-```
-
-```bash
+pm phase add "API Endpoints" --number 2 --description "Login, register, token refresh"
 pm phase add "Integration Tests" --number 3 --description "End-to-end auth flow tests"
 ```
 
-Phase options:
-
-- `--number <n>` (required) — ordering number
-- `--milestone <slug>` — defaults to the active milestone
-- `--description <text>` — phase description
-
-All phases start in `not_started` status.
+**Phase rules:**
+- 3-5 phases per milestone
+- Each phase has a clear deliverable
+- Dependencies flow forward (Phase 2 depends on Phase 1)
+- All phases start as `not_started`
 
 ---
 
-## Step 5: Verify Setup
+## Step 5: Verify and Commit
 
 ```bash
-pm milestone show <slug> --json
+pm progress
 ```
+
+Confirm the milestone is active and phases match your SPEC.
 
 ```bash
-pm phase list --json
+git add -A
+git commit -m "docs: create milestone <slug> with {N} phases"
 ```
-
-Confirm the milestone is active and phases match your Spec.
 
 ---
 
-## Milestone Status Transitions
+## Git Rules
 
-```
-planned → active → completed → archived
-```
+| When | Command |
+|------|---------|
+| After milestone + phases created | `git add -A && git commit -m "docs: create milestone <slug> with {N} phases"` |
 
-## Cascading Behavior
+## Related Workflows
 
-- Activating a milestone deactivates any currently-active milestone (single-active rule)
-- New phases default to `not_started` status
-
-## Success Criteria
-
-- [ ] Brainstorming completed and `SPEC.md` is `FINALIZED`
-- [ ] Milestone created and active
-- [ ] All initial phases added based on the Spec
-- [ ] `pm milestone show` displays correct goal and phases
+| Workflow | Relationship |
+|----------|-------------|
+| Discuss Phase | Clarify phase scope before planning |
+| Plan Phase | Create executable plans for Phase 1 |
+| Progress | Check milestone progress |
 
 ## Next Steps
 
-→ [Plan Phase](pm-plan-phase.md) — create executable plans for the first phase
+→ [Discuss Phase](pm-discuss-phase.md) — clarify Phase 1 scope (optional)
+→ [Plan Phase](pm-plan-phase.md) — create executable plans for Phase 1
