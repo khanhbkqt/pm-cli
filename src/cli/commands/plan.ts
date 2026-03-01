@@ -33,9 +33,8 @@ export function registerPlanCommands(program: Command): void {
             try {
                 const db = getProjectDb();
                 resolveIdentity(db, { agent: program.opts().agent });
-                const phaseId = parseInt(opts.phase, 10);
                 const created = createPlan(db, {
-                    phase_id: phaseId,
+                    phase_id: opts.phase,
                     number: parseInt(opts.number, 10),
                     name,
                     wave: opts.wave ? parseInt(opts.wave, 10) : 1,
@@ -46,7 +45,7 @@ export function registerPlanCommands(program: Command): void {
                 if (json) {
                     console.log(JSON.stringify(created, null, 2));
                 } else {
-                    console.log(`✓ Plan #${created.number} created in phase #${phaseId}`);
+                    console.log(`✓ Plan #${created.number} created in phase '${opts.phase}'`);
                 }
                 db.close();
             } catch (error) {
@@ -70,8 +69,7 @@ export function registerPlanCommands(program: Command): void {
             try {
                 const db = getProjectDb();
                 const json = program.opts().json;
-                const phaseId = parseInt(opts.phase, 10);
-                const plans = listPlans(db, phaseId, {
+                const plans = listPlans(db, opts.phase, {
                     status: opts.status,
                     wave: opts.wave !== undefined ? parseInt(opts.wave, 10) : undefined,
                 });
@@ -95,7 +93,7 @@ export function registerPlanCommands(program: Command): void {
             try {
                 const db = getProjectDb();
                 const json = program.opts().json;
-                const found = getPlanById(db, parseInt(id, 10));
+                const found = getPlanById(db, id);
 
                 if (!found) {
                     console.error(`Error: Plan #${id} not found.`);
@@ -127,11 +125,8 @@ export function registerPlanCommands(program: Command): void {
             try {
                 const db = getProjectDb();
                 resolveIdentity(db, { agent: program.opts().agent });
-                const planId = parseInt(id, 10);
-
-                // If --status provided, route through workflow transitions
                 if (opts.status) {
-                    transitionPlan(db, planId, opts.status as any, { force: opts.force });
+                    transitionPlan(db, id, opts.status as any, { force: opts.force });
                 }
 
                 // Apply non-status updates via raw CRUD
@@ -141,10 +136,10 @@ export function registerPlanCommands(program: Command): void {
                 if (opts.wave !== undefined) otherUpdates.wave = parseInt(opts.wave, 10);
 
                 if (Object.keys(otherUpdates).length > 0) {
-                    updatePlan(db, planId, otherUpdates);
+                    updatePlan(db, id, otherUpdates);
                 }
 
-                const updated = getPlanById(db, planId)!;
+                const updated = getPlanById(db, id)!;
                 const json = program.opts().json;
 
                 if (json) {
@@ -172,8 +167,7 @@ export function registerPlanCommands(program: Command): void {
             try {
                 const db = getProjectDb();
                 const json = program.opts().json;
-                const phaseId = parseInt(opts.phase, 10);
-                const plans = listPlans(db, phaseId);
+                const plans = listPlans(db, opts.phase);
                 console.log(formatPlanBoard(plans, json));
                 db.close();
             } catch (error) {

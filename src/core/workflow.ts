@@ -110,13 +110,13 @@ export function transitionMilestone(
  */
 export function transitionPhase(
     db: Database.Database,
-    id: number,
+    id: string,
     newStatus: PhaseStatus,
     opts?: { force?: boolean },
 ): Phase {
     const phase = getPhaseById(db, id);
     if (!phase) {
-        throw new Error(`Phase #${id} not found.`);
+        throw new Error(`Phase '${id}' not found.`);
     }
 
     if (!opts?.force) {
@@ -135,13 +135,13 @@ export function transitionPhase(
  */
 export function transitionPlan(
     db: Database.Database,
-    id: number,
+    id: string,
     newStatus: PlanStatus,
     opts?: { force?: boolean },
 ): Plan {
     const plan = getPlanById(db, id);
     if (!plan) {
-        throw new Error(`Plan #${id} not found.`);
+        throw new Error(`Plan '${id}' not found.`);
     }
 
     if (!opts?.force) {

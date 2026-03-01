@@ -32,7 +32,7 @@ export interface Milestone {
 }
 
 export interface Phase {
-    id: number;
+    id: string;
     milestone_id: string;
     number: number;
     name: string;
@@ -43,8 +43,8 @@ export interface Phase {
 }
 
 export interface Plan {
-    id: number;
-    phase_id: number;
+    id: string;
+    phase_id: string;
     number: number;
     name: string;
     wave: number;

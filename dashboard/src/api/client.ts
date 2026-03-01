@@ -65,13 +65,13 @@ export async function fetchMilestonePhases(milestoneId: string): Promise<PhaseWi
 }
 
 /** Fetch plans for a specific phase. */
-export async function fetchPhasePlans(phaseId: number): Promise<Plan[]> {
+export async function fetchPhasePlans(phaseId: string): Promise<Plan[]> {
     const res = await apiFetch<{ plans: Plan[] }>(`/api/phases/${phaseId}/plans`);
     return res.plans;
 }
 
 /** Fetch a single plan by ID. */
-export async function fetchPlanById(id: number): Promise<Plan> {
+export async function fetchPlanById(id: string): Promise<Plan> {
     const res = await apiFetch<{ plan: Plan }>(`/api/plans/${id}`);
     return res.plan;
 }

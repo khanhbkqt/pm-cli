@@ -111,7 +111,7 @@ export function registerPhaseCommands(program: Command): void {
             try {
                 const db = getProjectDb();
                 const json = program.opts().json;
-                const found = getPhaseById(db, parseInt(id, 10));
+                const found = getPhaseById(db, id);
 
                 if (!found) {
                     console.error(`Error: Phase #${id} not found.`);
@@ -155,7 +155,7 @@ export function registerPhaseCommands(program: Command): void {
 
                 // If --status provided, route through workflow transitions
                 if (opts.status) {
-                    transitionPhase(db, parseInt(id, 10), opts.status as any, { force: opts.force });
+                    transitionPhase(db, id, opts.status as any, { force: opts.force });
                 }
 
                 // Apply non-status updates via raw CRUD
@@ -163,10 +163,10 @@ export function registerPhaseCommands(program: Command): void {
                 if (opts.name !== undefined) otherUpdates.name = opts.name;
                 if (opts.description !== undefined) otherUpdates.description = opts.description;
                 if (Object.keys(otherUpdates).length > 0) {
-                    updatePhase(db, parseInt(id, 10), otherUpdates);
+                    updatePhase(db, id, otherUpdates);
                 }
 
-                const updated = getPhaseById(db, parseInt(id, 10))!;
+                const updated = getPhaseById(db, id)!;
                 const json = program.opts().json;
 
                 if (json) {

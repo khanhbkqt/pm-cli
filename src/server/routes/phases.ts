@@ -34,14 +34,9 @@ export function createPhaseRoutes(db: Database.Database): Router {
     // GET /api/phases/:id — get single phase by ID with plans
     router.get('/api/phases/:id', (req, res) => {
         try {
-            const id = parseInt(req.params.id, 10);
-            if (isNaN(id)) {
-                res.status(400).json({ error: 'Phase ID must be a number' });
-                return;
-            }
-            const phase = getPhaseById(db, id);
+            const phase = getPhaseById(db, req.params.id);
             if (!phase) {
-                res.status(404).json({ error: `Phase #${id} not found` });
+                res.status(404).json({ error: `Phase '${req.params.id}' not found` });
                 return;
             }
             const plans = listPlans(db, phase.id);

@@ -23,7 +23,7 @@ function formatStatus(s: string): string {
 export function PlanDetailPage() {
     const { planId } = useParams<{ planId: string }>();
     const { data: plan, loading, error, refetch } = useApi(
-        useCallback(() => fetchPlanById(Number(planId)), [planId])
+        useCallback(() => fetchPlanById(planId ?? ''), [planId])
     );
 
     if (loading) {

@@ -102,7 +102,7 @@ describe('phase core', () => {
     });
 
     it('getPhaseById returns undefined when not found', () => {
-        const found = getPhaseById(db, 999);
+        const found = getPhaseById(db, 'nonexistent-uuid');
         expect(found).toBeUndefined();
     });
 
@@ -126,8 +126,8 @@ describe('phase core', () => {
 
     it('updatePhase throws if phase not found', () => {
         expect(() => {
-            updatePhase(db, 999, { name: 'Nope' });
-        }).toThrow('Phase #999 not found.');
+            updatePhase(db, 'nonexistent-uuid', { name: 'Nope' });
+        }).toThrow("Phase 'nonexistent-uuid' not found.");
     });
 
     it('updatePhase with no updates returns existing phase', () => {
@@ -152,3 +152,4 @@ describe('phase core', () => {
         expect(phase).toBeUndefined();
     });
 });
+

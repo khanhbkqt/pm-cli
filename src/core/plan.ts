@@ -4,20 +4,20 @@ import type { Plan } from '../db/types.js';
 /**
  * Validate that a phase exists. Throws if not found.
  */
-function requirePhaseExists(db: Database.Database, phaseId: number): void {
+function requirePhaseExists(db: Database.Database, phaseId: string): void {
     const phase = db.prepare('SELECT id FROM phases WHERE id = ?').get(phaseId);
     if (!phase) {
-        throw new Error(`Phase #${phaseId} not found.`);
+        throw new Error(`Phase '${phaseId}' not found.`);
     }
 }
 
 /**
  * Validate that a plan exists. Throws if not found.
  */
-function requirePlan(db: Database.Database, id: number): Plan {
+function requirePlan(db: Database.Database, id: string): Plan {
     const plan = db.prepare('SELECT * FROM plans WHERE id = ?').get(id) as Plan | undefined;
     if (!plan) {
-        throw new Error(`Plan #${id} not found.`);
+        throw new Error(`Plan '${id}' not found.`);
     }
     return plan;
 }
@@ -27,17 +27,18 @@ function requirePlan(db: Database.Database, id: number): Plan {
  */
 export function createPlan(
     db: Database.Database,
-    params: { phase_id: number; number: number; name: string; wave?: number; content?: string }
+    params: { phase_id: string; number: number; name: string; wave?: number; content?: string }
 ): Plan {
     const { phase_id, number, name, wave, content } = params;
 
     requirePhaseExists(db, phase_id);
 
-    const result = db.prepare(
-        'INSERT INTO plans (phase_id, number, name, wave, content) VALUES (?, ?, ?, ?, ?)'
-    ).run(phase_id, number, name, wave ?? 1, content ?? null);
+    const id = crypto.randomUUID();
+    db.prepare(
+        'INSERT INTO plans (id, phase_id, number, name, wave, content) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run(id, phase_id, number, name, wave ?? 1, content ?? null);
 
-    return db.prepare('SELECT * FROM plans WHERE id = ?').get(result.lastInsertRowid) as Plan;
+    return db.prepare('SELECT * FROM plans WHERE id = ?').get(id) as Plan;
 }
 
 /**
@@ -45,7 +46,7 @@ export function createPlan(
  */
 export function listPlans(
     db: Database.Database,
-    phase_id: number,
+    phase_id: string,
     filters?: { status?: string; wave?: number }
 ): Plan[] {
     const conditions: string[] = ['phase_id = ?'];
@@ -68,7 +69,7 @@ export function listPlans(
 /**
  * Get a single plan by ID.
  */
-export function getPlanById(db: Database.Database, id: number): Plan | undefined {
+export function getPlanById(db: Database.Database, id: string): Plan | undefined {
     return db.prepare('SELECT * FROM plans WHERE id = ?').get(id) as Plan | undefined;
 }
 
@@ -77,7 +78,7 @@ export function getPlanById(db: Database.Database, id: number): Plan | undefined
  */
 export function updatePlan(
     db: Database.Database,
-    id: number,
+    id: string,
     updates: { name?: string; status?: string; content?: string; wave?: number }
 ): Plan {
     requirePlan(db, id);

@@ -30,7 +30,7 @@ const COLUMNS: Array<{ key: string; label: string }> = [
 export function PlansPage() {
     const { phaseId } = useParams<{ phaseId: string }>();
     const { data: plans, loading, error, refetch } = useApi(
-        useCallback(() => fetchPhasePlans(Number(phaseId)), [phaseId])
+        useCallback(() => fetchPhasePlans(phaseId ?? ''), [phaseId])
     );
 
     if (loading) {

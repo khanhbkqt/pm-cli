@@ -14,10 +14,10 @@ function requireMilestoneExists(db: Database.Database, milestoneId: string): voi
 /**
  * Validate that a phase exists. Throws if not found.
  */
-function requirePhase(db: Database.Database, id: number): Phase {
+function requirePhase(db: Database.Database, id: string): Phase {
     const phase = db.prepare('SELECT * FROM phases WHERE id = ?').get(id) as Phase | undefined;
     if (!phase) {
-        throw new Error(`Phase #${id} not found.`);
+        throw new Error(`Phase '${id}' not found.`);
     }
     return phase;
 }
@@ -33,11 +33,12 @@ export function addPhase(
 
     requireMilestoneExists(db, milestone_id);
 
-    const result = db.prepare(
-        'INSERT INTO phases (milestone_id, number, name, description) VALUES (?, ?, ?, ?)'
-    ).run(milestone_id, number, name, description ?? null);
+    const id = crypto.randomUUID();
+    db.prepare(
+        'INSERT INTO phases (id, milestone_id, number, name, description) VALUES (?, ?, ?, ?, ?)'
+    ).run(id, milestone_id, number, name, description ?? null);
 
-    return db.prepare('SELECT * FROM phases WHERE id = ?').get(result.lastInsertRowid) as Phase;
+    return db.prepare('SELECT * FROM phases WHERE id = ?').get(id) as Phase;
 }
 
 /**
@@ -64,7 +65,7 @@ export function listPhases(
 /**
  * Get a single phase by ID.
  */
-export function getPhaseById(db: Database.Database, id: number): Phase | undefined {
+export function getPhaseById(db: Database.Database, id: string): Phase | undefined {
     return db.prepare('SELECT * FROM phases WHERE id = ?').get(id) as Phase | undefined;
 }
 
@@ -73,7 +74,7 @@ export function getPhaseById(db: Database.Database, id: number): Phase | undefin
  */
 export function updatePhase(
     db: Database.Database,
-    id: number,
+    id: string,
     updates: { name?: string; description?: string; status?: string }
 ): Phase {
     requirePhase(db, id);

@@ -17,7 +17,7 @@ describe('plan core', () => {
     let tempDir: string;
     let db: ReturnType<typeof getDatabase>;
     let testAgent: { id: string; name: string };
-    let phaseId: number;
+    let phaseId: string;
 
     beforeEach(() => {
         tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pm-plan-test-'));
@@ -69,8 +69,8 @@ describe('plan core', () => {
 
     it('createPlan throws if phase does not exist', () => {
         expect(() => {
-            createPlan(db, { phase_id: 999, number: 1, name: 'Bad' });
-        }).toThrow('Phase #999 not found.');
+            createPlan(db, { phase_id: 'nonexistent-uuid', number: 1, name: 'Bad' });
+        }).toThrow("Phase 'nonexistent-uuid' not found.");
     });
 
     // --- listPlans ---
@@ -117,7 +117,7 @@ describe('plan core', () => {
     });
 
     it('getPlanById returns undefined when not found', () => {
-        const found = getPlanById(db, 999);
+        const found = getPlanById(db, 'nonexistent-uuid');
         expect(found).toBeUndefined();
     });
 
@@ -148,8 +148,8 @@ describe('plan core', () => {
 
     it('updatePlan throws if plan not found', () => {
         expect(() => {
-            updatePlan(db, 999, { name: 'Nope' });
-        }).toThrow('Plan #999 not found.');
+            updatePlan(db, 'nonexistent-uuid', { name: 'Nope' });
+        }).toThrow("Plan 'nonexistent-uuid' not found.");
     });
 
     it('updatePlan with no updates returns existing plan', () => {
@@ -158,3 +158,4 @@ describe('plan core', () => {
         expect(same.name).toBe('Same');
     });
 });
+

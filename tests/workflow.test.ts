@@ -165,7 +165,7 @@ describe('workflow engine', () => {
     // === transitionPhase ===
 
     describe('transitionPhase', () => {
-        let phaseId: number;
+        let phaseId: string;
 
         beforeEach(() => {
             createMilestone(db, { id: 'v1', name: 'MS', created_by: testAgent.id });
@@ -222,16 +222,16 @@ describe('workflow engine', () => {
 
         it('throws if phase not found', () => {
             expect(() => {
-                transitionPhase(db, 9999, 'planning');
-            }).toThrow('Phase #9999 not found.');
+                transitionPhase(db, 'nonexistent-uuid', 'planning');
+            }).toThrow("Phase 'nonexistent-uuid' not found.");
         });
     });
 
     // === transitionPlan ===
 
     describe('transitionPlan', () => {
-        let phaseId: number;
-        let planId: number;
+        let phaseId: string;
+        let planId: string;
 
         beforeEach(() => {
             createMilestone(db, { id: 'v1', name: 'MS', created_by: testAgent.id });
@@ -325,8 +325,8 @@ describe('workflow engine', () => {
 
         it('throws if plan not found', () => {
             expect(() => {
-                transitionPlan(db, 9999, 'in_progress');
-            }).toThrow('Plan #9999 not found.');
+                transitionPlan(db, 'nonexistent-uuid', 'in_progress');
+            }).toThrow("Plan 'nonexistent-uuid' not found.");
         });
     });
 

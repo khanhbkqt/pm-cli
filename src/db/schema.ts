@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS milestones (
 
 -- Phases table (workflow engine)
 CREATE TABLE IF NOT EXISTS phases (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id TEXT PRIMARY KEY,
   milestone_id TEXT NOT NULL REFERENCES milestones(id),
   number INTEGER NOT NULL,
   name TEXT NOT NULL,
@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS phases (
 
 -- Plans table (workflow engine)
 CREATE TABLE IF NOT EXISTS plans (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  phase_id INTEGER NOT NULL REFERENCES phases(id),
+  id TEXT PRIMARY KEY,
+  phase_id TEXT NOT NULL REFERENCES phases(id),
   number INTEGER NOT NULL,
   name TEXT NOT NULL,
   wave INTEGER NOT NULL DEFAULT 1,
