@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { ClientAdapter, ClientConfig, GenerateResult, CleanResult } from '../types.js';
 import { registerAdapter } from '../registry.js';
-import { loadCanonicalTemplate } from '../template.js';
+import { loadCanonicalTemplate, loadWorkflowTemplates } from '../template.js';
 
 const WORKFLOW_DIR = '.agent/workflows';
 const WORKFLOW_FILE = 'pm-guide.md';
@@ -79,6 +79,17 @@ export class AntigravityAdapter implements ClientAdapter {
         fs.writeFileSync(rulePath, RULE_CONTENT, 'utf-8');
         files.push(rulePath);
 
+        // --- 3. Individual workflow files ---
+        const workflows = loadWorkflowTemplates(projectRoot);
+        for (const [filename, content] of workflows) {
+            const wfPath = path.join(projectRoot, WORKFLOW_DIR, filename);
+            if (fs.existsSync(wfPath)) {
+                warnings.push(`Overwriting existing ${WORKFLOW_DIR}/${filename}`);
+            }
+            fs.writeFileSync(wfPath, content, 'utf-8');
+            files.push(wfPath);
+        }
+
         return { files, warnings };
     }
 
@@ -104,6 +115,18 @@ export class AntigravityAdapter implements ClientAdapter {
             skipped.push(rulePath);
         }
 
+        // Remove individual workflow files (pm-*.md but not pm-guide.md)
+        const wfDir = path.join(projectRoot, WORKFLOW_DIR);
+        if (fs.existsSync(wfDir)) {
+            for (const entry of fs.readdirSync(wfDir)) {
+                if (entry.startsWith('pm-') && entry.endsWith('.md') && entry !== WORKFLOW_FILE) {
+                    const wfPath = path.join(wfDir, entry);
+                    fs.unlinkSync(wfPath);
+                    removed.push(wfPath);
+                }
+            }
+        }
+
         // Do NOT remove .agent/ directories — may have other files
 
         return { removed, skipped };
@@ -113,7 +136,7 @@ export class AntigravityAdapter implements ClientAdapter {
         return {
             type: 'antigravity',
             name: 'Antigravity',
-            configPaths: [WORKFLOW_PATH, RULES_PATH],
+            configPaths: [WORKFLOW_PATH, RULES_PATH, '.agent/workflows/pm-*.md'],
             configFormat: 'markdown+yaml-frontmatter',
         };
     }

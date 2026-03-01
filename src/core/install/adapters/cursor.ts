@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { ClientAdapter, ClientConfig, GenerateResult, CleanResult } from '../types.js';
 import { registerAdapter } from '../registry.js';
-import { loadCanonicalTemplate } from '../template.js';
+import { loadCanonicalTemplate, loadWorkflowTemplates } from '../template.js';
 
 const RULES_DIR = '.cursor/rules';
 const RULES_FILE = 'pm-guide.mdc';
@@ -55,6 +55,35 @@ export class CursorAdapter implements ClientAdapter {
         fs.writeFileSync(outputPath, content, 'utf-8');
         files.push(outputPath);
 
+        // --- Individual workflow .mdc files ---
+        const workflows = loadWorkflowTemplates(projectRoot);
+        for (const [filename, wfContent] of workflows) {
+            // Extract description from original frontmatter
+            const fmMatch = wfContent.match(/^---\s*\n([\s\S]*?)\n---/);
+            let description = '';
+            let body = wfContent;
+            if (fmMatch) {
+                const descMatch = fmMatch[1].match(/^description:\s*(.+)$/m);
+                if (descMatch) {
+                    description = descMatch[1].trim();
+                }
+                // Strip original frontmatter, keep body
+                body = wfContent.slice(fmMatch[0].length).trimStart();
+            }
+
+            // Build MDC frontmatter
+            const mdcContent = `---\ndescription: ${description}\nglobs: "**/*"\nalwaysApply: true\n---\n\n${body}`;
+
+            // Write as .mdc
+            const mdcFilename = filename.replace(/\.md$/, '.mdc');
+            const mdcPath = path.join(projectRoot, RULES_DIR, mdcFilename);
+            if (fs.existsSync(mdcPath)) {
+                warnings.push(`Overwriting existing ${RULES_DIR}/${mdcFilename}`);
+            }
+            fs.writeFileSync(mdcPath, mdcContent, 'utf-8');
+            files.push(mdcPath);
+        }
+
         return { files, warnings };
     }
 
@@ -71,6 +100,18 @@ export class CursorAdapter implements ClientAdapter {
             skipped.push(outputPath);
         }
 
+        // Remove individual workflow .mdc files (pm-*.mdc but not pm-guide.mdc)
+        const cursorRulesDir = path.join(projectRoot, RULES_DIR);
+        if (fs.existsSync(cursorRulesDir)) {
+            for (const entry of fs.readdirSync(cursorRulesDir)) {
+                if (entry.startsWith('pm-') && entry.endsWith('.mdc') && entry !== RULES_FILE) {
+                    const wfPath = path.join(cursorRulesDir, entry);
+                    fs.unlinkSync(wfPath);
+                    removed.push(wfPath);
+                }
+            }
+        }
+
         // Do NOT remove .cursor/ directory — may have other files
 
         return { removed, skipped };
@@ -80,7 +121,7 @@ export class CursorAdapter implements ClientAdapter {
         return {
             type: 'cursor',
             name: 'Cursor',
-            configPaths: [RULES_PATH],
+            configPaths: [RULES_PATH, '.cursor/rules/pm-*.mdc'],
             configFormat: 'mdc+yaml-frontmatter',
         };
     }
