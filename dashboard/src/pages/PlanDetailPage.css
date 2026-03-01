@@ -1,0 +1,151 @@
+/* ─── PlanDetailPage ───────────────────────────────── */
+
+.plan-detail {
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ─── Breadcrumb ───────────────────────────────────── */
+
+.plan-detail__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.plan-detail__breadcrumb a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.plan-detail__breadcrumb a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+.plan-detail__breadcrumb-sep {
+    opacity: 0.4;
+}
+
+.plan-detail__breadcrumb-current {
+    color: var(--text-primary);
+}
+
+/* ─── Header ───────────────────────────────────────── */
+
+.plan-detail__header {
+    margin-bottom: 2rem;
+}
+
+.plan-detail__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+.plan-detail__meta {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.plan-detail__status {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 500;
+}
+
+.plan-detail__status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.plan-detail__wave {
+    background: var(--bg-tertiary);
+    padding: 0.2em 0.65em;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent-purple);
+    border: 1px solid var(--border-color);
+}
+
+.plan-detail__time {
+    opacity: 0.8;
+}
+
+/* ─── Content Panel ────────────────────────────────── */
+
+.plan-detail__content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 2rem;
+    min-height: 200px;
+}
+
+/* ─── Footer ───────────────────────────────────────── */
+
+.plan-detail__footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.plan-detail__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    color: var(--accent-blue);
+    text-decoration: none;
+    padding: 0.5em 0;
+    transition: opacity 0.2s;
+}
+
+.plan-detail__back:hover {
+    opacity: 0.8;
+    text-decoration: none;
+}
+
+/* ─── Responsive ───────────────────────────────────── */
+
+@media (max-width: 640px) {
+    .plan-detail {
+        padding: 1rem;
+    }
+
+    .plan-detail__content {
+        padding: 1.25rem;
+    }
+
+    .plan-detail__title {
+        font-size: 1.35rem;
+    }
+}

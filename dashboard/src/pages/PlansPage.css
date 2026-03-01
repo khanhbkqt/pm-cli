@@ -161,6 +161,12 @@
 }
 
 /* ─── Plan Card ────────────────────────────────────── */
+.plan-card__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
 .plan-card {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);

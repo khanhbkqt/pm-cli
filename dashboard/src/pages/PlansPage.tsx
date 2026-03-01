@@ -91,21 +91,27 @@ export function PlansPage() {
                                         <div className="plans-kanban__empty">No {col.label.toLowerCase()}</div>
                                     ) : (
                                         colPlans.map((plan: Plan) => (
-                                            <div key={plan.id} className="plan-card">
-                                                <div className="plan-card__name">{plan.name}</div>
-                                                <div className="plan-card__meta">
-                                                    <span className="plan-card__wave">W{plan.wave}</span>
-                                                    <span
-                                                        className="plan-card__status"
-                                                        style={{ color: STATUS_COLORS[plan.status] }}
-                                                    >
-                                                        {formatStatus(plan.status)}
-                                                    </span>
-                                                    <span className="plan-card__time">
-                                                        {relativeTime(plan.created_at)}
-                                                    </span>
+                                            <Link
+                                                key={plan.id}
+                                                to={`/plans/${plan.id}`}
+                                                className="plan-card__link"
+                                            >
+                                                <div className="plan-card">
+                                                    <div className="plan-card__name">{plan.name}</div>
+                                                    <div className="plan-card__meta">
+                                                        <span className="plan-card__wave">W{plan.wave}</span>
+                                                        <span
+                                                            className="plan-card__status"
+                                                            style={{ color: STATUS_COLORS[plan.status] }}
+                                                        >
+                                                            {formatStatus(plan.status)}
+                                                        </span>
+                                                        <span className="plan-card__time">
+                                                            {relativeTime(plan.created_at)}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </Link>
                                         ))
                                     )}
                                 </div>

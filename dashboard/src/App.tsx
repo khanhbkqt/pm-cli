@@ -9,6 +9,7 @@ import { ContextPage } from './pages/ContextPage';
 import { MilestonesPage } from './pages/MilestonesPage';
 import { PhasesPage } from './pages/PhasesPage';
 import { PlansPage } from './pages/PlansPage';
+import { PlanDetailPage } from './pages/PlanDetailPage';
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
                         <Route path="/milestones" element={<MilestonesPage />} />
                         <Route path="/milestones/:milestoneId/phases" element={<PhasesPage />} />
                         <Route path="/phases/:phaseId/plans" element={<PlansPage />} />
+                        <Route path="/plans/:planId" element={<PlanDetailPage />} />
                         <Route path="/tasks" element={<TasksBoard />} />
                         <Route path="/agents" element={<AgentsPage />} />
                         <Route path="/context" element={<ContextPage />} />
