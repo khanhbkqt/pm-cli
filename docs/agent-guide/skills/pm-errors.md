@@ -15,11 +15,12 @@ All errors: `Error: <message>` on stderr, exit code `1`. Success: exit code `0`.
 | `Agent '<name>' already exists.`                                                  | Duplicate registration               | Use existing agent or different name                         |
 | `Agent '<name>' not found`                                                        | Looking up nonexistent agent         | `pm agent list --json` to see valid agents                   |
 | `Invalid agent type: '<type>'. Must be 'human' or 'ai'.`                          | Bad `--type` value                   | Use `--type ai`                                              |
-| `Task #<id> not found.`                                                           | Invalid task ID                      | `pm task list --json` to see valid IDs                       |
+| `Plan #<id> not found.`                                                           | Invalid plan ID                      | `pm plan list --phase <id> --json` to see valid IDs          |
 | `Context key '<key>' not found.`                                                  | Looking up nonexistent key           | `pm context list --json` to see valid keys                   |
 | `CHECK constraint failed: category IN ('decision', 'spec', 'note', 'constraint')` | Invalid context `--category` flag    | Use only `decision`, `spec`, `note`, or `constraint`         |
 | `Not a PM project. Run: pm init`                                                  | No `.pm/` directory                  | `pm init` in project root                                    |
 | `Project already initialized.`                                                    | Re-running init                      | No action needed                                             |
+| `Invalid transition: <from> → <to>`                                               | Invalid workflow status change       | Check allowed transitions for the entity type                |
 
 ## Defensive Patterns
 
@@ -35,8 +36,7 @@ pm agent show my-agent --json 2>&1 || pm agent register my-agent --role develope
 
 # 4. Wrap multi-step operations
 set -e
-pm task assign "$ID" --to "$ME" --json
-pm task update "$ID" --status in-progress --json
-pm task comment "$ID" "Starting work"
+pm plan update "$ID" --status in_progress
+pm context set "plan-$ID:started" "Beginning work on plan $ID"
 set +e
 ```

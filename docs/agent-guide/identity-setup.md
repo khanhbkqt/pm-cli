@@ -33,14 +33,14 @@ Two methods, in priority order:
 ### Method 1: `--agent` Flag (Per-Command)
 
 ```bash
-pm task list --agent atlas --json
+pm plan list --phase 1 --agent atlas --json
 ```
 
 ### Method 2: `PM_AGENT` Environment Variable (Session-Wide)
 
 ```bash
 export PM_AGENT=atlas
-pm task list --json   # uses "atlas" automatically
+pm plan list --phase 1 --json   # uses "atlas" automatically
 ```
 
 **Recommended:** Set `PM_AGENT` at the start of your session to avoid repeating `--agent` on every command.

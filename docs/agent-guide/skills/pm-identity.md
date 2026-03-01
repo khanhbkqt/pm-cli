@@ -23,7 +23,7 @@ Two methods (in priority order):
 
 | Method                | Scope        | Example                             |
 | --------------------- | ------------ | ----------------------------------- |
-| `--agent <name>` flag | Per-command  | `pm task list --agent atlas --json` |
+| `--agent <name>` flag | Per-command  | `pm plan list --phase 1 --agent atlas --json` |
 | `PM_AGENT` env var    | Session-wide | `export PM_AGENT=atlas`             |
 
 **Recommended:** Set `PM_AGENT` at session start. The `--agent` flag overrides the env var if both are set.

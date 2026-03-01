@@ -27,7 +27,7 @@ pm status --json
 ```json
 {
   "agents": 2,
-  "tasks": { "total": 5, "todo": 3, "in-progress": 1, "done": 1 },
+  "milestones": { "total": 1, "active": 1 },
   "context": 4
 }
 ```
@@ -128,55 +128,59 @@ Get an overview of what's happening:
 # Project summary
 pm status --json
 
-# All tasks
-pm task list --json
+# Current progress
+pm progress
 
 # Who else is working
 pm agent list --json
 
 # Shared decisions, constraints, and notes
 pm context list --json
+
+# Active milestone plans
+pm plan list --phase 1 --json
 ```
 
-Parse the JSON output to understand:
-- How many tasks exist and their status distribution
+Parse the output to understand:
+- What milestones and phases exist
 - Which agents are active
 - Key decisions or constraints recorded in context
 
 ---
 
-## Step 6: Pick Your First Task
+## Step 6: Pick Your First Plan
 
-Find an unassigned task, claim it, and start working:
+Find an available plan and start working:
 
 ```bash
-# 1. List available tasks
-pm task list --status todo --json
+# 1. Check milestone progress
+pm progress
 
-# 2. Assign it to yourself
-pm task assign <task-id> --to <your-name> --agent <your-name> --json
+# 2. List plans in the current phase
+pm plan list --phase <phase-id> --status pending --json
 
-# 3. Move it to in-progress
-pm task update <task-id> --status in-progress --agent <your-name> --json
+# 3. Start work on a plan
+pm plan update <plan-id> --status in_progress --agent <your-name>
 
-# 4. Log what you're about to do
-pm task comment <task-id> "Starting work on this task" --agent <your-name>
+# 4. Log what you're about to do via context
+pm context set "plan-<id>:started" "Beginning work on this plan" --category note --agent <your-name>
 ```
 
 **Example:**
 
 ```bash
-pm task list --status todo --json
-pm task assign 3 --to atlas --agent atlas --json
-pm task update 3 --status in-progress --agent atlas --json
-pm task comment 3 "Starting implementation of input validation" --agent atlas
+pm progress
+pm plan list --phase 1 --status pending --json
+pm plan update 3 --status in_progress --agent atlas
+pm context set "plan-3:started" "Starting implementation of input validation" --category note --agent atlas
 ```
 
-**How to pick a task:**
+**How to pick a plan:**
 
-1. Filter for `assigned_to: null` (unassigned)
-2. Sort by priority: `urgent` > `high` > `medium` > `low`
-3. Pick the highest-priority task within your capability
+1. Check `pm progress` for the current phase
+2. Look for plans with `pending` status
+3. Pick the lowest-wave plan (Wave 1 before Wave 2)
+4. Start working and update status when done
 
 ---
 
@@ -196,14 +200,13 @@ pm agent whoami --json
 
 # Explore
 pm status --json
-pm task list --json
+pm progress
 pm agent list --json
 pm context list --json
 
-# Pick first task
-pm task list --status todo --json
-# pm task assign <id> --to my-agent --agent my-agent --json
-# pm task update <id> --status in-progress --agent my-agent --json
+# Pick first plan
+pm plan list --phase 1 --status pending --json
+# pm plan update <id> --status in_progress
 ```
 
 ---
@@ -215,7 +218,7 @@ After onboarding, refer to these guides for detailed workflows:
 | Guide | Purpose |
 |-------|---------|
 | [CLI Reference](cli-reference.md) | All commands, flags, and JSON schemas |
-| [Task Lifecycle](workflows/task-lifecycle.md) | Full task management workflow |
+| [Progress](workflows/pm-progress.md) | Check milestone and phase progress |
 | [Context Sharing](workflows/context-sharing.md) | Share decisions and data with other agents |
 | [Collaboration](workflows/collaboration.md) | Multi-agent coordination patterns |
 | [Error Handling](error-handling.md) | Common errors and recovery strategies |
@@ -228,5 +231,5 @@ After onboarding, refer to these guides for detailed workflows:
 - [ ] `pm agent register` — Agent registered with name, role, and type
 - [ ] `export PM_AGENT=<name>` — Identity set for session
 - [ ] `pm agent whoami --json` — Identity verified
-- [ ] `pm status --json` / `pm task list --json` — Project explored
-- [ ] `pm task assign` / `pm task update` — First task claimed and started
+- [ ] `pm status --json` / `pm progress` — Project explored
+- [ ] `pm plan update` — First plan claimed and started

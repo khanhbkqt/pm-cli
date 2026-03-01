@@ -33,16 +33,16 @@ All errors follow the same pattern:
 | `Agent '<name>' not found` | Looking up an agent that doesn't exist | Check available agents: `pm agent list --json` |
 | `Invalid agent type: '<type>'. Must be 'human' or 'ai'.` | `--type` flag has an invalid value | Use `--type ai` or `--type human` |
 
-**Source:** `src/core/agent.ts` — `registerAgent()`, `src/cli/commands/agent.ts`
+**Source:** `src/core/agent.ts` — `registerAgent()`
 
-### Task Errors
+### Workflow Transition Errors
 
 | Error Message | Cause | Recovery |
 |--------------|-------|----------|
-| `Task #<id> not found.` | Task ID doesn't exist | List valid tasks: `pm task list --json` |
-| `<Label> agent '<agentId>' not found.` | Creator or assignee agent doesn't exist in the database | Register the agent first, then retry |
+| `Invalid transition: <from> → <to>` | Status change violates workflow rules | Check allowed transitions for the entity type |
+| `Cannot complete milestone: <N> phases not completed` | Trying to complete a milestone with pending phases | Complete or skip remaining phases, or use `--force` |
 
-**Source:** `src/core/task.ts` — `validateAgent()`, `validateTask()`
+**Source:** `src/core/workflow.ts` — `transitionMilestone()`, `transitionPhase()`, `transitionPlan()`
 
 ### Context Errors
 
@@ -71,7 +71,7 @@ Always check the exit code after running a `pm` command:
 ### Bash
 
 ```bash
-result=$(pm task list --json 2>&1)
+result=$(pm plan list --phase 1 --json 2>&1)
 exit_code=$?
 
 if [ $exit_code -ne 0 ]; then
@@ -89,8 +89,8 @@ fi
 const { execSync } = require('child_process');
 
 try {
-  const output = execSync('pm task list --json', { encoding: 'utf8' });
-  const tasks = JSON.parse(output);
+  const output = execSync('pm plan list --phase 1 --json', { encoding: 'utf8' });
+  const plans = JSON.parse(output);
 } catch (error) {
   // error.status = 1 (exit code)
   // error.stderr contains the error message
@@ -122,8 +122,8 @@ pm agent whoami --json
 ### "Not Found" Errors → List Resources to Discover Valid IDs
 
 ```bash
-# Task not found? List all tasks
-pm task list --json
+# Plan not found? List plans for the phase
+pm plan list --phase 1 --json
 
 # Agent not found? List all agents
 pm agent list --json
@@ -187,9 +187,9 @@ fi
 ### 3. Parse JSON with Error Handling
 
 ```bash
-result=$(pm task list --json 2>&1)
+result=$(pm plan list --phase 1 --json 2>&1)
 if [ $? -ne 0 ]; then
-  echo "Failed to list tasks: $result"
+  echo "Failed to list plans: $result"
   exit 1
 fi
 
@@ -200,12 +200,11 @@ echo "$result" | jq '.[0].id'
 ### 4. Wrap Multi-Step Operations
 
 ```bash
-# Claim and start a task — abort if any step fails
+# Start work on a plan — abort if any step fails
 set -e
 
-pm task assign "$TASK_ID" --to "$MY_NAME" --agent "$MY_NAME" --json
-pm task update "$TASK_ID" --status in-progress --agent "$MY_NAME" --json
-pm task comment "$TASK_ID" "Starting work" --agent "$MY_NAME"
+pm plan update "$PLAN_ID" --status in_progress --agent "$MY_NAME"
+pm context set "plan-$PLAN_ID:started" "Beginning work" --category note --agent "$MY_NAME"
 
 set +e
 ```
@@ -224,12 +223,19 @@ Quick lookup of which errors each command can produce:
 | `pm agent show` | `Agent not found` |
 | `pm agent whoami` | `Agent identity required`, `Agent not registered` |
 | `pm agent list` | (no command-specific errors) |
-| `pm task add` | `Agent identity required`, `Agent not registered` |
-| `pm task list` | `Agent not found` (if `--assigned` filter references unknown agent) |
-| `pm task show` | `Task not found` |
-| `pm task update` | `Agent identity required`, `Agent not registered`, `Task not found` |
-| `pm task assign` | `Agent identity required`, `Agent not registered`, `Agent not found` (assignee) |
-| `pm task comment` | `Agent identity required`, `Agent not registered`, `Task not found` |
+| `pm milestone create` | `Agent identity required`, `Agent not registered` |
+| `pm milestone list` | (no command-specific errors) |
+| `pm milestone show` | `Milestone not found` |
+| `pm milestone update` | `Invalid transition`, `Cannot complete milestone` |
+| `pm phase add` | `Agent identity required`, `Agent not registered` |
+| `pm phase list` | (no command-specific errors) |
+| `pm phase show` | `Phase not found` |
+| `pm phase update` | `Invalid transition` |
+| `pm plan create` | `Agent identity required`, `Agent not registered` |
+| `pm plan list` | (no command-specific errors) |
+| `pm plan show` | `Plan not found` |
+| `pm plan update` | `Agent identity required`, `Invalid transition` |
+| `pm progress` | `No active milestone` |
 | `pm context set` | `Agent identity required`, `Agent not found` |
 | `pm context get` | `Context key not found` |
 | `pm context list` | (no command-specific errors) |
