@@ -3,19 +3,17 @@
 ## Current Position
 
 - **Milestone**: v3.1-dashboard-upgrade — Dashboard Upgrade
-- **Phase**: 2 — Fix Overview & StatsCards ✅ Complete
-- **Task**: All tasks complete
-- **Status**: Verified
+- **Phase**: 3 — Milestones & Phases API Routes
+- **Task**: Planning complete
+- **Status**: Ready for execution
 
-## Phase 2 Summary
+## Phase 3 Plans
 
-Executed 2 plans across 1 wave. Enhanced dashboard Overview and StatsCards:
-- `/api/status` now returns milestone + phase progress data
-- StatsCards shows 5 cards: Milestone, Phases, Plans, In Progress, Agents
-- Overview shows MilestoneProgress banner with phase completion bar
-- Full build passes (tsup + vite), server tests 4/4 green
+| Plan | Name | Wave |
+|------|------|------|
+| 3.1 | Milestones, Phases & Plans API Route Files | 1 |
+| 3.2 | Wire Routes & API Integration Tests | 1 |
 
 ## Next Steps
 
-1. `/plan 3` — Phase 3: Milestones & Phases API Routes
-2. `/execute 3` — Execute Phase 3 (if plans exist)
+1. `/execute 3` — Execute Phase 3 plans
