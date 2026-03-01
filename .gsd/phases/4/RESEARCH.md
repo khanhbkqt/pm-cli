@@ -163,6 +163,14 @@ No new dependencies. All libraries already in use:
 - **Phase ID UX**: Users must know phase DB ID — mitigated by `pm phase list` showing IDs
 - **Test timeout**: CLI tests with multiple `execSync` calls can be slow — use `{ timeout: 15000 }` where needed
 
+## Scope Decision (Discussion 2026-03-01)
+
+**Phase 4 = CLI only.** Workflow instruction templates (like GSD `/plan`, `/execute`, `/verify`) added as new phases:
+- **Phase 7**: Agent Workflow Templates — create markdown workflow files for pm-cli lifecycle
+- **Phase 8**: Install System — update `pm install` to deploy multiple workflow files to target clients
+
+GSD workflow catalog analyzed (25 workflows). Templates will be informed by that analysis.
+
 ## Ready for Planning
 
 - [x] Questions answered
