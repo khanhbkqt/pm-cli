@@ -25,16 +25,31 @@ function seedTemplate(projectRoot: string): void {
     fs.mkdirSync(workflowsDir, { recursive: true });
 
     const workflows = [
-        'pm-add-phase', 'pm-add-todo', 'pm-audit-milestone', 'pm-check-todos',
-        'pm-complete-milestone', 'pm-debug', 'pm-discuss-phase', 'pm-execute-phase',
-        'pm-new-milestone', 'pm-new-project', 'pm-pause', 'pm-plan-phase',
-        'pm-progress', 'pm-resume', 'pm-verify-work',
+        'pm-add-phase', 'pm-add-todo', 'pm-audit-milestone', 'pm-brainstorm',
+        'pm-check-todos', 'pm-complete-milestone', 'pm-debug', 'pm-discuss-phase',
+        'pm-execute-phase', 'pm-help', 'pm-insert-phase', 'pm-install',
+        'pm-list-phase-assumptions', 'pm-map', 'pm-new-milestone', 'pm-new-project',
+        'pm-pause', 'pm-plan-milestone-gaps', 'pm-plan-phase', 'pm-progress',
+        'pm-remove-phase', 'pm-research-phase', 'pm-resume', 'pm-update',
+        'pm-verify-work', 'pm-web-search', 'pm-whats-new',
     ];
 
     for (const wf of workflows) {
         const desc = wf.replace('pm-', '').replace(/-/g, ' ');
         const content = `---\ndescription: ${desc}\n---\n\n# ${desc}\n\nWorkflow instructions.\n`;
         fs.writeFileSync(path.join(workflowsDir, `${wf}.md`), content, 'utf-8');
+    }
+
+    // Seed skill files
+    const skillsDir = path.join(templateDir, 'skills');
+    fs.mkdirSync(skillsDir, { recursive: true });
+
+    const skills = ['pm-collaboration', 'pm-context', 'pm-errors', 'pm-identity'];
+
+    for (const skill of skills) {
+        const desc = skill.replace('pm-', '').replace(/-/g, ' ');
+        const content = `---\ndescription: PM ${desc}\n---\n\n# PM ${desc}\n\nSkill instructions.\n`;
+        fs.writeFileSync(path.join(skillsDir, `${skill}.md`), content, 'utf-8');
     }
 }
 
@@ -54,7 +69,7 @@ describe('AntigravityAdapter multi-file workflows', () => {
         fs.rmSync(tempDir, { recursive: true, force: true });
     });
 
-    it('generates pm-guide.md + pm-cli.md + 15 workflow files', () => {
+    it('generates pm-guide.md + pm-cli.md + 27 workflow + 4 skill files', () => {
         const adapter = getAdapter('antigravity');
         const result = adapter.generate(tempDir, '');
 
@@ -63,13 +78,13 @@ describe('AntigravityAdapter multi-file workflows', () => {
         // pm-cli.md
         expect(fs.existsSync(path.join(tempDir, '.agent/rules/pm-cli.md'))).toBe(true);
 
-        // 15 individual workflow files
+        // 27 individual workflow files
         const wfDir = path.join(tempDir, '.agent/workflows');
         const wfFiles = fs.readdirSync(wfDir).filter(f => f.startsWith('pm-') && f.endsWith('.md') && f !== 'pm-guide.md');
-        expect(wfFiles.length).toBe(15);
+        expect(wfFiles.length).toBe(27);
 
         // All files are in the result
-        expect(result.files.length).toBe(17); // pm-guide + pm-cli + 15 workflows
+        expect(result.files.length).toBe(33); // pm-guide + pm-cli + 27 workflows + 4 skills
     });
 
     it('workflow files preserve their original content', () => {
@@ -94,8 +109,8 @@ describe('AntigravityAdapter multi-file workflows', () => {
         const remaining = fs.readdirSync(wfDir).filter(f => f.startsWith('pm-'));
         expect(remaining.length).toBe(0);
 
-        // Should have removed 17 files total (pm-guide + pm-cli + 15 workflows)
-        expect(result.removed.length).toBe(17);
+        // Should have removed 33 files total (pm-guide + pm-cli + 27 workflows + 4 skills)
+        expect(result.removed.length).toBe(33);
     });
 });
 
@@ -115,32 +130,32 @@ describe('CursorAdapter multi-file workflows', () => {
         fs.rmSync(tempDir, { recursive: true, force: true });
     });
 
-    it('generates pm-guide.mdc + 15 workflow .mdc files', () => {
+    it('generates pm-guide.mdc + 27 workflow + 4 skill .mdc files', () => {
         const adapter = getAdapter('cursor');
         const result = adapter.generate(tempDir, '');
 
         // pm-guide.mdc
         expect(fs.existsSync(path.join(tempDir, '.cursor/rules/pm-guide.mdc'))).toBe(true);
 
-        // 15 individual .mdc workflow files
+        // 31 individual .mdc files (27 workflows + 4 skills)
         const rulesDir = path.join(tempDir, '.cursor/rules');
         const mdcFiles = fs.readdirSync(rulesDir).filter(f => f.startsWith('pm-') && f.endsWith('.mdc') && f !== 'pm-guide.mdc');
-        expect(mdcFiles.length).toBe(15);
+        expect(mdcFiles.length).toBe(31);
 
-        // Total: pm-guide.mdc + 15 workflows = 16
-        expect(result.files.length).toBe(16);
+        // Total: pm-guide.mdc + 31 = 32
+        expect(result.files.length).toBe(32);
     });
 
-    it('each .mdc file has alwaysApply: true in frontmatter', () => {
+    it('each .mdc file has alwaysApply: false in frontmatter', () => {
         const adapter = getAdapter('cursor');
         adapter.generate(tempDir, '');
 
         const rulesDir = path.join(tempDir, '.cursor/rules');
-        const mdcFiles = fs.readdirSync(rulesDir).filter(f => f.startsWith('pm-') && f.endsWith('.mdc'));
+        const mdcFiles = fs.readdirSync(rulesDir).filter(f => f.startsWith('pm-') && f.endsWith('.mdc') && f !== 'pm-guide.mdc');
 
         for (const file of mdcFiles) {
             const content = fs.readFileSync(path.join(rulesDir, file), 'utf-8');
-            expect(content).toContain('alwaysApply: true');
+            expect(content).toContain('alwaysApply: false');
         }
     });
 
@@ -154,8 +169,8 @@ describe('CursorAdapter multi-file workflows', () => {
         const remaining = fs.readdirSync(rulesDir).filter(f => f.startsWith('pm-'));
         expect(remaining.length).toBe(0);
 
-        // 16 files removed (pm-guide.mdc + 15 workflows)
-        expect(result.removed.length).toBe(16);
+        // 32 files removed (pm-guide.mdc + 27 workflows + 4 skills)
+        expect(result.removed.length).toBe(32);
     });
 });
 
@@ -183,7 +198,7 @@ describe('ClaudeCodeAdapter workflow index', () => {
         expect(content).toContain('## Available Workflows');
     });
 
-    it('workflow index table has 15 rows', () => {
+    it('workflow index table has 27 rows', () => {
         const adapter = getAdapter('claude-code');
         adapter.generate(tempDir, '');
 
@@ -192,7 +207,7 @@ describe('ClaudeCodeAdapter workflow index', () => {
         const dataRows = content.split('\n').filter(
             line => line.startsWith('| ') && !line.startsWith('| Workflow') && !line.startsWith('|---')
         );
-        expect(dataRows.length).toBe(15);
+        expect(dataRows.length).toBe(27);
     });
 
     it('clean() removes PM section including workflow index', () => {
