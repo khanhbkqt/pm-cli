@@ -6,6 +6,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { EmptyState } from '../components/EmptyState';
 import type { BoardMilestone, BoardPhase, Plan } from '../api/types';
+import { ProgressBar } from '../components/ProgressBar';
 import './BoardPage.css';
 
 const MILESTONE_STATUS_CLASS: Record<string, string> = {
@@ -45,6 +46,7 @@ function PlanRow({ plan }: { plan: Plan }) {
             <span className="tree-row__icon" aria-hidden="true">📄</span>
             <span className="tree-row__id">#{plan.number}</span>
             <span className="tree-row__name">{plan.name}</span>
+            <span className="tree-row__progress"></span>
             <span className="tree-row__status">
                 <span className={`board-badge ${PLAN_STATUS_CLASS[plan.status] || ''}`}>
                     {formatStatus(plan.status)}
@@ -58,6 +60,8 @@ function PlanRow({ plan }: { plan: Plan }) {
 function PhaseRow({ phase }: { phase: BoardPhase }) {
     const [expanded, setExpanded] = useState(phase.status === 'in_progress');
     const planCount = phase.plans.length;
+    const completedPlans = phase.plans.filter(p => p.status === 'completed').length;
+    const progress = planCount > 0 ? (completedPlans / planCount) * 100 : 0;
 
     return (
         <>
@@ -79,6 +83,9 @@ function PhaseRow({ phase }: { phase: BoardPhase }) {
                 <span className="tree-row__icon" aria-hidden="true">📁</span>
                 <span className="tree-row__id">P{phase.number}</span>
                 <span className="tree-row__name">{phase.name}</span>
+                <span className="tree-row__progress">
+                    <ProgressBar progress={progress} />
+                </span>
                 <span className="tree-row__status">
                     <span className={`board-badge ${PHASE_STATUS_CLASS[phase.status] || ''}`}>
                         {formatStatus(phase.status)}
@@ -109,6 +116,12 @@ function MilestoneRow({ milestone }: { milestone: BoardMilestone }) {
     const [expanded, setExpanded] = useState(milestone.status === 'active');
     const phaseCount = milestone.phases.length;
     const totalPlans = milestone.phases.reduce((sum, p) => sum + p.plans.length, 0);
+    const totalCompletedPlans = milestone.phases.reduce(
+        (sum, p) => sum + p.plans.filter(plan => plan.status === 'completed').length,
+        0
+    );
+    const progress = totalPlans > 0 ? (totalCompletedPlans / totalPlans) * 100 : 0;
+
     const childHeight = milestone.phases.reduce(
         (sum, p) => sum + 44 + (p.status === 'in_progress' ? p.plans.length * 44 : 0),
         0
@@ -134,6 +147,9 @@ function MilestoneRow({ milestone }: { milestone: BoardMilestone }) {
                 <span className="tree-row__icon" aria-hidden="true">🎯</span>
                 <span className="tree-row__id">{milestone.id}</span>
                 <span className="tree-row__name">{milestone.name}</span>
+                <span className="tree-row__progress">
+                    <ProgressBar progress={progress} />
+                </span>
                 <span className="tree-row__status">
                     <span className={`board-badge ${MILESTONE_STATUS_CLASS[milestone.status] || ''}`}>
                         {formatStatus(milestone.status)}
@@ -202,6 +218,7 @@ export function BoardPage() {
                 <div className="board-tree" role="tree" aria-label="Plans hierarchy">
                     <div className="board-tree__header" aria-hidden="true">
                         <span className="board-tree__col-name">Name</span>
+                        <span className="board-tree__col-progress">Progress</span>
                         <span className="board-tree__col-status">Status</span>
                         <span className="board-tree__col-details">Details</span>
                     </div>

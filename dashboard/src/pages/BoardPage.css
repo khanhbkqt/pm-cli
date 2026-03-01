@@ -93,6 +93,12 @@
     min-width: 0;
 }
 
+.board-tree__col-progress {
+    width: 140px;
+    flex-shrink: 0;
+    margin-right: var(--space-4);
+}
+
 .board-tree__col-status {
     width: 110px;
     flex-shrink: 0;
@@ -212,6 +218,14 @@
     margin-right: var(--space-1);
 }
 
+.tree-row__progress {
+    width: 140px;
+    flex-shrink: 0;
+    margin-right: var(--space-4);
+    display: flex;
+    align-items: center;
+}
+
 .tree-row__status {
     width: 110px;
     flex-shrink: 0;
@@ -243,7 +257,9 @@
 @media (max-width: 640px) {
 
     .board-tree__col-details,
-    .tree-row__meta {
+    .tree-row__meta,
+    .board-tree__col-progress,
+    .tree-row__progress {
         display: none;
     }
 
