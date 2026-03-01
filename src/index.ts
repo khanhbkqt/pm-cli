@@ -5,6 +5,7 @@ import { registerTaskCommands } from './cli/commands/task.js';
 import { registerContextCommands } from './cli/commands/context.js';
 import { registerStatusCommand } from './cli/commands/status.js';
 import { registerDashboardCommand } from './cli/commands/dashboard.js';
+import { registerInstallCommand } from './cli/commands/install.js';
 
 // Register commands
 registerInitCommand(program);
@@ -13,6 +14,7 @@ registerTaskCommands(program);
 registerContextCommands(program);
 registerStatusCommand(program);
 registerDashboardCommand(program);
+registerInstallCommand(program);
 
 // Parse and execute
 program.parseAsync(process.argv);
