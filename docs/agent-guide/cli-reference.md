@@ -220,6 +220,300 @@ Since: 2026-02-28
 
 **Exit codes:** `0` success, `1` error.
 
+---
+
+## `pm milestone create`
+
+Create a new milestone. **Requires agent identity.**
+
+```
+pm milestone create <id> <name> [options]
+```
+
+| Argument/Flag | Required | Description |
+|---------------|----------|-------------|
+| `<id>` | Yes | Milestone slug (used as DB identifier, e.g. `v1-mvp`) |
+| `<name>` | Yes | Human-readable milestone name |
+| `--goal <text>` | No | Goal description |
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm milestone list`
+
+List all milestones.
+
+```
+pm milestone list [options]
+```
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--status <status>` | No | Filter by status: `planned`, `active`, `completed`, `archived` |
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm milestone show`
+
+Show milestone details.
+
+```
+pm milestone show <id>
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `<id>` | Yes | Milestone slug |
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm milestone update`
+
+Update milestone fields. **Requires agent identity.**
+
+```
+pm milestone update <id> [options]
+```
+
+| Argument/Flag | Required | Description |
+|---------------|----------|-------------|
+| `<id>` | Yes | Milestone slug |
+| `--status <status>` | No | New status: `planned`, `active`, `completed`, `archived` |
+| `--goal <text>` | No | Updated goal text |
+| `--force` | No | Force status transition (bypass phase completion checks) |
+
+**Workflow transitions:** `planned → active → completed → archived`
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm phase add`
+
+Add a phase to a milestone. **Requires agent identity.**
+
+```
+pm phase add <name> [options]
+```
+
+| Argument/Flag | Required | Description |
+|---------------|----------|-------------|
+| `<name>` | Yes | Phase name |
+| `--number <n>` | Yes | Phase ordering number |
+| `--milestone <slug>` | No | Milestone slug (defaults to active milestone) |
+| `--description <text>` | No | Phase description |
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm phase list`
+
+List phases for a milestone.
+
+```
+pm phase list [options]
+```
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--milestone <slug>` | No | Milestone slug (defaults to active milestone) |
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm phase show`
+
+Show phase details.
+
+```
+pm phase show <id>
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `<id>` | Yes | Phase DB integer ID (not the phase number) |
+
+> **Note:** Use `pm phase list --json` to find the DB ID.
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm phase update`
+
+Update phase fields. **Requires agent identity.**
+
+```
+pm phase update <id> [options]
+```
+
+| Argument/Flag | Required | Description |
+|---------------|----------|-------------|
+| `<id>` | Yes | Phase DB integer ID |
+| `--status <status>` | No | New status: `not_started`, `planning`, `in_progress`, `completed`, `skipped` |
+| `--number <n>` | No | Updated phase number |
+| `--force` | No | Force status transition |
+
+**Workflow transitions:** `not_started → planning → in_progress → completed` (also: `→ skipped`)
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm plan create`
+
+Create a plan within a phase. **Requires agent identity.**
+
+```
+pm plan create <name> [options]
+```
+
+| Argument/Flag | Required | Description |
+|---------------|----------|-------------|
+| `<name>` | Yes | Plan name |
+| `--phase <id>` | Yes | Phase DB integer ID |
+| `--number <n>` | Yes | Plan number within the phase |
+| `--wave <n>` | No | Wave number for parallel execution (default: `1`) |
+| `--content <text>` | No | Plan content/description |
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm plan list`
+
+List plans for a phase.
+
+```
+pm plan list [options]
+```
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--phase <id>` | Yes | Phase DB integer ID |
+| `--status <status>` | No | Filter by status |
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm plan show`
+
+Show plan details.
+
+```
+pm plan show <id>
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `<id>` | Yes | Plan DB integer ID |
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm plan update`
+
+Update plan fields. **Requires agent identity.**
+
+```
+pm plan update <id> [options]
+```
+
+| Argument/Flag | Required | Description |
+|---------------|----------|-------------|
+| `<id>` | Yes | Plan DB integer ID |
+| `--status <status>` | No | New status: `pending`, `in_progress`, `completed`, `failed` |
+| `--content <text>` | No | Updated plan content |
+
+**Workflow transitions:** `pending → in_progress → completed` (also: `→ failed`)
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm plan board`
+
+Show plans as a kanban board grouped by status.
+
+```
+pm plan board [options]
+```
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--phase <id>` | No | Phase DB integer ID (defaults to active phase) |
+
+**Human output:**
+
+```
+╔══════════════════╗  ╔══════════════════╗  ╔══════════════════╗
+║    PENDING (2)   ║  ║ IN PROGRESS (1)  ║  ║  COMPLETED (3)   ║
+╠══════════════════╣  ╠══════════════════╣  ╠══════════════════╣
+║ Plan 4: API docs ║  ║ Plan 2: Auth     ║  ║ Plan 1: Setup    ║
+║ Plan 5: Tests    ║  ║                  ║  ║ Plan 3: DB       ║
+╚══════════════════╝  ╚══════════════════╝  ╚══════════════════╝
+```
+
+> Note: `pm plan board` only has human output, not JSON. Use `pm plan list --json` for machine-readable data.
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm progress`
+
+Show active milestone progress.
+
+```
+pm progress [options]
+```
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--milestone <id>` | No | Show a specific milestone by slug (defaults to active milestone) |
+
+**Human output:**
+
+```
+📊 Milestone: v1-mvp (active)
+   Goal: Ship minimum viable product
+
+   Phase 1: Foundation [████████████] 100% ✅
+   Phase 2: Core API   [██████░░░░░░]  50% 🔄
+   Phase 3: Frontend   [░░░░░░░░░░░░]   0% ⬜
+```
+
+**Exit codes:** `0` success, `1` error.
+
+---
+
+## `pm install`
+
+Install AI agent config for a specific client or all detected clients.
+
+```
+pm install [client] [options]
+```
+
+| Argument/Flag | Required | Description |
+|---------------|----------|-------------|
+| `[client]` | No | Client name: `antigravity`, `cursor`, `claude-code`, `codex`, `opencode`, `gemini-cli` |
+| `--all` | No | Install for all detected clients |
+| `--detect` | No | Detect AI clients present in the project (no changes made) |
+| `--force` | No | Overwrite existing files without section merging |
+
+**Exit codes:** `0` success, `1` error.
+
+---
 
 ## `pm context set`
 
@@ -447,6 +741,34 @@ This is a long-running command. It starts an Express server and blocks until ter
 ## Output Schemas
 
 All JSON output conforms to these TypeScript interfaces:
+
+### Milestone
+
+```typescript
+interface Milestone {
+  id: string;                                                   // Slug identifier
+  name: string;
+  goal: string | null;
+  status: "planned" | "active" | "completed" | "archived";
+  created_at: string;                                           // ISO 8601 timestamp
+  completed_at: string | null;
+}
+```
+
+### Phase
+
+```typescript
+interface Phase {
+  id: number;                                                   // Auto-increment
+  milestone_id: string;                                         // Milestone slug
+  number: number;                                               // Phase ordering number
+  name: string;
+  description: string | null;
+  status: "not_started" | "planning" | "in_progress" | "completed" | "skipped";
+  created_at: string;                                           // ISO 8601 timestamp
+  completed_at: string | null;
+}
+```
 
 ### Agent
 
