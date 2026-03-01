@@ -84,6 +84,17 @@ Once all phases are `completed` or `skipped`:
 
 ---
 
+## Step 6: Commit Audit Findings
+
+If decisions were made (phases skipped, issues found):
+
+```bash
+git add -A
+git commit -m "docs: milestone audit - <slug>"
+```
+
+---
+
 ## Success Criteria
 
 - [ ] Every phase is accounted for (`completed` or `skipped`)
@@ -91,6 +102,22 @@ Once all phases are `completed` or `skipped`:
 - [ ] Key deliverables verified with empirical evidence
 - [ ] Ready for formal milestone completion
 
+## Git Rules
+
+| When | Command |
+|------|---------|
+| After audit complete | `git add -A && git commit -m "docs: milestone audit - <slug>"` |
+
+## Related Workflows
+
+| Workflow | Relationship |
+|----------|-------------|
+| Complete Milestone | Finalize after audit passes |
+| Execute Phase | Finish incomplete phases |
+| Verify Work | Verify individual phases |
+| Plan Milestone Gaps | Create plans for found gaps |
+
 ## Next Steps
 
 → [Complete Milestone](pm-complete-milestone.md) — finalize the milestone
+→ [Plan Milestone Gaps](pm-plan-milestone-gaps.md) — address found gaps

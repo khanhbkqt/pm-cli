@@ -55,16 +55,35 @@ Confirm the new phase appears with the correct number and `not_started` status.
 
 ---
 
-## Cascading Behavior
+## Step 4: Commit
 
-- New phases are created with `not_started` status
-- Adding a phase does not affect the milestone's status
+```bash
+git add -A
+git commit -m "docs: add phase {N} - <name>"
+```
+
+---
 
 ## Success Criteria
 
 - [ ] New phase created with correct number and description
 - [ ] `pm phase list` shows it in the right position
 - [ ] Phase status is `not_started`
+- [ ] Change committed
+
+## Git Rules
+
+| When | Command |
+|------|---------|
+| After phase added | `git add -A && git commit -m "docs: add phase {N} - <name>"` |
+
+## Related Workflows
+
+| Workflow | Relationship |
+|----------|-------------|
+| Discuss Phase | Clarify scope before planning |
+| Plan Phase | Create plans for the new phase |
+| Insert Phase | Insert between existing phases |
 
 ## Next Steps
 

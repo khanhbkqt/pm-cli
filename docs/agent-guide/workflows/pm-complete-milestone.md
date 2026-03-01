@@ -71,6 +71,15 @@ Confirm status is `completed` or `archived`.
 
 ---
 
+## Step 5: Commit Milestone Completion
+
+```bash
+git add -A
+git commit -m "docs: complete milestone <slug>"
+```
+
+---
+
 ## Milestone Status Transitions
 
 ```
@@ -87,6 +96,21 @@ planned → active → completed → archived
 - [ ] All phases are `completed` or `skipped`
 - [ ] Milestone status is `completed`
 - [ ] `pm milestone show` confirms final state
+- [ ] Change committed
+
+## Git Rules
+
+| When | Command |
+|------|---------|
+| After milestone completed | `git add -A && git commit -m "docs: complete milestone <slug>"` |
+
+## Related Workflows
+
+| Workflow | Relationship |
+|----------|-------------|
+| Audit Milestone | Pre-completion quality check |
+| New Milestone | Start the next body of work |
+| Verify Work | Ensure phases were properly verified |
 
 ## Next Steps
 

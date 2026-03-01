@@ -77,11 +77,36 @@ Once scope is clear:
 - No open questions or trade-offs
 - Similar phases have been done before
 
+## Step 5: Commit Decisions
+
+If scope decisions were significant:
+
+```bash
+git add -A
+git commit -m "docs(phase-{N}): scope decisions recorded"
+```
+
+---
+
 ## Success Criteria
 
 - [ ] Phase scope is understood
 - [ ] Key decisions are recorded via `pm context set`
 - [ ] Ready to create plans
+
+## Git Rules
+
+| When | Command |
+|------|---------|
+| After scope decisions recorded | `git add -A && git commit -m "docs(phase-{N}): scope decisions recorded"` |
+
+## Related Workflows
+
+| Workflow | Relationship |
+|----------|-------------|
+| Plan Phase | Create plans after discussion |
+| Research Phase | Deep research if needed |
+| Add Phase | If new phase is warranted |
 
 ## Next Steps
 
