@@ -184,11 +184,11 @@ Fix dashboard loading bugs caused by stale task-based types/components (backend 
 
 ### Must-Haves
 
-- [ ] Fix `/api/status` response mismatch — frontend `StatusResponse` type still expects `tasks`/`recent_tasks` but backend returns `plans`/`recent_plans`
-- [ ] Fix `StatsCards` — references `status.tasks.total` and `status.tasks.by_status` (crash)
-- [ ] Fix `Overview` page — passes `status.recent_tasks` to `ActivityFeed` (undefined)
-- [ ] Fix `ActivityFeed` — typed for `Task[]` but should accept `Plan[]`
-- [ ] Replace `TasksBoard` page — calls non-existent `/api/tasks` endpoint
+- [x] Fix `/api/status` response mismatch — frontend `StatusResponse` type still expects `tasks`/`recent_tasks` but backend returns `plans`/`recent_plans`
+- [x] Fix `StatsCards` — references `status.tasks.total` and `status.tasks.by_status` (crash)
+- [x] Fix `Overview` page — passes `status.recent_tasks` to `ActivityFeed` (undefined)
+- [x] Fix `ActivityFeed` — typed for `Task[]` but should accept `Plan[]`
+- [x] Replace `TasksBoard` page — calls non-existent `/api/tasks` endpoint
 - [ ] New Milestones page — list milestones with status and progress
 - [ ] New Phases page — list phases for active milestone with plan counts
 - [ ] New Plans page — kanban/list view of plans (replaces old TasksBoard)
@@ -203,7 +203,7 @@ Fix dashboard loading bugs caused by stale task-based types/components (backend 
 
 | Phase | Name | Status | Plans |
 |-------|------|--------|-------|
-| 1 | Fix API Types & Status Endpoint | ⬜ Not Started | — |
+| 1 | Fix API Types & Status Endpoint | ✅ Complete | 2 |
 | 2 | Fix Overview & StatsCards | ⬜ Not Started | — |
 | 3 | Milestones & Phases API Routes | ⬜ Not Started | — |
 | 4 | Dashboard Pages — Milestones, Phases, Plans | ⬜ Not Started | — |
