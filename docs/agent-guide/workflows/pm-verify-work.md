@@ -1,110 +1,163 @@
 ---
-description: Verify completed work against requirements
+description: Validate work against requirements with empirical evidence
 ---
 
 # Verify Work Workflow
 
-Validate that completed plans actually deliver what they promised, using empirical evidence rather than assumptions.
+Confirm that implemented work meets requirements with documented proof. The verifier checks the CODEBASE, not claims.
 
 ## When to Use
 
-After executing a phase's plans, before considering the phase done. Verification ensures deliverables match requirements.
+After executing a phase's plans, before marking the phase as complete.
 
 ## Prerequisites
 
-- Phase plans have been executed (`pm plan list --phase <phase-id>`)
-- Work artifacts exist to verify (code, tests, documentation)
+- Phase plans have been executed
+- Phase has completed plans (`pm plan list --phase <phase-id> --json`)
 
 ---
 
-## Step 1: Check Current Progress
+## Step 1: Load Verification Context
 
 ```bash
+pm phase show <phase-id> --json
+pm plan list --phase <phase-id> --json
 pm progress
 ```
 
-Review which plans are completed and which are still pending or failed.
+Extract the phase objective and all deliverables from completed plans.
 
 ---
 
-## Step 2: Verify Each Plan's Deliverables
+## Step 2: Extract Must-Haves
 
-For each completed plan, verify its outputs exist and work correctly.
+From the phase definition, identify testable requirements:
 
-**Proof requirements by change type:**
+```
+Must-Haves for Phase {N}:
+1. {Requirement 1} — How to verify
+2. {Requirement 2} — How to verify
+3. {Requirement 3} — How to verify
+```
+
+---
+
+## Step 3: Verify Each Must-Have
+
+For each requirement, determine the verification method and execute it:
 
 | Change Type | Required Proof |
 |-------------|----------------|
-| API endpoint | `curl` / HTTP response |
+| API endpoint | curl/HTTP response with status code |
 | UI change | Screenshot |
-| Build/compile | Command output |
-| Test | Test runner output |
-| Config | Verification command |
-| Documentation | File exists and content is correct |
+| Build/compile | `npm run build` output |
+| Tests pass | `npm test` output |
+| Config change | Verification command output |
+| File created | `ls` or `find` output |
 
-**Never accept:** "It looks correct", "This should work", "I've done similar before."
-**Always require:** Captured output, screenshot, or test result.
+### Forbidden Phrases
 
----
+**Never accept** these as verification evidence:
+- "This should work"
+- "The code looks correct"
+- "I've made similar changes before"
+- "Based on my understanding"
+- "It follows the pattern"
 
-## Step 3: Mark Plans Based on Evidence
+**Always require:** Captured command output, screenshot, or test result.
 
-If a plan's deliverables are verified:
+### Record Evidence
 
-```bash
-pm plan update <plan-id> --status completed
-```
-
-If a plan's deliverables are missing or incorrect:
-
-```bash
-pm plan update <plan-id> --status failed
-```
-
-**Retry path** — to rework a failed plan:
-
-```bash
-pm plan update <plan-id> --status pending
-```
-
-Then return to the execute workflow.
+For each must-have, record:
+- **Status:** PASS or FAIL
+- **Evidence:** Actual command output or screenshot
+- **Notes:** Any observations
 
 ---
 
-## Step 4: Check Phase Completion
+## Step 4: Create Verification Report
 
-After verifying all plans:
+Record results via context:
 
 ```bash
-pm plan list --phase <phase-id> --json
+pm context set "phase-{N}-verification" "{X}/{Y} must-haves verified. Verdict: PASS|FAIL" --category note
 ```
-
-- If all plans are `completed` → phase auto-completes
-- If any plans are `failed` → phase stays `in_progress`, fix and re-verify
 
 ---
 
-## Plan Status Transitions
+## Step 5: Handle Results
 
+### If PASS (all must-haves verified):
+
+```bash
+# Commit verification
+git add -A
+git commit -m "docs(phase-{N}): verification report — PASS"
 ```
-pending → in_progress → completed ✓
-                      → failed → pending (retry)
+
+Output:
+```
+Phase {N} VERIFIED ✓
+{X}/{X} must-haves verified
+All requirements satisfied.
+
+Next: Execute Phase {N+1} or Complete Milestone
 ```
 
-## Cascading Behavior
+### If FAIL (some must-haves failed):
 
-- All plans `completed` → phase automatically transitions to `completed`
-- Failed plans prevent phase auto-completion
+Create gap closure plans for each failure:
 
-## Success Criteria
+```bash
+pm plan create "Fix: {issue}" \
+  --phase <phase-id> \
+  --number <next-number> \
+  --wave 1 \
+  --content "Problem: {what failed}. Fix: {specific instructions}. Verify: {how to confirm fix}"
+```
 
-- [ ] Every plan has empirical proof of completion
-- [ ] All plans are `completed`
-- [ ] Phase status is `completed`
-- [ ] `pm progress` shows phase as done
+```bash
+git add -A
+git commit -m "docs(phase-{N}): verification report — FAIL, gap plans created"
+```
 
-## Next Steps
+Output:
+```
+Phase {N} GAPS FOUND ⚠
+{X}/{Y} must-haves verified
+{Z} issues require fixes
 
-→ [Check Progress](pm-progress.md) — review milestone-level status
-→ [Audit Milestone](pm-audit-milestone.md) — pre-completion review
-→ [Complete Milestone](pm-complete-milestone.md) — if all phases are done
+Gap closure plans created.
+Next: Execute Phase to run fix plans
+```
+
+---
+
+## Evidence Requirements Table
+
+| Claim | Required Proof |
+|-------|----------------|
+| "Tests pass" | Actual test runner output |
+| "API works" | curl command + response body |
+| "UI renders" | Screenshot |
+| "Build succeeds" | Build command output |
+| "File created" | `ls` or `find` output |
+| "Performance OK" | Benchmark output |
+
+---
+
+## Git Rules
+
+| When | Command |
+|------|---------|
+| After verification PASS | `git add -A && git commit -m "docs(phase-{N}): verification report — PASS"` |
+| After verification FAIL | `git add -A && git commit -m "docs(phase-{N}): verification report — FAIL, gap plans created"` |
+
+## Related Workflows
+
+| Workflow | Relationship |
+|----------|-------------|
+| Execute Phase | Run before verify to implement work |
+| Debug | Diagnose verification failures |
+| Plan Phase | Create gap closure plans from failures |
+| Progress | Check overall milestone status |

@@ -4,7 +4,7 @@ description: Execute plans in a phase using wave-based ordering
 
 # Execute Phase Workflow
 
-Work through a phase's plans in wave order, transitioning each plan through `pending → in_progress → completed`.
+Work through a phase's plans in wave order, committing after each plan and verifying at the end.
 
 ## When to Use
 
@@ -12,7 +12,7 @@ After plans have been created for a phase (via the Plan Phase workflow) and you'
 
 ## Prerequisites
 
-- Phase has plans (`pm plan list --phase <phase-id>`)
+- Phase has plans (`pm plan list --phase <phase-id> --json`)
 - Plans are in `pending` status
 
 ---
@@ -25,107 +25,137 @@ pm plan list --phase <phase-id> --json
 
 Group plans by wave. Execute wave 1 first, then wave 2, etc.
 
+Display wave structure before starting:
+```
+Wave 1: Plan 1.1, Plan 1.2
+Wave 2: Plan 1.3
+Total: 3 plans across 2 waves
+```
+
 ---
 
-## Step 2: Start a Plan
+## Step 2: Execute Each Plan
 
-Move the first pending plan to `in_progress`:
+For each plan in wave order:
+
+### 2a. Start the Plan
 
 ```bash
 pm plan update <plan-id> --status in_progress
 ```
 
-**Cascading behavior:** If the parent phase is `not_started`, starting a plan automatically transitions the phase to `in_progress`.
+**Cascading:** Starting a plan auto-transitions the parent phase to `in_progress` if it's `not_started`.
 
----
+### 2b. Do the Work
 
-## Step 3: Do the Work
+Implement what the plan describes. Follow task blocks in order:
+1. Load plan context
+2. Execute tasks
+3. Verify each task with empirical evidence (never "it should work")
 
-Implement what the plan describes. This is where actual code changes, documentation, or configuration happens.
+### 2c. Commit the Work
 
----
+**After each plan, commit immediately:**
 
-## Step 4: Complete the Plan
+```bash
+git add -A
+git commit -m "feat(phase-{N}): {plan-name}"
+```
 
-When the plan's work is done and verified:
+### 2d. Complete the Plan
 
 ```bash
 pm plan update <plan-id> --status completed
 ```
 
-**Cascading behavior:** When all plans in a phase reach `completed` status, the phase automatically transitions to `completed`.
+### 2e. Handle Failures
 
----
-
-## Step 5: Handle Failures
-
-If a plan's work cannot be completed:
+If a plan cannot be completed:
 
 ```bash
 pm plan update <plan-id> --status failed
 ```
 
-To retry a failed plan:
+To retry: set back to `pending`, then restart from 2a.
+
+---
+
+## Step 3: Verify Wave, Then Next Wave
+
+After all plans in a wave complete:
+1. Confirm all plans show `completed` status
+2. Only then proceed to the next wave
 
 ```bash
-pm plan update <plan-id> --status pending
+pm plan list --phase <phase-id> --json
 ```
 
-Then start it again from Step 2.
+---
+
+## Step 4: Verify Phase Goal
+
+After all waves complete:
+
+1. Review phase objective from `pm phase show <phase-id>`
+2. Check all must-haves against actual codebase (not claims)
+3. Run verification commands (build, tests, etc.)
+
+```bash
+npm run build
+npm test
+```
+
+**Route by result:**
+- **PASS** → Continue to Step 5
+- **FAIL** → Create gap closure plans and retry
+
+---
+
+## Step 5: Commit Phase Completion
+
+```bash
+git add -A
+git commit -m "docs(phase-{N}): complete {phase-name}"
+```
 
 ---
 
 ## Step 6: Track Progress
 
-Check overall milestone progress at any time:
-
 ```bash
 pm progress
 ```
 
-Or check a specific milestone:
-
-```bash
-pm progress --milestone <milestone-id>
-```
-
 ---
 
-## Wave Execution Order
+## Context Hygiene
 
-1. Execute all **Wave 1** plans (can run in parallel)
-2. Wait for all Wave 1 plans to complete
-3. Execute all **Wave 2** plans
-4. Repeat until all waves are done
-
-Filter plans by wave:
-
-```bash
-pm plan list --phase <phase-id> --wave 1 --json
-```
+**After 3 failed debugging attempts on the same issue:**
+1. Stop current approach
+2. Record what was tried via `pm context set debug-attempts "{approaches tried}"`
+3. Recommend pausing for a fresh session (`/pause`)
 
 ---
-
-## Plan Status Transitions
-
-```
-pending → in_progress → completed
-                      → failed → pending (retry)
-```
 
 ## Cascading Behavior
 
-- Starting a plan (`pending → in_progress`) auto-starts the parent phase if it's `not_started`
+- Starting a plan (`pending → in_progress`) auto-starts the parent phase if `not_started`
 - Completing all plans in a phase auto-completes the phase
 - Failed plans block phase auto-completion
 
-## Success Criteria
+## Git Rules Summary
 
-- [ ] All plans in the phase are `completed`
-- [ ] Phase status is `completed` (auto-transitioned)
-- [ ] `pm progress` reflects the updated state
+| When | Command |
+|------|---------|
+| After each plan | `git add -A && git commit -m "feat(phase-{N}): {plan-name}"` |
+| After phase verified | `git add -A && git commit -m "docs(phase-{N}): complete {phase-name}"` |
 
-## Next Steps
+## Related Workflows
 
-→ [Verify Work](pm-verify-work.md) — validate deliverables against requirements
-→ [Check Progress](pm-progress.md) — review milestone progress
+| Workflow | Relationship |
+|----------|-------------|
+| Plan Phase | Creates plans that this workflow executes |
+| Verify Work | Validates deliverables after execution |
+| Debug | Use when plans fail verification |
+| Pause | Use after 3 debugging failures |
+| Progress | Check milestone progress |
