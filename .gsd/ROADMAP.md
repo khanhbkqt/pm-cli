@@ -172,7 +172,7 @@ Xây dựng workflow engine tương tự GSD methodology, tích hợp trực ti�
 | 1 | DB Schema & Models | ✅ Complete | 2 |
 | 2 | Milestone & Phase CLI | 🔵 Planned | 2 |
 | 3 | Workflow State Machine | ✅ Complete | 2 |
-| 4 | Plan & Execution CLI | 🔵 Planned | 3 |
+| 4 | Plan & Execution CLI | ✅ Complete | 3 |
 | 5 | Progress & Dashboard | ⬜ Not Started | — |
 | 6 | Tests & Documentation | ⬜ Not Started | — |
 | 7 | Agent Workflow Templates | ⬜ Not Started | — |
