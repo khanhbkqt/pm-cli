@@ -1,5 +1,5 @@
 ---
-updated: 2026-03-01T07:55:00+07:00
+updated: 2026-03-01T07:57:00+07:00
 ---
 
 # Project State
@@ -7,17 +7,17 @@ updated: 2026-03-01T07:55:00+07:00
 ## Current Position
 
 **Milestone:** v3.0-workflow-engine
-**Phase:** Not started
-**Task:** Milestone planned
-**Status:** Ready for planning
+**Phase:** 1 — DB Schema & Models
+**Task:** Planning complete
+**Status:** Ready for execution
 
 ## Last Session Summary
 
-Milestone v2.1-multi-client completed. Created new milestone v3.0-workflow-engine with 6 phases for building a GSD-like workflow engine integrated into pm-cli.
+Phase 1 planned with 2 plans: 1.1 (schema + types) and 1.2 (core CRUD functions + tests). Both in wave 1.
 
 ## Next Steps
 
-1. `/plan 1` — Create Phase 1 execution plans (DB Schema & Models)
+1. `/execute 1` — Execute Phase 1 plans
 
 ## Active Decisions
 
