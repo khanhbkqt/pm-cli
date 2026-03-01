@@ -1,13 +1,13 @@
 ---
-milestone: v3.1-dashboard-upgrade
-version: 3.1.0
-updated: 2026-03-01T18:46:00+07:00
+milestone: v3.3-board-redesign
+version: 3.3.0
+updated: 2026-03-01T19:57:00+07:00
 ---
 
 # Roadmap
 
-> **Current Milestone**: v3.1-dashboard-upgrade — Dashboard Upgrade
-> **Last Completed**: v3.0-workflow-engine
+> **Current Milestone**: v3.3-board-redesign — Plans Board Redesign
+> **Last Completed**: v3.2-gsd-workflows
 
 ## Previous Milestones
 
@@ -216,7 +216,8 @@ Fix dashboard loading bugs caused by stale task-based types/components (backend 
 
 ---
 
-## Active Milestone: v3.2-gsd-workflows — GSD Workflow Sync
+<details>
+<summary>✅ v3.2-gsd-workflows — GSD Workflow Sync (Complete)</summary>
 
 ### Goal
 
@@ -237,50 +238,58 @@ Update the pm-cli workflow documents to include ROADMAP and STATE context loadin
 | 2 | Sync Planning Workflows | ✅ Complete | 1 |
 | 3 | Sync Review & Misc Workflows | ✅ Complete | 1 |
 
----
-
-### Phase 1: Sync Execute Workflows
-**Status**: ✅ Complete
-**Objective**: Update the execution workflows (`pm-execute-phase.md` and related) to require reading ROADMAP/STATE.
-**Depends on**: None
-
-**Must-Haves**:
-- [x] Update `pm-execute-phase.md`
-- [x] Update `pm-debug.md` (if applicable)
-
-**Verification**:
-- [x] Markdown files render correctly
-- [x] Manual review confirms "quick trace" pattern is present
+</details>
 
 ---
 
-### Phase 2: Sync Planning Workflows
-**Status**: ✅ Complete
-**Objective**: Update the planning workflows (`pm-plan-phase.md`, `pm-discuss-phase.md`, `pm-research-phase.md`) to require reading ROADMAP/STATE.
-**Depends on**: None
+## Active Milestone: v3.3-board-redesign — Plans Board Redesign
 
-**Must-Haves**:
-- [x] Update `pm-plan-phase.md`
-- [x] Update `pm-discuss-phase.md`
-- [x] Update `pm-research-phase.md`
+### Goal
 
-**Verification**:
-- [x] Markdown files render correctly
-- [x] Manual review confirms "quick trace" pattern is present
+Redesign the Plans Board page into a premium Jira-style hierarchy tree view with visual sophistication — replacing the current flat accordion with a clean indented tree layout showing Milestones → Phases → Plans with progress indicators, status badges, and smooth interactions.
+
+### Must-Haves
+
+- [ ] Jira-style hierarchy tree layout (indented rows, expand/collapse)
+- [ ] Progress bars per milestone and phase (completion %)
+- [ ] Rich status badges with consistent design language
+- [ ] Smooth expand/collapse animations
+- [ ] Milestone filter toolbar (All / Active / Completed / Planned)
+- [ ] Hover highlighting and interactive row states
+- [ ] Responsive design (desktop + mobile)
+
+### Nice-to-Haves
+
+- [ ] Expand all / Collapse all controls
+- [ ] Keyboard navigation between rows
+- [ ] Animated progress bar fills
+
+### Phases
+
+| Phase | Name | Status | Plans |
+|-------|------|--------|-------|
+| 1 | Design System & Hierarchy Layout | ⬜ Not Started | 0 |
+| 2 | Tree Rows & Progress Indicators | ⬜ Not Started | 0 |
+| 3 | Filtering, Polish & Interactions | ⬜ Not Started | 0 |
 
 ---
 
-### Phase 3: Sync Review & Misc Workflows
-**Status**: ✅ Complete
-**Objective**: Update verification and progress workflows (`pm-verify-work.md`, `pm-progress.md`, `pm-audit-milestone.md`) with the quick trace requirements.
+### Phase 1: Design System & Hierarchy Layout
+**Status**: ⬜ Not Started
+**Objective**: Add missing CSS custom properties and build the core Jira-style tree table layout container.
 **Depends on**: None
 
-**Must-Haves**:
-- [x] Update `pm-verify-work.md`
-- [x] Update `pm-progress.md`
-- [x] Update `pm-audit-milestone.md`
-- [x] Check other workflows for applicability
+---
 
-**Verification**:
-- [x] Markdown files render correctly
-- [x] Manual review confirms "quick trace" pattern is present
+### Phase 2: Tree Rows & Progress Indicators
+**Status**: ⬜ Not Started
+**Objective**: Implement milestone, phase, and plan rows as indented tree items with progress bars, status badges, and plan counts.
+**Depends on**: Phase 1
+
+---
+
+### Phase 3: Filtering, Polish & Interactions
+**Status**: ⬜ Not Started
+**Objective**: Add milestone status filter, hover effects, animations, responsive layout, and overall visual polish.
+**Depends on**: Phase 2
+

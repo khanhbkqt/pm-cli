@@ -2,17 +2,16 @@
 
 ## Current Position
 
-- **Milestone**: v3.2-gsd-workflows — GSD Workflow Sync
-- **Phase**: 3 (completed)
-- **Status**: Verified
+- **Milestone**: v3.3-board-redesign — Plans Board Redesign
+- **Phase**: Not started
+- **Status**: Milestone planned
 
 ## Last Session Summary
 
-Completed all 3 phases of the v3.2-gsd-workflows milestone. 
-Updated `pm-execute-phase.md`, `pm-plan-phase.md`, `pm-verify-work.md`, `pm-audit-milestone.md`, `pm-progress.md`, `pm-discuss-phase.md`, and `pm-debug.md` to include a Step 0 "Quick Trace" pattern that requires reading ROADMAP.md and STATE.md for context recovery.
-All changes have been committed.
+Created milestone v3.3-board-redesign to redesign the Plans Board into a Jira-style hierarchy tree view.
+Previous milestone v3.2-gsd-workflows completed and archived.
 
 ## Next Steps
 
-1. All phases of milestone v3.1-dashboard-upgrade are now ✅ Complete
-2. Consider `/complete-milestone` to archive and create new milestone
+1. `/plan 1` — Plan Phase 1: Design System & Hierarchy Layout
+2. `/execute 1` — Implement Phase 1
