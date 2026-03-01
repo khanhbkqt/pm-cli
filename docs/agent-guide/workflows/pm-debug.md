@@ -16,9 +16,9 @@ When you encounter a bug or unexpected behavior that needs systematic investigat
 
 When starting a debug session, first understand what was supposed to happen:
 
-1. **Read `.gsd/ROADMAP.md`**
+1. **Read `.pm/ROADMAP.md`**
    - Identify the active milestone and the current phase's objective
-2. **Read `.gsd/STATE.md`**
+2. **Read `.pm/STATE.md`**
    - Check what was being worked on when the bug occurred
    - Note any recent completed plans
 

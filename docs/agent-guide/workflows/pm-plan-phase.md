@@ -21,10 +21,10 @@ After a milestone and phases exist, and you're ready to break a phase into concr
 
 Before planning, you must understand the wider context:
 
-1. **Read `.gsd/ROADMAP.md`**
+1. **Read `.pm/ROADMAP.md`**
    - Identify the active milestone's goal and must-haves
    - Read the current phase's objective and dependencies
-2. **Read `.gsd/STATE.md`**
+2. **Read `.pm/STATE.md`**
    - Check where the last session left off
 
 _This ensures your plans align with the overall project direction._

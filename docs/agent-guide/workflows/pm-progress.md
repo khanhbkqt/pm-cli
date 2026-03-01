@@ -20,10 +20,10 @@ At any point during project work when you need to understand overall progress, i
 
 When checking progress, always start with the persistent state files:
 
-1. **Read `.gsd/ROADMAP.md`**
+1. **Read `.pm/ROADMAP.md`**
    - Identify the active milestone and its must-haves
    - See the high-level phase breakdown
-2. **Read `.gsd/STATE.md`**
+2. **Read `.pm/STATE.md`**
    - Check the exact position where the last session left off
 
 _This gives you the project's true intent before looking at CLI output._

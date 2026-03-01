@@ -21,10 +21,10 @@ When you believe a milestone is ready to complete, but want to do a thorough che
 
 Before auditing, restore context to understand the entire milestone scope:
 
-1. **Read `.gsd/ROADMAP.md`**
+1. **Read `.pm/ROADMAP.md`**
    - Identify the active milestone and its must-haves
    - Review all phases and their objectives
-2. **Read `.gsd/STATE.md`**
+2. **Read `.pm/STATE.md`**
    - Check where the last session left off
 
 _This ensures you evaluate the milestone against its original goals, not just its current state._

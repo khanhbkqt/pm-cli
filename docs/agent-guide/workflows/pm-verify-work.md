@@ -21,10 +21,10 @@ After executing a phase's plans, before marking the phase as complete.
 
 Before verifying, restore context to understand what needs verification:
 
-1. **Read `.gsd/ROADMAP.md`**
+1. **Read `.pm/ROADMAP.md`**
    - Identify the active milestone and its must-haves
    - Read the current phase's objective and must-haves
-2. **Read `.gsd/STATE.md`**
+2. **Read `.pm/STATE.md`**
    - Check where the last execution session left off
 
 _This ensures you verify the actual goals, not just what the plans happened to build._

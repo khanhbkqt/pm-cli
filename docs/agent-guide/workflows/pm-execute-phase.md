@@ -21,10 +21,10 @@ After plans have been created for a phase (via the Plan Phase workflow) and you'
 
 Before executing any plans, quickly understand the current state:
 
-1. **Read `.gsd/ROADMAP.md`**
+1. **Read `.pm/ROADMAP.md`**
    - Identify the active milestone and its must-haves
    - Identify the current phase and its objective
-2. **Read `.gsd/STATE.md`**
+2. **Read `.pm/STATE.md`**
    - Check where the last session left off
 
 _This ensures you don't execute plans blindly without understanding the wider phase goal._

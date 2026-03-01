@@ -20,10 +20,10 @@ Before planning a phase that has unclear scope, open questions, or multiple poss
 
 Before discussing scope, restore context:
 
-1. **Read `.gsd/ROADMAP.md`**
+1. **Read `.pm/ROADMAP.md`**
    - Identify the active milestone and its must-haves
    - Read the current phase's objective
-2. **Read `.gsd/STATE.md`**
+2. **Read `.pm/STATE.md`**
    - Check where the last session left off
 
 _This ensures your discussion is grounded in the project's actual goals._
