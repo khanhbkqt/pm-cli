@@ -42,16 +42,30 @@ The individual documents provide detailed examples and extended explanations. `A
 
 ---
 
-## For Client Integration
+## Multi-Client Installation
 
-> **v2.1 milestone** will create per-client adapters that automatically generate client-specific configuration files from `AGENT_INSTRUCTIONS.md`:
->
-> | Client | Generated Config |
-> |--------|-----------------|
-> | Antigravity | `.agent/workflows/*.md` |
-> | Claude Code | `CLAUDE.md` |
-> | Cursor | `.cursor/rules/*.mdc` |
-> | Codex | `AGENTS.md` |
-> | OpenCode | `AGENTS.md` + `opencode.json` |
->
-> See the [v2.1-multi-client milestone](../../.gsd/ROADMAP.md) for details.
+Install the agent instructions into any supported AI coding client with a single command:
+
+```bash
+# Detect which clients are present
+pm install --detect
+
+# Install for a specific client
+pm install <client>
+
+# Install for all detected clients
+pm install --all
+```
+
+### Supported Clients
+
+| Client | Command | Generated Config |
+|--------|---------|-----------------|
+| Antigravity | `pm install antigravity` | `.agent/workflows/pm-guide.md` + `.agent/rules/pm-cli.md` |
+| Claude Code | `pm install claude-code` | `CLAUDE.md` (section markers) |
+| Cursor | `pm install cursor` | `.cursor/rules/pm-guide.mdc` |
+| Codex | `pm install codex` | `AGENTS.md` (section markers) |
+| OpenCode | `pm install opencode` | `AGENTS.md` + `opencode.json` |
+| Gemini CLI | `pm install gemini-cli` | `GEMINI.md` (section markers) |
+
+Each adapter translates the canonical `AGENT_INSTRUCTIONS.md` into the client's native config format. Existing user content in shared files (e.g. `CLAUDE.md`, `AGENTS.md`) is preserved via section markers.

@@ -19,6 +19,7 @@ PM CLI (`pm`) is a local-first project management tool that serves as a shared p
 - 🕵️ **Agent System** — Register agents, identify who did what, track activity per agent
 - 📝 **Context Sharing** — Set, get, search key-value context entries across collaborators
 - 📊 **Web Dashboard** — Local browser-based project view with Kanban board, stats, and activity feed
+- 🔌 **Multi-Client Install** — One command to install agent guides for Antigravity, Claude Code, Cursor, Codex, OpenCode, and Gemini CLI
 - 🔒 **Local-first** — Everything stays on your machine, zero config, instant startup
 
 ## Quick Start
@@ -149,6 +150,30 @@ npm run build:dashboard               # Build dashboard only
 npm run build                          # Build CLI + dashboard
 ```
 
+## AI Client Integration
+
+Install the PM agent workflow guide into any supported AI coding client:
+
+```bash
+# Detect which AI clients are present in the project
+pm install --detect
+
+# Install for a specific client
+pm install <client>
+
+# Install for all detected clients
+pm install --all
+```
+
+| Client | Config Format |
+|--------|---------------|
+| Antigravity | `.agent/workflows/pm-guide.md` + `.agent/rules/pm-cli.md` |
+| Claude Code | `CLAUDE.md` (section markers) |
+| Cursor | `.cursor/rules/pm-guide.mdc` |
+| Codex | `AGENTS.md` (section markers) |
+| OpenCode | `AGENTS.md` + `opencode.json` |
+| Gemini CLI | `GEMINI.md` (section markers) |
+
 ## CLI Reference
 
 ### Project
@@ -186,6 +211,14 @@ npm run build                          # Build CLI + dashboard
 | `pm context get <key>` | Get a context entry |
 | `pm context list` | List all context entries |
 | `pm context search <query>` | Search context entries |
+
+### Install
+
+| Command | Description |
+|---------|-------------|
+| `pm install <client>` | Install agent config for a specific AI client |
+| `pm install --all` | Install for all detected clients |
+| `pm install --detect` | Detect AI clients present in the project |
 
 ### Dashboard
 
