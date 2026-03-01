@@ -79,8 +79,8 @@ export class GeminiCliAdapter implements ClientAdapter {
         const commandsDir = path.join(projectRoot, COMMANDS_DIR);
         fs.mkdirSync(commandsDir, { recursive: true });
         for (const [filename, content] of workflows) {
-            // Strip the 'pm-' prefix: pm-execute-phase.md → execute-phase.md
-            const commandFilename = filename.replace(/^pm-/, '');
+            // Strip the 'pm-' prefix and change extension to .toml: pm-execute-phase.md → execute-phase.toml
+            const commandFilename = filename.replace(/^pm-/, '').replace(/\.md$/, '.toml');
             const cmdPath = path.join(commandsDir, commandFilename);
             if (fs.existsSync(cmdPath)) {
                 warnings.push(`Overwriting existing ${COMMANDS_DIR}/${commandFilename}`);
@@ -140,7 +140,7 @@ export class GeminiCliAdapter implements ClientAdapter {
         const cmdDir = path.join(projectRoot, COMMANDS_DIR);
         if (fs.existsSync(cmdDir)) {
             for (const entry of fs.readdirSync(cmdDir)) {
-                if (entry.endsWith('.md')) {
+                if (entry.endsWith('.toml')) {
                     const cmdPath = path.join(cmdDir, entry);
                     fs.unlinkSync(cmdPath);
                     removed.push(cmdPath);
@@ -169,7 +169,7 @@ export class GeminiCliAdapter implements ClientAdapter {
         return {
             type: 'gemini-cli',
             name: 'Gemini CLI',
-            configPaths: [GEMINI_FILE, `${COMMANDS_DIR}/*.md`, `${SKILLS_DIR}/pm-*.md`],
+            configPaths: [GEMINI_FILE, `${COMMANDS_DIR}/*.toml`, `${SKILLS_DIR}/pm-*.md`],
             configFormat: 'markdown',
         };
     }
