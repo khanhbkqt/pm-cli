@@ -206,5 +206,5 @@ Fix dashboard loading bugs caused by stale task-based types/components (backend 
 | 1 | Fix API Types & Status Endpoint | ✅ Complete | 2 |
 | 2 | Fix Overview & StatsCards | ✅ Complete | 2 |
 | 3 | Milestones & Phases API Routes | ✅ Complete | 2 |
-| 4 | Dashboard Pages — Milestones, Phases, Plans | ⬜ Not Started | — |
+| 4 | Dashboard Pages — Milestones, Phases, Plans | 📋 Planned | 3 |
 | 5 | Tests & Polish | ⬜ Not Started | — |
