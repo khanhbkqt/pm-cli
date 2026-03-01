@@ -7,8 +7,8 @@ import { buildWorkflowIndex } from '../workflow-index.js';
 
 const GEMINI_FILE = 'GEMINI.md';
 
-const WORKFLOW_DIR = '.agent/workflows';
-const SKILLS_DIR = '.agent/skills';
+const WORKFLOW_DIR = '.gemini/workflows';
+const SKILLS_DIR = '.gemini/skills';
 
 /** Section marker used to delimit PM CLI content inside GEMINI.md. */
 const SECTION_START = '<!-- pm-cli:start -->';
