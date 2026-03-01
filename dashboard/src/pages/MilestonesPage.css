@@ -1,0 +1,203 @@
+/* ─── Milestones Page ──────────────────────────────── */
+.milestones-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ─── Toolbar ──────────────────────────────────────── */
+.milestones-page__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.milestones-page__status-filter {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    border: 1px solid var(--border-color);
+}
+
+.milestones-page__status-btn {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.milestones-page__status-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.milestones-page__status-btn--active {
+    background: var(--accent-blue);
+    color: #0f0f23;
+    font-weight: 600;
+}
+
+.milestones-page__status-btn--active:hover {
+    background: var(--accent-blue);
+    color: #0f0f23;
+}
+
+/* ─── Grid ─────────────────────────────────────────── */
+.milestones-page__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+}
+
+/* ─── Milestone Card ───────────────────────────────── */
+.milestone-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.milestone-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.milestone-card--active {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 1px var(--accent-blue), 0 4px 16px rgba(79, 195, 247, 0.1);
+}
+
+.milestone-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.milestone-card__name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.milestone-card__badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.milestone-card__badge--planned {
+    background: rgba(158, 158, 158, 0.15);
+    color: var(--text-secondary);
+}
+
+.milestone-card__badge--active {
+    background: rgba(79, 195, 247, 0.15);
+    color: var(--accent-blue);
+}
+
+.milestone-card__badge--completed {
+    background: rgba(129, 199, 132, 0.15);
+    color: var(--accent-green);
+}
+
+.milestone-card__badge--archived {
+    background: rgba(158, 158, 158, 0.1);
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.milestone-card__goal {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.milestone-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
+}
+
+.milestone-card__time {
+    font-size: 11px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.milestone-card__action {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-blue);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ─── Empty & Error ────────────────────────────────── */
+.milestones-page__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.milestones-page__empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.4;
+}
+
+.milestones-page__empty-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* ─── Responsive ───────────────────────────────────── */
+@media (max-width: 640px) {
+    .milestones-page__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .milestones-page__toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .milestones-page__status-filter {
+        justify-content: center;
+    }
+}

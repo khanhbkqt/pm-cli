@@ -35,7 +35,27 @@ export interface ContextEntry {
 export interface Milestone {
     id: string;
     name: string;
-    status: string;
+    goal: string | null;
+    status: 'planned' | 'active' | 'completed' | 'archived';
+    created_by: string;
+    created_at: string;
+    completed_at: string | null;
+}
+
+export interface Phase {
+    id: number;
+    milestone_id: string;
+    number: number;
+    name: string;
+    description: string | null;
+    status: 'not_started' | 'planning' | 'in_progress' | 'completed' | 'skipped';
+    created_at: string;
+    completed_at: string | null;
+}
+
+export interface PhaseWithPlanCounts extends Phase {
+    plans_total: number;
+    plans_done: number;
 }
 
 export interface PhasesSummary {
@@ -45,8 +65,15 @@ export interface PhasesSummary {
     not_started: number;
 }
 
+/** Lightweight milestone shape returned by /api/status. */
+export interface MilestoneSummary {
+    id: string;
+    name: string;
+    status: string;
+}
+
 export interface StatusResponse {
-    milestone: Milestone | null;
+    milestone: MilestoneSummary | null;
     phases: PhasesSummary;
     plans: {
         total: number;

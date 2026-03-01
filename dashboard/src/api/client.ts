@@ -1,4 +1,4 @@
-import type { StatusResponse, Plan, Agent, ContextEntry } from './types';
+import type { StatusResponse, Plan, Agent, ContextEntry, Milestone, PhaseWithPlanCounts, PhasesSummary } from './types';
 
 /**
  * Base GET fetch wrapper with error handling.
@@ -42,6 +42,32 @@ export async function fetchAgentById(id: string): Promise<Agent> {
 export async function searchContext(query: string): Promise<ContextEntry[]> {
     const res = await apiFetch<{ entries: ContextEntry[] }>(`/api/context/search?q=${encodeURIComponent(query)}`);
     return res.entries;
+}
+
+/* ─── Milestone / Phase / Plan endpoints ───────────── */
+
+/** Fetch all milestones, optional status filter. */
+export async function fetchMilestones(status?: string): Promise<Milestone[]> {
+    const qs = status ? `?status=${encodeURIComponent(status)}` : '';
+    const res = await apiFetch<{ milestones: Milestone[] }>(`/api/milestones${qs}`);
+    return res.milestones;
+}
+
+/** Fetch the active milestone with phase summary. */
+export async function fetchActiveMilestone(): Promise<{ milestone: Milestone; phases_summary: PhasesSummary }> {
+    return apiFetch<{ milestone: Milestone; phases_summary: PhasesSummary }>('/api/milestones/active');
+}
+
+/** Fetch phases for a milestone (enriched with plan counts). */
+export async function fetchMilestonePhases(milestoneId: string): Promise<PhaseWithPlanCounts[]> {
+    const res = await apiFetch<{ phases: PhaseWithPlanCounts[] }>(`/api/milestones/${encodeURIComponent(milestoneId)}/phases`);
+    return res.phases;
+}
+
+/** Fetch plans for a specific phase. */
+export async function fetchPhasePlans(phaseId: number): Promise<Plan[]> {
+    const res = await apiFetch<{ plans: Plan[] }>(`/api/phases/${phaseId}/plans`);
+    return res.plans;
 }
 
 // Re-export Plan for downstream consumers
