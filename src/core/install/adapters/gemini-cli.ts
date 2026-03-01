@@ -75,17 +75,17 @@ export class GeminiCliAdapter implements ClientAdapter {
 
         files.push(geminiPath);
 
-        // --- Individual workflow files → .gemini/commands/pm/<command>.md ---
+        // --- Individual workflow files → .gemini/commands/pm/<command>.toml ---
         const commandsDir = path.join(projectRoot, COMMANDS_DIR);
         fs.mkdirSync(commandsDir, { recursive: true });
         for (const [filename, content] of workflows) {
-            // Strip the 'pm-' prefix and change extension to .toml: pm-execute-phase.md → execute-phase.toml
+            // Strip 'pm-' prefix and change extension: pm-execute-phase.md → execute-phase.toml
             const commandFilename = filename.replace(/^pm-/, '').replace(/\.md$/, '.toml');
             const cmdPath = path.join(commandsDir, commandFilename);
             if (fs.existsSync(cmdPath)) {
                 warnings.push(`Overwriting existing ${COMMANDS_DIR}/${commandFilename}`);
             }
-            fs.writeFileSync(cmdPath, content, 'utf-8');
+            fs.writeFileSync(cmdPath, markdownToToml(content), 'utf-8');
             files.push(cmdPath);
         }
 
@@ -178,6 +178,46 @@ export class GeminiCliAdapter implements ClientAdapter {
 /** Escape special regex characters in a string. */
 function escapeRegex(str: string): string {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Convert a markdown workflow file (with optional YAML frontmatter) into a
+ * valid gemini-cli TOML command file.
+ *
+ * Schema:
+ *   description = "one-line summary"   # optional
+ *   prompt = """
+ *   <markdown body>
+ *   """
+ */
+function markdownToToml(markdown: string): string {
+    let description = '';
+    let body = markdown;
+
+    // Extract description from YAML frontmatter (--- ... ---)
+    const fmMatch = markdown.match(/^---\s*\n([\s\S]*?)\n---\s*\n?/);
+    if (fmMatch) {
+        const descMatch = fmMatch[1].match(/^description:\s*(.+)$/m);
+        if (descMatch) {
+            description = descMatch[1].trim().replace(/"/g, '\\"');
+        }
+        body = markdown.slice(fmMatch[0].length).trimStart();
+    }
+
+    // Escape any triple-quote sequences in body to prevent TOML parse errors
+    const safeBody = body.replace(/"""/g, '""\\"');
+
+    const lines: string[] = [];
+    if (description) {
+        lines.push(`description = "${description}"`);
+        lines.push('');
+    }
+    lines.push(`prompt = """`);
+    lines.push(safeBody.trimEnd());
+    lines.push(`"""`);
+    lines.push('');
+
+    return lines.join('\n');
 }
 
 registerAdapter('gemini-cli', () => new GeminiCliAdapter());
