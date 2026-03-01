@@ -115,11 +115,12 @@ Make the agent workflow guide installable on multiple AI coding clients, transla
 
 | Client | Config Format | Location |
 |--------|--------------|----------|
-| **Antigravity** | `.agent/workflows/*.md` + `.gemini/` | MD + YAML frontmatter |
+| **Antigravity** | `.agent/workflows/*.md` + `.agent/rules/*.md` | MD + YAML frontmatter |
 | **Claude Code** | `CLAUDE.md` (root) | Markdown with project rules |
 | **Cursor** | `.cursor/rules/*.mdc` | MD with YAML frontmatter + globs |
 | **Codex** | `AGENTS.md` (root) | Markdown with commands, style |
 | **OpenCode** | `AGENTS.md` + `opencode.json` | MD + JSON config |
+| **Gemini CLI** | `GEMINI.md` (root) | Markdown context file |
 
 ### Must-Haves
 
@@ -146,6 +147,7 @@ Make the agent workflow guide installable on multiple AI coding clients, transla
 | 2 | Antigravity & Claude Code | ✅ Complete | 1 |
 | 3 | Cursor & Codex | ✅ Complete | 1 |
 | 4 | OpenCode & CLI Command | ✅ Complete | 1 |
-| 5 | Tests & Documentation | Not Started | 1 |
+| 5 | Gemini CLI & Antigravity Rules | ✅ Complete | 1 |
+| 6 | Tests & Documentation | Not Started | 1 |
 
 </details>

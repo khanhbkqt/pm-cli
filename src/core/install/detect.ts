@@ -48,6 +48,13 @@ const CLIENT_SIGNATURES: ClientSignature[] = [
             { path: 'AGENTS.md', type: 'file', confidence: 'low', reason: 'Found AGENTS.md without opencode.json' },
         ],
     },
+    {
+        client: 'gemini-cli',
+        checks: [
+            { path: 'GEMINI.md', type: 'file', confidence: 'high', reason: 'Found GEMINI.md file' },
+            { path: '.gemini', type: 'directory', confidence: 'medium', reason: 'Found .gemini/ directory' },
+        ],
+    },
 ];
 
 /** Confidence priority for sorting results. */

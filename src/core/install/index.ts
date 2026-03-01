@@ -30,3 +30,4 @@ import './adapters/claude-code.js';
 import './adapters/cursor.js';
 import './adapters/codex.js';
 import './adapters/opencode.js';
+import './adapters/gemini-cli.js';

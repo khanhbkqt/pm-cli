@@ -11,7 +11,8 @@ export type ClientType =
     | 'claude-code'
     | 'cursor'
     | 'codex'
-    | 'opencode';
+    | 'opencode'
+    | 'gemini-cli';
 
 /** Metadata describing a client's configuration format. */
 export interface ClientConfig {

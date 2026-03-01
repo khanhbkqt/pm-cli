@@ -1,10 +1,10 @@
 ---
-phase: 5
+phase: 6
 plan: 1
 wave: 1
 ---
 
-# Plan 5.1: Integration Tests & Documentation
+# Plan 6.1: Integration Tests & Documentation
 
 ## Objective
 Write integration tests for the install system and update documentation.

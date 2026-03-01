@@ -1,5 +1,5 @@
 ---
-updated: 2026-03-01T07:10:00+07:00
+updated: 2026-03-01T07:14:00+07:00
 ---
 
 # Project State
@@ -7,17 +7,17 @@ updated: 2026-03-01T07:10:00+07:00
 ## Current Position
 
 **Milestone:** v2.1-multi-client
-**Phase:** 4 (completed)
+**Phase:** 5 (completed)
 **Task:** All tasks complete
 **Status:** Verified
 
 ## Last Session Summary
 
-Phase 4 executed successfully. 1 plan, 2 tasks completed. Created OpenCode adapter (`AGENTS.md` + `opencode.json`) and `pm install` CLI command with `--all`, `--detect`, `--json`, `--force` flags.
+Phase 5 (inserted) executed successfully. Created Gemini CLI adapter (`GEMINI.md` context file) and updated Antigravity adapter to also generate `.agent/rules/pm-cli.md` as an always-active rule. Added `gemini-cli` to types, detection, registry, and CLI command. All 6 client adapters now registered.
 
 ## Next Steps
 
-1. `/execute 5` → Tests & Documentation
+1. `/execute 6` → Tests & Documentation
 
 ## Active Decisions
 

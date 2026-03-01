@@ -10,9 +10,10 @@ import '../../core/install/adapters/claude-code.js';
 import '../../core/install/adapters/cursor.js';
 import '../../core/install/adapters/codex.js';
 import '../../core/install/adapters/opencode.js';
+import '../../core/install/adapters/gemini-cli.js';
 
 /** All valid client type values. */
-const VALID_CLIENTS: ClientType[] = ['antigravity', 'claude-code', 'cursor', 'codex', 'opencode'];
+const VALID_CLIENTS: ClientType[] = ['antigravity', 'claude-code', 'cursor', 'codex', 'opencode', 'gemini-cli'];
 
 /**
  * Install config for a single client.
