@@ -16,16 +16,28 @@ When starting a new body of work — a feature set, a version release, or a majo
 
 ---
 
-## Step 1: Create the Milestone
+## Step 1: Brainstorm & Clarify Requirements
+
+Before creating a new milestone, you must define what features you are building.
+
+→ **Run the [Brainstorm Phase](pm-brainstorm.md)** workflow to clarify requirements, map user flows, and draft your `SPEC.md` for this milestone.
+
+_Do not proceed to the next step until your `SPEC.md` has `Status: FINALIZED`._
+
+---
+
+## Step 2: Create the Milestone
+
+Based on the finalized `SPEC.md`, create the milestone.
 
 ```bash
-pm milestone create <slug> "<name>" --goal "<goal description>"
+pm milestone create <slug> "<name>" --goal "<goal description from SPEC>"
 ```
 
 **Example:**
 
 ```bash
-pm milestone create v2.0-auth "Authentication System" --goal "Add user authentication with JWT tokens and role-based access control"
+pm milestone create v2.0-auth "Authentication System" --goal "Add user authentication defined in the Spec"
 ```
 
 **JSON output:**
@@ -38,7 +50,7 @@ The `<slug>` is a unique identifier (e.g., `v2.0-auth`) and `<name>` is the disp
 
 ---
 
-## Step 2: Activate the Milestone
+## Step 3: Activate the Milestone
 
 ```bash
 pm milestone update <slug> --status active
@@ -48,9 +60,9 @@ pm milestone update <slug> --status active
 
 ---
 
-## Step 3: Add Phases
+## Step 4: Add Phases
 
-Add phases to structure the work:
+Add high-level phases to structure the work based on the Core Features defined in your `SPEC.md`:
 
 ```bash
 pm phase add "Database Schema" --number 1 --description "Create auth tables and models"
@@ -65,6 +77,7 @@ pm phase add "Integration Tests" --number 3 --description "End-to-end auth flow 
 ```
 
 Phase options:
+
 - `--number <n>` (required) — ordering number
 - `--milestone <slug>` — defaults to the active milestone
 - `--description <text>` — phase description
@@ -73,7 +86,7 @@ All phases start in `not_started` status.
 
 ---
 
-## Step 4: Verify Setup
+## Step 5: Verify Setup
 
 ```bash
 pm milestone show <slug> --json
@@ -83,7 +96,7 @@ pm milestone show <slug> --json
 pm phase list --json
 ```
 
-Confirm the milestone is active and all phases are listed.
+Confirm the milestone is active and phases match your Spec.
 
 ---
 
@@ -100,10 +113,11 @@ planned → active → completed → archived
 
 ## Success Criteria
 
+- [ ] Brainstorming completed and `SPEC.md` is `FINALIZED`
 - [ ] Milestone created and active
-- [ ] All initial phases added
+- [ ] All initial phases added based on the Spec
 - [ ] `pm milestone show` displays correct goal and phases
 
 ## Next Steps
 
-→ [Plan Phase](pm-plan-phase.md) — create plans for the first phase
+→ [Plan Phase](pm-plan-phase.md) — create executable plans for the first phase

@@ -26,22 +26,30 @@ This creates the local pm database and configuration. Run this once per project.
 
 ---
 
-## Step 2: Create the First Milestone
+## Step 2: Brainstorm & Clarify Requirements
 
-```bash
-pm milestone create <slug> "<name>" --goal "<goal description>"
-```
+Before creating milestones or phases, you must define what you are building.
 
-**Example:**
+→ **Run the [Brainstorm Phase](pm-brainstorm.md)** workflow to clarify requirements, map user flows, and draft your initial `SPEC.md`.
 
-```bash
-pm milestone create v1.0-mvp "MVP Release" --goal "Deliver core features for initial launch"
-```
+*Do not proceed to the next step until your `SPEC.md` has `Status: FINALIZED`.*
 
 ---
 
-## Step 3: Activate the Milestone
+## Step 3: Create the First Milestone
 
+Based on the finalized `SPEC.md`, create a milestone that represents the first major deliverable.
+
+```bash
+pm milestone create <slug> "<name>" --goal "<goal description from SPEC>"
+```
+
+**Example:**
+```bash
+pm milestone create v1.0-mvp "MVP Release" --goal "Deliver core features defined in the Spec"
+```
+
+Activate the milestone:
 ```bash
 pm milestone update <slug> --status active
 ```
@@ -50,11 +58,12 @@ pm milestone update <slug> --status active
 
 ## Step 4: Add Initial Phases
 
+Break down the milestone into high-level phases based on the Core Features defined in your `SPEC.md`.
+
 ```bash
-pm phase add "Research & Design" --number 1 --description "Investigate requirements and design architecture"
-pm phase add "Core Implementation" --number 2 --description "Build the main features"
-pm phase add "Testing" --number 3 --description "Write and run tests"
-pm phase add "Documentation" --number 4 --description "Write user and developer docs"
+pm phase add "Foundation & Setup" --number 1 --description "Project setup and database schema"
+pm phase add "Core Feature A" --number 2 --description "Implement Feature A"
+pm phase add "Core Feature B" --number 3 --description "Implement Feature B"
 ```
 
 ---
@@ -66,17 +75,18 @@ pm milestone show <slug>
 pm phase list
 ```
 
-Confirm the milestone is active and all phases are listed.
+Confirm the milestone is active and phases match your Spec.
 
 ---
 
 ## Success Criteria
 
 - [ ] `pm init` completed successfully
+- [ ] Brainstorming completed and `SPEC.md` is `FINALIZED`
 - [ ] Milestone created and active
-- [ ] Initial phases added
+- [ ] Initial phases added based on the Spec
 - [ ] `pm progress` shows the project structure
 
 ## Next Steps
 
-→ [Plan Phase](pm-plan-phase.md) — create plans for the first phase
+→ [Plan Phase](pm-plan-phase.md) — create executable plans for your first phase
