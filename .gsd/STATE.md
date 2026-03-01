@@ -3,30 +3,20 @@
 ## Current Position
 
 - **Milestone**: v3.1-dashboard-upgrade — Dashboard Upgrade
-- **Phase**: 6 (completed)
-- **Task**: All tasks complete
-- **Status**: Verified
+- **Phase**: 7 (not started)
+- **Task**: Planning
+- **Status**: Phase 6 complete, Phase 7 added
 
 ## Last Session Summary
 
-Phase 6 executed successfully. 2 plans, all tasks completed in 1 wave.
+Phase 6 executed successfully. 2 plans completed:
+- Removed dead `TasksBoard` code (import, route, files)
+- Fixed flaky CLI test timeouts (`testTimeout: 30000` in vitest config)
+- Full suite: 21/21 files, 253/253 tests PASS
 
-### Wave 1
-
-**Plan 6.1 — Remove Dead TasksBoard Code:**
-- Removed `TasksBoard` import and `/tasks` route from `App.tsx`
-- Deleted `TasksBoard.tsx` and `TasksBoard.css`
-
-**Plan 6.2 — Fix Flaky CLI Test Timeouts:**
-- Added `testTimeout: 30000` to `vitest.config.ts`
-- All 6 CLI test files (26 tests) now pass consistently
-
-### Verification
-- `tsc --noEmit` (dashboard): PASS
-- `vitest run`: 21/21 files, 253/253 tests PASS
+Phase 7 added: **Hierarchy Board View** — Plans board grouped by Milestone → Phase.
 
 ## Next Steps
 
-1. All phases complete — milestone ready for completion
-2. `/audit-milestone` — audit before closing
-3. `/complete-milestone` — finalize milestone
+1. `/plan 7` — Create execution plans for Hierarchy Board View phase
+2. `/execute 7` — Execute once plans are created

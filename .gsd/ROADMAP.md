@@ -209,3 +209,22 @@ Fix dashboard loading bugs caused by stale task-based types/components (backend 
 | 4 | Dashboard Pages — Milestones, Phases, Plans | ✅ Complete | 3 |
 | 5 | Markdown Content View | ✅ Complete | 2 |
 | 6 | Tests & Polish | ✅ Complete | 2 |
+| 7 | Hierarchy Board View | ⬜ Not Started | — |
+
+---
+
+### Phase 7: Hierarchy Board View
+**Status**: ⬜ Not Started
+**Objective**: Redesign the Plans board so it groups plans by Milestone → Phase, giving a clear hierarchical overview of the entire project rather than a flat plan list.
+**Depends on**: Phase 6
+
+**Must-Haves**:
+- [ ] New `/api/board` endpoint — returns milestones with nested phases and plans
+- [ ] Updated PlansPage (or new BoardPage) — renders Milestone → Phase → Plan hierarchy
+- [ ] Collapsible sections per milestone/phase for overview clarity
+- [ ] Status badges at each level (milestone, phase, plan)
+
+**Verification**:
+- [ ] `tsc --noEmit` passes
+- [ ] `vitest run` — all tests pass
+- [ ] Dashboard visually shows grouped hierarchy
