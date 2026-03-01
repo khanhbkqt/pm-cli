@@ -32,7 +32,22 @@ export interface ContextEntry {
     updated_at: string;
 }
 
+export interface Milestone {
+    id: string;
+    name: string;
+    status: string;
+}
+
+export interface PhasesSummary {
+    total: number;
+    completed: number;
+    in_progress: number;
+    not_started: number;
+}
+
 export interface StatusResponse {
+    milestone: Milestone | null;
+    phases: PhasesSummary;
     plans: {
         total: number;
         by_status: Record<string, number>;

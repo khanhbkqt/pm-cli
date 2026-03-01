@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import type Database from 'better-sqlite3';
 import type { Plan } from '../../db/types.js';
+import { getActiveMilestone } from '../../core/milestone.js';
+import { listPhases } from '../../core/phase.js';
 
 /**
  * Create Express Router with status overview endpoint.
- * Aggregates plans, agents, and context — no direct task tables.
+ * Aggregates plans, agents, context, and active milestone/phase progress.
  */
 export function createStatusRoutes(db: Database.Database): Router {
     const router = Router();
@@ -32,7 +34,25 @@ export function createStatusRoutes(db: Database.Database): Router {
                 'SELECT * FROM plans ORDER BY created_at DESC LIMIT 5'
             ).all() as Plan[];
 
+            // Active milestone + phase summary
+            let milestoneData: { id: string; name: string; status: string } | null = null;
+            let phasesSummary = { total: 0, completed: 0, in_progress: 0, not_started: 0 };
+
+            const milestone = getActiveMilestone(db);
+            if (milestone) {
+                milestoneData = { id: milestone.id, name: milestone.name, status: milestone.status };
+                const phases = listPhases(db, milestone.id);
+                phasesSummary = {
+                    total: phases.length,
+                    completed: phases.filter(p => p.status === 'completed').length,
+                    in_progress: phases.filter(p => p.status === 'in_progress').length,
+                    not_started: phases.filter(p => p.status === 'not_started' || p.status === 'planning').length,
+                };
+            }
+
             res.json({
+                milestone: milestoneData,
+                phases: phasesSummary,
                 plans: {
                     total: planTotal,
                     by_status: planByStatus,
