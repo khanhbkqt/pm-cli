@@ -178,3 +178,31 @@ Xây dựng workflow engine tương tự GSD methodology, tích hợp trực ti�
 | 7 | Agent Workflow Templates | ⬜ Not Started | — |
 | 8 | Install System — Multi-file Workflows | ⬜ Not Started | — |
 
+---
+
+### Phase 7: Agent Workflow Templates
+**Status**: ⬜ Not Started
+**Objective**: Create GSD-style workflow instruction markdown files that teach agents how to use `pm` CLI for the full project lifecycle — plan, execute, verify, progress, milestone management and session.
+**Depends on**: Phase 5 (Progress & Dashboard), Phase 6 (Tests & Documentation)
+
+**Tasks**:
+- [ ] TBD (run /plan 7 to create)
+
+**Verification**:
+- All workflow files installable and readable by agents
+- Core lifecycle (plan → execute → verify → complete) fully described
+
+---
+
+### Phase 8: Install System — Multi-file Workflows
+**Status**: ⬜ Not Started
+**Objective**: Update `pm install` to deploy multiple workflow instruction files (from Phase 7) into target client directories instead of a single monolithic `pm-guide.md`. Support client-specific path conventions (Antigravity, Cursor, Gemini CLI).
+**Depends on**: Phase 7 (Agent Workflow Templates)
+
+**Tasks**:
+- [ ] TBD (run /plan 8 to create)
+
+**Verification**:
+- `pm install antigravity` installs all workflow files to `.agent/workflows/`
+- `pm install cursor` installs all workflow files to `.cursor/rules/`
+- `pm uninstall` cleanly removes all workflow files

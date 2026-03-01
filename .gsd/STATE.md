@@ -1,5 +1,5 @@
 ---
-updated: 2026-03-01T08:48:00+07:00
+updated: 2026-03-01T09:40:00+07:00
 ---
 
 # Project State
@@ -7,17 +7,17 @@ updated: 2026-03-01T08:48:00+07:00
 ## Current Position
 
 **Milestone:** v3.0-workflow-engine
-**Phase:** 4 — Plan & Execution CLI ✅ (completed)
-**Task:** All tasks complete
-**Status:** Verified
+**Phase:** 4 — Plan & Execution CLI ✅ Complete
+**Task:** Ready for Phase 5
+**Status:** Phases 7 & 8 added to roadmap (Agent Workflow Templates + Install System)
 
 ## Last Session Summary
 
-Phase 4 executed successfully. 3 plans, 7 tasks completed across 2 waves. Plan CLI (`pm plan create/list/show/update`) implemented with workflow transition routing. Milestone and phase update commands now route `--status` through workflow engine with `--force` bypass support. 36 new integration tests written and verified. Bug fixed in `workflow.ts` where milestone completion guard was not respecting the `force` option.
+Phase 4 (Plan & Execution CLI) complete — 3 plans. Phase 7 (Agent Workflow Templates) and Phase 8 (Install System — Multi-file Workflows) added to roadmap for GSD-style workflow instructions.
 
 ## Next Steps
 
-1. `/plan 5` or `/execute 5` — Progress & Dashboard phase
+1. `/plan 5` — Plan Phase 5 (Progress & Dashboard)
 
 ## Active Decisions
 
