@@ -1,58 +1,65 @@
 ---
-description: Review and prioritize pending tasks
+description: Review and prioritize pending todo items
 ---
 
 # Check Todos Workflow
 
-List pending tasks, prioritize them, and pick the next one to work on.
+List pending todo items, prioritize them, and decide what to work on next.
 
 ## When to Use
 
-When you have free cycles and want to see what needs doing, or at the start of a session to pick up work.
+When you have free cycles, at the start of a session, or periodically to keep track of deferred work.
 
 ---
 
-## Step 1: List Pending Tasks
+## Step 1: List Pending Todos
 
 ```bash
-pm task list --status todo --json
+pm context search "todo" --json
 ```
+
+This returns all context entries with "todo" in the key or value.
 
 ---
 
 ## Step 2: Review and Prioritize
 
-Sort tasks by priority:
-1. `urgent` — handle immediately
-2. `high` — handle next
-3. `medium` — handle soon
-4. `low` — handle eventually
-
-Filter by priority if needed:
-
-```bash
-pm task list --status todo --priority high --json
-```
+Sort the results by urgency:
+1. **Critical** — blocking other work
+2. **High** — should be done soon
+3. **Medium** — do when convenient
+4. **Low** — nice to have
 
 ---
 
-## Step 3: Pick a Task
+## Step 3: Act on Items
 
-Choose the highest-priority task you can work on and follow the [Task Lifecycle](task-lifecycle.md) workflow to claim and complete it.
+**Option A: Work on it now** — start implementing
+
+**Option B: Create a plan** — if it's substantial enough:
+
+```bash
+pm plan create "<description>" --phase <phase-id> --number <n>
+```
+
+**Option C: Defer** — leave it as context for later
+
+**Option D: Done** — if already resolved, clean up the context entry
 
 ---
 
 ## Tips
 
 - Check todos at the start of each session
-- Don't let urgent/high tasks pile up — address them promptly
-- Use `pm task list --json` for programmatic parsing
+- Don't let critical items pile up
+- Convert substantial todos into plans for proper tracking
 
 ## Success Criteria
 
-- [ ] All pending tasks reviewed
-- [ ] Next task selected (or all tasks addressed)
+- [ ] All pending todos reviewed
+- [ ] Next action selected (or all items addressed)
 
 ## Next Steps
 
-→ [Task Lifecycle](task-lifecycle.md) — claim and work on a task
+→ [Execute Phase](pm-execute-phase.md) — work on a plan
+→ [Add Todo](pm-add-todo.md) — capture new items
