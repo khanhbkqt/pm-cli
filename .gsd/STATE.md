@@ -2,30 +2,19 @@
 
 ## Current Position
 
-- **Milestone**: v3.0-workflow-engine — Workflow Engine
-- **Phase**: 9 — Gap Closure (completed)
-- **Task**: All tasks complete
-- **Status**: Verified
+- **Milestone**: v3.1-dashboard-upgrade — Dashboard Upgrade
+- **Phase**: Not started
+- **Task**: Milestone planned
+- **Status**: Ready for planning
 
-## Active Milestone Phase Status
+## Bug Analysis
 
-| Phase | Name | Status |
-|-------|------|--------|
-| 1 | DB Schema & Models | ✅ Complete |
-| 2 | Milestone & Phase CLI | ✅ Complete |
-| 3 | Workflow State Machine | ✅ Complete |
-| 4 | Plan & Execution CLI | ✅ Complete |
-| 5 | Progress & Dashboard | ✅ Complete |
-| 6 | Tests & Documentation | ✅ Complete |
-| 7 | Agent Workflow Templates | ✅ Complete |
-| 8 | Install System | ✅ Complete |
-| 9 | Gap Closure | ✅ Complete |
-
-## Last Session Summary
-
-Phase 9 executed successfully. 2 plans, 2 tasks completed. Gap closures from milestone audit addressed.
+Dashboard loading fails because:
+1. Backend `/api/status` returns `plans`/`recent_plans` but frontend types expect `tasks`/`recent_tasks`
+2. `StatsCards` accesses `status.tasks.total` → crash (undefined)
+3. `TasksBoard` fetches `/api/tasks` → 404 (endpoint removed)
+4. `ActivityFeed` typed for `Task[]` but data is `Plan[]`
 
 ## Next Steps
 
-1. `/audit-milestone` — review the gap closure (optional)
-2. `/complete-milestone` — finalize and archive the milestone
+1. `/plan 1` — Create Phase 1 execution plans (fix API types & status endpoint)
