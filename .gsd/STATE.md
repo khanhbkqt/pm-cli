@@ -3,19 +3,29 @@
 ## Current Position
 
 - **Milestone**: v3.1-dashboard-upgrade — Dashboard Upgrade
-- **Phase**: 5 — Markdown Content View
-- **Task**: Planning complete
-- **Status**: Ready for execution
+- **Phase**: 5 (completed)
+- **Task**: All tasks complete
+- **Status**: Verified
 
 ## Last Session Summary
 
-Phase 5 planned. 2 plans across 2 waves.
+Phase 5 executed successfully. 2 plans, 5 tasks completed across 2 waves.
 
-### Plans
-- **5.1** (Wave 1) — Install react-markdown + remark-gfm + rehype-highlight, create MarkdownView component, add fetchPlanById API function
-- **5.2** (Wave 2) — Create PlanDetailPage with markdown rendering, wire routing, make plan cards clickable
+### Wave 1 (Plan 5.1) — Markdown Rendering Foundation
+- Installed react-markdown, remark-gfm, rehype-highlight, highlight.js
+- Created MarkdownView.tsx component with styled CSS
+- Added fetchPlanById to API client
+
+### Wave 2 (Plan 5.2) — Plan Detail Page & Navigation
+- Created PlanDetailPage with breadcrumb, metadata header, markdown rendering
+- Added route /plans/:planId in App.tsx
+- Made plan cards clickable with Link wrappers in PlansPage
+
+### Verification
+- `tsc --noEmit`: PASS
+- `vite build`: PASS (542 modules)
 
 ## Next Steps
 
-1. `/execute 5` — run all plans
-2. `/plan 6` — Tests & Polish
+1. `/plan 6` — Tests & Polish
+2. `/execute 6` — run all plans
