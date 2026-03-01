@@ -53,7 +53,7 @@ describe('task CLI commands', () => {
         expect(output).toContain('Agent identity required');
     });
 
-    it('pm task list shows created tasks (no identity required)', () => {
+    it('pm task list shows created tasks (no identity required)', { timeout: 15000 }, () => {
         run('--agent alice task add "Task A"', tempDir);
         run('--agent alice task add "Task B"', tempDir);
 

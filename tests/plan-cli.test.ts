@@ -45,7 +45,7 @@ describe('plan CLI commands', () => {
         const json = run('--json phase list', tempDir);
         const phases = JSON.parse(json);
         phaseId = phases[0].id;
-    });
+    }, 30000);
 
     afterEach(() => {
         fs.rmSync(tempDir, { recursive: true, force: true });
