@@ -10,6 +10,7 @@ import { resolveIdentity, getProjectDb } from '../../core/identity.js';
 import {
     formatPlan,
     formatPlanList,
+    formatPlanBoard,
 } from '../../output/formatter.js';
 
 /**
@@ -151,6 +152,29 @@ export function registerPlanCommands(program: Command): void {
                 } else {
                     console.log(`✓ Plan #${updated.id} updated`);
                 }
+                db.close();
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.error(`Error: ${error.message}`);
+                } else {
+                    console.error('An unexpected error occurred');
+                }
+                process.exit(1);
+            }
+        });
+
+    // pm plan board
+    plan
+        .command('board')
+        .description('Show plans as a kanban board grouped by status')
+        .requiredOption('--phase <id>', 'Phase DB ID')
+        .action(async (opts: { phase: string }) => {
+            try {
+                const db = getProjectDb();
+                const json = program.opts().json;
+                const phaseId = parseInt(opts.phase, 10);
+                const plans = listPlans(db, phaseId);
+                console.log(formatPlanBoard(plans, json));
                 db.close();
             } catch (error) {
                 if (error instanceof Error) {

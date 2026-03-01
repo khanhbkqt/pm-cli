@@ -36,8 +36,8 @@ describe('pm init', () => {
             .map((row: any) => row.name);
 
         expect(tables).toContain('agents');
-        expect(tables).toContain('tasks');
-        expect(tables).toContain('task_comments');
+        expect(tables).not.toContain('tasks');
+        expect(tables).not.toContain('task_comments');
         expect(tables).toContain('context');
         db.close();
     });
@@ -62,8 +62,8 @@ describe('pm init', () => {
         expect(config.project.name).toBe('my-project');
         expect(config.project.version).toBe(1);
         expect(config.project.created_at).toBeDefined();
-        expect(config.settings.task_statuses).toEqual([
-            'todo', 'in_progress', 'review', 'done', 'blocked', 'cancelled',
+        expect(config.settings.plan_statuses).toEqual([
+            'pending', 'in_progress', 'completed', 'failed',
         ]);
         expect(config.settings.agent_roles).toEqual([
             'developer', 'reviewer', 'pm', 'researcher',

@@ -38,7 +38,7 @@ pm init [name]
 ```
 ✓ Project "my-project" initialized successfully.
   Created: .pm/
-  Database: data.db (4 tables, WAL mode)
+  Database: data.db (6 tables, WAL mode)
   Config: config.yaml
 ```
 
@@ -220,308 +220,6 @@ Since: 2026-02-28
 
 **Exit codes:** `0` success, `1` error.
 
----
-
-## `pm task add`
-
-Create a new task. **Requires agent identity.**
-
-```
-pm task add <title> [options]
-```
-
-| Argument/Flag | Required | Description |
-|---------------|----------|-------------|
-| `<title>` | Yes | Task title |
-| `--description <desc>` | No | Task description |
-| `--priority <priority>` | No | Priority: `low`, `medium`, `high`, `urgent` |
-| `--parent <id>` | No | Parent task ID (creates a subtask) |
-
-**Human output:**
-
-```
-✓ Task #1 created: "Implement user authentication"
-```
-
-**JSON output** (`--json`):
-
-```json
-{
-  "id": 1,
-  "title": "Implement user authentication",
-  "description": "Add JWT-based auth to all API endpoints",
-  "status": "todo",
-  "priority": "high",
-  "assigned_to": null,
-  "created_by": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "parent_id": null,
-  "created_at": "2026-02-28T14:30:00.000Z",
-  "updated_at": "2026-02-28T14:30:00.000Z"
-}
-```
-
-**Error cases:**
-
-| Error | Message |
-|-------|---------|
-| No identity | `Error: Agent identity required. Use --agent <name> or set PM_AGENT environment variable.` |
-
-**Exit codes:** `0` success, `1` error.
-
----
-
-## `pm task list`
-
-List tasks with optional filters.
-
-```
-pm task list [options]
-```
-
-| Flag | Required | Description |
-|------|----------|-------------|
-| `--status <status>` | No | Filter by status (e.g., `todo`, `in-progress`, `done`) |
-| `--assigned <agent>` | No | Filter by assigned agent name |
-| `--parent <id>` | No | Filter by parent task ID |
-
-**Human output:**
-
-```
- ID │ Title                         │ Status      │ Priority │ Assigned
-────┼───────────────────────────────┼─────────────┼──────────┼─────────
- 1  │ Implement user authentication │ in-progress │ high     │ atlas
- 2  │ Write unit tests              │ todo        │ medium   │ -
-```
-
-**JSON output** (`--json`):
-
-```json
-[
-  {
-    "id": 1,
-    "title": "Implement user authentication",
-    "description": "Add JWT-based auth to all API endpoints",
-    "status": "in-progress",
-    "priority": "high",
-    "assigned_to": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    "created_by": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    "parent_id": null,
-    "created_at": "2026-02-28T14:30:00.000Z",
-    "updated_at": "2026-02-28T15:00:00.000Z"
-  }
-]
-```
-
-**Empty result:** Human: `No tasks found.` / JSON: `[]`
-
-**Exit codes:** `0` success, `1` error.
-
----
-
-## `pm task show`
-
-Show task details including comments.
-
-```
-pm task show <id>
-```
-
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `<id>` | Yes | Task ID (numeric) |
-
-**Human output:**
-
-```
-ID:       #1
-Title:    Implement user authentication
-Status:   in-progress
-Priority: high
-Assigned: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-Creator:  a1b2c3d4-e5f6-7890-abcd-ef1234567890
-Parent:   none
-Desc:     Add JWT-based auth to all API endpoints
-Created:  2026-02-28T14:30:00.000Z
-Updated:  2026-02-28T15:00:00.000Z
-
-Comments:
-[2026-02-28T15:30:00.000Z] a1b2c3d4-e5f6-7890-abcd-ef1234567890: Started working on JWT middleware
-```
-
-**JSON output** (`--json`):
-
-```json
-{
-  "id": 1,
-  "title": "Implement user authentication",
-  "description": "Add JWT-based auth to all API endpoints",
-  "status": "in-progress",
-  "priority": "high",
-  "assigned_to": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "created_by": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "parent_id": null,
-  "created_at": "2026-02-28T14:30:00.000Z",
-  "updated_at": "2026-02-28T15:00:00.000Z",
-  "comments": [
-    {
-      "id": 1,
-      "task_id": 1,
-      "agent_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      "content": "Started working on JWT middleware",
-      "created_at": "2026-02-28T15:30:00.000Z"
-    }
-  ]
-}
-```
-
-**Error cases:**
-
-| Error | Message |
-|-------|---------|
-| Not found | `Error: Task #99 not found.` |
-
-**Exit codes:** `0` success, `1` error.
-
----
-
-## `pm task update`
-
-Update task fields. **Requires agent identity.**
-
-```
-pm task update <id> [options]
-```
-
-| Argument/Flag | Required | Description |
-|---------------|----------|-------------|
-| `<id>` | Yes | Task ID (numeric) |
-| `--title <title>` | No | New title |
-| `--description <desc>` | No | New description |
-| `--status <status>` | No | New status (`todo`, `in-progress`, `done`, etc.) |
-| `--priority <priority>` | No | New priority (`low`, `medium`, `high`, `urgent`) |
-
-**Human output:**
-
-```
-✓ Task #1 updated
-```
-
-**JSON output** (`--json`):
-
-```json
-{
-  "id": 1,
-  "title": "Implement user authentication",
-  "description": "Add JWT-based auth to all API endpoints",
-  "status": "done",
-  "priority": "high",
-  "assigned_to": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "created_by": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "parent_id": null,
-  "created_at": "2026-02-28T14:30:00.000Z",
-  "updated_at": "2026-02-28T16:00:00.000Z"
-}
-```
-
-**Error cases:**
-
-| Error | Message |
-|-------|---------|
-| No identity | `Error: Agent identity required.` |
-| Not found | `Error: Task #99 not found.` |
-
-**Exit codes:** `0` success, `1` error.
-
----
-
-## `pm task assign`
-
-Assign a task to an agent. **Requires agent identity.**
-
-```
-pm task assign <id> --to <agent>
-```
-
-| Argument/Flag | Required | Description |
-|---------------|----------|-------------|
-| `<id>` | Yes | Task ID (numeric) |
-| `--to <agent>` | Yes | Agent name to assign to |
-
-**Human output:**
-
-```
-✓ Task #1 assigned to 'atlas'
-```
-
-**JSON output** (`--json`):
-
-```json
-{
-  "id": 1,
-  "title": "Implement user authentication",
-  "description": "Add JWT-based auth to all API endpoints",
-  "status": "todo",
-  "priority": "high",
-  "assigned_to": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "created_by": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "parent_id": null,
-  "created_at": "2026-02-28T14:30:00.000Z",
-  "updated_at": "2026-02-28T16:00:00.000Z"
-}
-```
-
-**Error cases:**
-
-| Error | Message |
-|-------|---------|
-| No identity | `Error: Agent identity required.` |
-| Agent not found | `Error: Agent 'unknown-agent' not found.` |
-
-**Exit codes:** `0` success, `1` error.
-
----
-
-## `pm task comment`
-
-Add a comment to a task. **Requires agent identity.**
-
-```
-pm task comment <id> <message>
-```
-
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `<id>` | Yes | Task ID (numeric) |
-| `<message>` | Yes | Comment text |
-
-**Human output:**
-
-```
-✓ Comment added to task #1
-```
-
-**JSON output** (`--json`):
-
-```json
-{
-  "id": 1,
-  "task_id": 1,
-  "agent_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "content": "Completed JWT middleware implementation",
-  "created_at": "2026-02-28T16:30:00.000Z"
-}
-```
-
-**Error cases:**
-
-| Error | Message |
-|-------|---------|
-| No identity | `Error: Agent identity required.` |
-| Task not found | `Error: Task #99 not found.` |
-
-**Exit codes:** `0` success, `1` error.
-
----
 
 ## `pm context set`
 
@@ -694,7 +392,7 @@ No arguments or flags.
 📋 Project Status
 ─────────────────
 Agents:  3 registered
-Tasks:   12 total (4 todo, 3 in-progress, 5 done)
+Plans:   12 total (4 pending, 3 in_progress, 5 completed)
 Context: 8 entries
 ```
 
@@ -703,11 +401,12 @@ Context: 8 entries
 ```json
 {
   "agents": 3,
-  "tasks": {
+  "plans": {
     "total": 12,
-    "todo": 4,
-    "in-progress": 3,
-    "done": 5
+    "pending": 4,
+    "in_progress": 3,
+    "completed": 5,
+    "failed": 0
   },
   "context": 8
 }
@@ -761,32 +460,19 @@ interface Agent {
 }
 ```
 
-### Task
+### Plan
 
 ```typescript
-interface Task {
+interface Plan {
   id: number;                                      // Auto-increment
-  title: string;
-  description: string | null;
-  status: string;                                  // "todo", "in-progress", "done", etc.
-  priority: "low" | "medium" | "high" | "urgent";
-  assigned_to: string | null;                      // Agent ID or null
-  created_by: string;                              // Agent ID
-  parent_id: number | null;                        // Parent task ID or null
+  phase_id: number;                                // Parent phase ID
+  number: number;                                  // Plan number within phase
+  name: string;
+  wave: number;                                    // Wave number for parallel execution
+  status: "pending" | "in_progress" | "completed" | "failed";
+  content: string | null;                          // Plan content/description
   created_at: string;                              // ISO 8601 timestamp
-  updated_at: string;                              // ISO 8601 timestamp
-}
-```
-
-### TaskComment
-
-```typescript
-interface TaskComment {
-  id: number;          // Auto-increment
-  task_id: number;     // Parent task ID
-  agent_id: string;    // Author agent ID
-  content: string;     // Comment text
-  created_at: string;  // ISO 8601 timestamp
+  completed_at: string | null;                     // ISO 8601 timestamp or null
 }
 ```
 
@@ -809,22 +495,13 @@ interface ContextEntry {
 ```typescript
 interface Status {
   agents: number;
-  tasks: {
+  plans: {
     total: number;
-    todo: number;
-    "in-progress": number;
-    done: number;
+    pending: number;
+    in_progress: number;
+    completed: number;
+    failed: number;
   };
   context: number;
-}
-```
-
-### `pm task show` (JSON)
-
-When using `pm task show <id> --json`, the response includes a `comments` array:
-
-```typescript
-interface TaskWithComments extends Task {
-  comments: TaskComment[];
 }
 ```

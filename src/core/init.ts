@@ -35,7 +35,7 @@ export async function initProject(name: string, targetDir: string): Promise<void
             version: 1,
         },
         settings: {
-            task_statuses: ['todo', 'in_progress', 'review', 'done', 'blocked', 'cancelled'],
+            plan_statuses: ['pending', 'in_progress', 'completed', 'failed'],
             agent_roles: ['developer', 'reviewer', 'pm', 'researcher'],
         },
     };
@@ -45,6 +45,6 @@ export async function initProject(name: string, targetDir: string): Promise<void
 
     console.log(`✓ Project "${name}" initialized successfully.`);
     console.log(`  Created: ${pmDir}/`);
-    console.log(`  Database: ${DB_FILE} (4 tables, WAL mode)`);
+    console.log(`  Database: ${DB_FILE} (6 tables, WAL mode)`);
     console.log(`  Config: ${CONFIG_FILE}`);
 }

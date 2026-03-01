@@ -16,7 +16,7 @@ beforeAll(async () => {
     db = new Database(':memory:');
     db.exec(SCHEMA_SQL);
 
-    // Register a test agent for task operations
+    // Register a test agent for API operations
     const agent = registerAgent(db, { name: 'test-agent', role: 'tester', type: 'human' });
     testAgentId = agent.id;
 
@@ -31,103 +31,6 @@ afterAll(async () => {
     db.close();
 });
 
-describe('Task Endpoints', () => {
-    let createdTaskId: number;
-
-    it('POST /api/tasks — creates task, returns 201', async () => {
-        const res = await fetch(`${baseUrl}/api/tasks`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title: 'Test task',
-                description: 'A test task',
-                priority: 'high',
-                created_by: testAgentId,
-            }),
-        });
-
-        expect(res.status).toBe(201);
-        const body = await res.json();
-        expect(body.task).toBeDefined();
-        expect(body.task.title).toBe('Test task');
-        expect(body.task.priority).toBe('high');
-        createdTaskId = body.task.id;
-    });
-
-    it('GET /api/tasks — returns array with created task', async () => {
-        const res = await fetch(`${baseUrl}/api/tasks`);
-        expect(res.status).toBe(200);
-        const body = await res.json();
-        expect(body.tasks).toBeInstanceOf(Array);
-        expect(body.tasks.length).toBeGreaterThanOrEqual(1);
-    });
-
-    it('GET /api/tasks?status=todo — filters by status', async () => {
-        const res = await fetch(`${baseUrl}/api/tasks?status=todo`);
-        expect(res.status).toBe(200);
-        const body = await res.json();
-        expect(body.tasks).toBeInstanceOf(Array);
-        body.tasks.forEach((t: any) => expect(t.status).toBe('todo'));
-    });
-
-    it('GET /api/tasks/:id — returns task by id', async () => {
-        const res = await fetch(`${baseUrl}/api/tasks/${createdTaskId}`);
-        expect(res.status).toBe(200);
-        const body = await res.json();
-        expect(body.task.id).toBe(createdTaskId);
-        expect(body.task.title).toBe('Test task');
-    });
-
-    it('GET /api/tasks/999 — returns 404', async () => {
-        const res = await fetch(`${baseUrl}/api/tasks/999`);
-        expect(res.status).toBe(404);
-        const body = await res.json();
-        expect(body.error).toBeDefined();
-    });
-
-    it('PUT /api/tasks/:id — updates title', async () => {
-        const res = await fetch(`${baseUrl}/api/tasks/${createdTaskId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: 'Updated task' }),
-        });
-        expect(res.status).toBe(200);
-        const body = await res.json();
-        expect(body.task.title).toBe('Updated task');
-    });
-
-    it('POST /api/tasks/:id/assign — assigns agent', async () => {
-        const res = await fetch(`${baseUrl}/api/tasks/${createdTaskId}/assign`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ agent_id: testAgentId }),
-        });
-        expect(res.status).toBe(200);
-        const body = await res.json();
-        expect(body.task.assigned_to).toBe(testAgentId);
-    });
-
-    it('POST /api/tasks/:id/comments — creates comment, returns 201', async () => {
-        const res = await fetch(`${baseUrl}/api/tasks/${createdTaskId}/comments`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ agent_id: testAgentId, content: 'Test comment' }),
-        });
-        expect(res.status).toBe(201);
-        const body = await res.json();
-        expect(body.comment).toBeDefined();
-        expect(body.comment.content).toBe('Test comment');
-    });
-
-    it('GET /api/tasks/:id/comments — returns comments array', async () => {
-        const res = await fetch(`${baseUrl}/api/tasks/${createdTaskId}/comments`);
-        expect(res.status).toBe(200);
-        const body = await res.json();
-        expect(body.comments).toBeInstanceOf(Array);
-        expect(body.comments.length).toBeGreaterThanOrEqual(1);
-        expect(body.comments[0].content).toBe('Test comment');
-    });
-});
 
 describe('Agent Endpoints', () => {
     it('GET /api/agents — returns registered agents', async () => {
@@ -200,15 +103,14 @@ describe('Status Endpoint', () => {
         expect(res.status).toBe(200);
         const body = await res.json();
 
-        // Check tasks section
-        expect(body.tasks).toBeDefined();
-        expect(typeof body.tasks.total).toBe('number');
-        expect(body.tasks.by_status).toBeDefined();
-        expect(typeof body.tasks.by_status.todo).toBe('number');
-        expect(typeof body.tasks.by_status.in_progress).toBe('number');
-        expect(typeof body.tasks.by_status.done).toBe('number');
-        expect(typeof body.tasks.by_status.blocked).toBe('number');
-        expect(body.tasks.by_priority).toBeDefined();
+        // Check plans section
+        expect(body.plans).toBeDefined();
+        expect(typeof body.plans.total).toBe('number');
+        expect(body.plans.by_status).toBeDefined();
+        expect(typeof body.plans.by_status.pending).toBe('number');
+        expect(typeof body.plans.by_status.in_progress).toBe('number');
+        expect(typeof body.plans.by_status.completed).toBe('number');
+        expect(typeof body.plans.by_status.failed).toBe('number');
 
         // Check agents section
         expect(body.agents).toBeDefined();
@@ -219,8 +121,8 @@ describe('Status Endpoint', () => {
         expect(body.context).toBeDefined();
         expect(typeof body.context.total).toBe('number');
 
-        // Check recent_tasks
-        expect(body.recent_tasks).toBeInstanceOf(Array);
+        // Check recent_plans
+        expect(body.recent_plans).toBeInstanceOf(Array);
     });
 });
 

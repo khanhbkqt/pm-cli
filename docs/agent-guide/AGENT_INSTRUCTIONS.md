@@ -20,9 +20,8 @@ To save your context window, detailed instructions have been broken down into sm
 **CRITICAL RULE:** Before attempting any complex PM operations, you MUST read the relevant skill file from the `skills/` directory using your file-viewing tools or by executing `cat`.
 
 - **[Identity & Registration]** → Read `pm-identity.md` for role types and identity persistence.
-- **[Task Management]** → Read `pm-tasks.md` for task lifecycles, claiming tasks, and subtasks.
 - **[Context & Decisions]** → Read `pm-context.md` for sharing architecture decisions and the 4 strict categories.
-- **[Collaboration]** → Read `pm-collaboration.md` for task handoffs and shared workflows.
+- **[Collaboration]** → Read `pm-collaboration.md` for plan handoffs and shared workflows.
 - **[Error Recovery]** → Read `pm-errors.md` for a dictionary of common errors (e.g. `CHECK constraint failed`) and how to recover.
 
 > *Note for Claude and Gemini:* You can find these files in `docs/agent-guide/skills/` (if inside the `cli-prj-mgmt` repository). If you are inside a target project, look for `.agent/skills/` or `.cursor/rules/`.

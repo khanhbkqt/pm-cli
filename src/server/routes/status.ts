@@ -1,11 +1,10 @@
 import { Router } from 'express';
 import type Database from 'better-sqlite3';
-import type { Task } from '../../db/types.js';
+import type { Plan } from '../../db/types.js';
 
 /**
  * Create Express Router with status overview endpoint.
- * This is the one route that uses direct SQL — it's an aggregation
- * endpoint not covered by existing core functions.
+ * Aggregates plans, agents, and context — no direct task tables.
  */
 export function createStatusRoutes(db: Database.Database): Router {
     const router = Router();
@@ -13,18 +12,12 @@ export function createStatusRoutes(db: Database.Database): Router {
     // GET /api/status — project overview stats
     router.get('/api/status', (_req, res) => {
         try {
-            const taskTotal = (db.prepare('SELECT COUNT(*) as count FROM tasks').get() as any).count;
-            const taskByStatus = {
-                todo: (db.prepare("SELECT COUNT(*) as count FROM tasks WHERE status = ?").get('todo') as any).count,
-                in_progress: (db.prepare("SELECT COUNT(*) as count FROM tasks WHERE status = ?").get('in-progress') as any).count,
-                done: (db.prepare("SELECT COUNT(*) as count FROM tasks WHERE status = ?").get('done') as any).count,
-                blocked: (db.prepare("SELECT COUNT(*) as count FROM tasks WHERE status = ?").get('blocked') as any).count,
-            };
-            const taskByPriority = {
-                low: (db.prepare("SELECT COUNT(*) as count FROM tasks WHERE priority = ?").get('low') as any).count,
-                medium: (db.prepare("SELECT COUNT(*) as count FROM tasks WHERE priority = ?").get('medium') as any).count,
-                high: (db.prepare("SELECT COUNT(*) as count FROM tasks WHERE priority = ?").get('high') as any).count,
-                urgent: (db.prepare("SELECT COUNT(*) as count FROM tasks WHERE priority = ?").get('urgent') as any).count,
+            const planTotal = (db.prepare('SELECT COUNT(*) as count FROM plans').get() as any).count;
+            const planByStatus = {
+                pending: (db.prepare("SELECT COUNT(*) as count FROM plans WHERE status = ?").get('pending') as any).count,
+                in_progress: (db.prepare("SELECT COUNT(*) as count FROM plans WHERE status = ?").get('in_progress') as any).count,
+                completed: (db.prepare("SELECT COUNT(*) as count FROM plans WHERE status = ?").get('completed') as any).count,
+                failed: (db.prepare("SELECT COUNT(*) as count FROM plans WHERE status = ?").get('failed') as any).count,
             };
 
             const agentTotal = (db.prepare('SELECT COUNT(*) as count FROM agents').get() as any).count;
@@ -35,15 +28,14 @@ export function createStatusRoutes(db: Database.Database): Router {
 
             const contextTotal = (db.prepare('SELECT COUNT(*) as count FROM context').get() as any).count;
 
-            const recentTasks = db.prepare(
-                'SELECT * FROM tasks ORDER BY updated_at DESC LIMIT 5'
-            ).all() as Task[];
+            const recentPlans = db.prepare(
+                'SELECT * FROM plans ORDER BY created_at DESC LIMIT 5'
+            ).all() as Plan[];
 
             res.json({
-                tasks: {
-                    total: taskTotal,
-                    by_status: taskByStatus,
-                    by_priority: taskByPriority,
+                plans: {
+                    total: planTotal,
+                    by_status: planByStatus,
                 },
                 agents: {
                     total: agentTotal,
@@ -52,7 +44,7 @@ export function createStatusRoutes(db: Database.Database): Router {
                 context: {
                     total: contextTotal,
                 },
-                recent_tasks: recentTasks,
+                recent_plans: recentPlans,
             });
         } catch (err: any) {
             res.status(500).json({ error: err.message });

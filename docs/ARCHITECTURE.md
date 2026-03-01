@@ -40,14 +40,13 @@ Commander.js command definitions and argument parsing. Each command file in `src
 **Files:**
 - `program.ts` — Commander program setup
 - `commands/init.ts` — `pm init`
-- `commands/task.ts` — `pm task add|list|show|update|assign|comment`
 - `commands/agent.ts` — `pm agent register|list|show|whoami`
 - `commands/context.ts` — `pm context set|get|list|search`
 - `commands/dashboard.ts` — `pm dashboard`
 - `commands/status.ts` — `pm status`
 - `commands/milestone.ts` — `pm milestone create|list|show|update|complete`
 - `commands/phase.ts` — `pm phase add|list|show|update`
-- `commands/plan.ts` — `pm plan create|list|show|update`
+- `commands/plan.ts` — `pm plan create|list|show|update|board`
 - `commands/progress.ts` — `pm progress`
 - `commands/install.ts` — `pm install <client>`
 
@@ -56,7 +55,6 @@ Commander.js command definitions and argument parsing. Each command file in `src
 Pure business logic — no I/O formatting, no CLI concerns. Each module exposes functions that operate on the database.
 
 **Files:**
-- `task.ts` — Task CRUD (add, list, show, update, assign, comment)
 - `agent.ts` — Agent management (register, list, show)
 - `context.ts` — Context sharing (set, get, list, search)
 - `init.ts` — Project initialization (create DB, config)
@@ -90,7 +88,7 @@ Express HTTP server with REST API routes. Started by `pm dashboard`, serves the 
 
 **Files:**
 - `app.ts` — Express app setup, middleware, static serving
-- `routes/` — API route handlers (tasks, agents, context, status, progress)
+- `routes/` — API route handlers (agents, context, status, progress)
 - `utils.ts` — Server utilities (port finding, etc.)
 
 ### Install Layer (`src/core/install/`)
@@ -118,10 +116,10 @@ React + Vite + TypeScript single-page application. Communicates with the server 
 ### CLI Command
 
 ```
-User types `pm task list --agent claude`
+User types `pm plan list --phase 1`
   → Commander parses args
-    → commands/task.ts calls core/task.ts
-      → core/task.ts queries SQLite via db/connection.ts
+    → commands/plan.ts calls core/plan.ts
+      → core/plan.ts queries SQLite via db/connection.ts
         → output/formatter.ts renders result (table or JSON)
 ```
 
@@ -138,9 +136,9 @@ User types `pm milestone update v1 --status active`
 ### Dashboard Request
 
 ```
-React component fetches /api/tasks
+React component fetches /api/status
   → Express route handler
-    → core/task.ts queries SQLite
+    → status.ts queries plans from SQLite
       → JSON response back to React
 ```
 
@@ -162,7 +160,6 @@ React component fetches /api/tasks
 | File | Purpose |
 |------|---------|
 | `src/index.ts` | CLI entry point |
-| `src/core/task.ts` | Task business logic |
 | `src/core/agent.ts` | Agent business logic |
 | `src/core/context.ts` | Context business logic |
 | `src/core/milestone.ts` | Milestone CRUD and lifecycle |

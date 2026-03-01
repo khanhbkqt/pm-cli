@@ -35,46 +35,50 @@ echo "=== Step 5: Check status ==="
 pm status --json
 echo ""
 
-echo "=== Step 6: Create task ==="
-pm task add "Implement feature X" --description "Test task" --priority high --json
+echo "=== Step 6: Create milestone ==="
+pm milestone create v1 --name "Version 1" --goal "Initial release" --json
 echo ""
 
-echo "=== Step 7: List tasks ==="
-pm task list --json
+echo "=== Step 7: Create phase ==="
+pm phase create "Setup" --milestone v1 --number 1 --json
 echo ""
 
-echo "=== Step 8: Assign task ==="
-pm task assign 1 --to test-bot --json
+echo "=== Step 8: Create plan ==="
+pm plan create "Implement feature X" --phase 1 --number 1 --content "Build the core feature" --json
 echo ""
 
-echo "=== Step 9: Update status ==="
-pm task update 1 --status in-progress --json
+echo "=== Step 9: List plans ==="
+pm plan list --phase 1 --json
 echo ""
 
-echo "=== Step 10: Add comment ==="
-pm task comment 1 "Starting work on feature X" --json
+echo "=== Step 10: Show plan board ==="
+pm plan board --phase 1
 echo ""
 
-echo "=== Step 11: Set context ==="
+echo "=== Step 11: Update plan status ==="
+pm plan update 1 --status in_progress --json
+echo ""
+
+echo "=== Step 12: Set context ==="
 pm context set "test-key" "test-value" --category decision --json
 echo ""
 
-echo "=== Step 12: Get context ==="
+echo "=== Step 13: Get context ==="
 pm context get "test-key" --json
 echo ""
 
-echo "=== Step 13: Search context ==="
+echo "=== Step 14: Search context ==="
 pm context search "test" --json
 echo ""
 
-echo "=== Step 14: Complete task ==="
-pm task update 1 --status done --json
+echo "=== Step 15: Complete plan ==="
+pm plan update 1 --status completed --json
 echo ""
 
-echo "=== Step 15: Final status ==="
+echo "=== Step 16: Final status ==="
 pm status --json
 echo ""
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo " ✅ All 15 steps passed!"
+echo " ✅ All 16 steps passed!"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

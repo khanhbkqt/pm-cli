@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import type Database from 'better-sqlite3';
-import { createTaskRoutes, createAgentRoutes, createContextRoutes, createStatusRoutes } from './routes/index.js';
+import { createAgentRoutes, createContextRoutes, createStatusRoutes } from './routes/index.js';
 import { createProgressRouter } from './routes/progress.js';
 
 /**
@@ -20,7 +20,7 @@ export function createApp(db: Database.Database): express.Express {
     });
 
     // API routes
-    app.use(createTaskRoutes(db));
+
     app.use(createAgentRoutes(db));
     app.use(createContextRoutes(db));
     app.use(createStatusRoutes(db));
