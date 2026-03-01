@@ -176,7 +176,8 @@ Xây dựng workflow engine tương tự GSD methodology, tích hợp trực ti�
 
 ---
 
-## Active Milestone: v3.1-dashboard-upgrade — Dashboard Upgrade
+<details>
+<summary>✅ v3.1-dashboard-upgrade — Dashboard Upgrade (Complete)</summary>
 
 ### Goal
 
@@ -211,21 +212,75 @@ Fix dashboard loading bugs caused by stale task-based types/components (backend 
 | 6 | Tests & Polish | ✅ Complete | 2 |
 | 7 | Hierarchy Board View | ✅ Complete | 3 |
 
+</details>
+
 ---
 
-### Phase 7: Hierarchy Board View
-**Status**: ✅ Complete
-**Objective**: Redesign the Plans board so it groups plans by Milestone → Phase, giving a clear hierarchical overview of the entire project rather than a flat plan list.
-**Depends on**: Phase 6
+## Active Milestone: v3.2-gsd-workflows — GSD Workflow Sync
+
+### Goal
+
+Update the pm-cli workflow documents to include ROADMAP and STATE context loading for quick trace, similar to the GSD workflows.
+
+### Must-Haves
+
+- [ ] Review all `pm-*` workflow files in `docs/agent-guide/workflows`
+- [ ] Add a "Quick Trace" section to relevant workflows (execute, plan, evaluate, etc.)
+- [ ] Ensure the prompt clearly directs agents to read `.gsd/ROADMAP.md` and `.gsd/STATE.md` at the start of execution/planning.
+- [ ] Verify markdown formatting and consistency across modified files.
+
+### Phases
+
+| Phase | Name | Status | Plans |
+|-------|------|--------|-------|
+| 1 | Sync Execute Workflows | ⬜ Not Started | 0 |
+| 2 | Sync Planning Workflows | ⬜ Not Started | 0 |
+| 3 | Sync Review & Misc Workflows | ⬜ Not Started | 0 |
+
+---
+
+### Phase 1: Sync Execute Workflows
+**Status**: ⬜ Not Started
+**Objective**: Update the execution workflows (`pm-execute-phase.md` and related) to require reading ROADMAP/STATE.
+**Depends on**: None
 
 **Must-Haves**:
-- [x] New `/api/board` endpoint — returns milestones with nested phases and plans
-- [x] Updated PlansPage (or new BoardPage) — renders Milestone → Phase → Plan hierarchy
-- [x] Collapsible sections per milestone/phase for overview clarity
-- [x] Status badges at each level (milestone, phase, plan)
-- [x] Phase & Plan IDs refactored to TEXT UUIDs
+- [ ] Update `pm-execute-phase.md`
+- [ ] Update `pm-debug.md` (if applicable)
 
 **Verification**:
-- [x] `tsc --noEmit` passes
-- [x] `vitest run` — all tests pass (175+)
-- [x] Dashboard builds successfully
+- [ ] Markdown files render correctly
+- [ ] Manual review confirms "quick trace" pattern is present
+
+---
+
+### Phase 2: Sync Planning Workflows
+**Status**: ⬜ Not Started
+**Objective**: Update the planning workflows (`pm-plan-phase.md`, `pm-discuss-phase.md`, `pm-research-phase.md`) to require reading ROADMAP/STATE.
+**Depends on**: None
+
+**Must-Haves**:
+- [ ] Update `pm-plan-phase.md`
+- [ ] Update `pm-discuss-phase.md`
+- [ ] Update `pm-research-phase.md`
+
+**Verification**:
+- [ ] Markdown files render correctly
+- [ ] Manual review confirms "quick trace" pattern is present
+
+---
+
+### Phase 3: Sync Review & Misc Workflows
+**Status**: ⬜ Not Started
+**Objective**: Update verification and progress workflows (`pm-verify-work.md`, `pm-progress.md`, `pm-audit-milestone.md`) with the quick trace requirements.
+**Depends on**: None
+
+**Must-Haves**:
+- [ ] Update `pm-verify-work.md`
+- [ ] Update `pm-progress.md`
+- [ ] Update `pm-audit-milestone.md`
+- [ ] Check other workflows for applicability
+
+**Verification**:
+- [ ] Markdown files render correctly
+- [ ] Manual review confirms "quick trace" pattern is present
