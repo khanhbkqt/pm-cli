@@ -2,10 +2,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { ClientAdapter, ClientConfig, GenerateResult, CleanResult } from '../types.js';
 import { registerAdapter } from '../registry.js';
-import { loadCanonicalTemplate, loadWorkflowTemplates } from '../template.js';
+import { loadCanonicalTemplate, loadWorkflowTemplates, loadSkillTemplates } from '../template.js';
 import { buildWorkflowIndex } from '../workflow-index.js';
 
 const GEMINI_FILE = 'GEMINI.md';
+
+const WORKFLOW_DIR = '.agent/workflows';
+const SKILLS_DIR = '.agent/skills';
 
 /** Section marker used to delimit PM CLI content inside GEMINI.md. */
 const SECTION_START = '<!-- pm-cli:start -->';
@@ -71,6 +74,32 @@ export class GeminiCliAdapter implements ClientAdapter {
         }
 
         files.push(geminiPath);
+
+        // --- Individual workflow files ---
+        const workflowDir = path.join(projectRoot, WORKFLOW_DIR);
+        fs.mkdirSync(workflowDir, { recursive: true });
+        for (const [filename, content] of workflows) {
+            const wfPath = path.join(workflowDir, filename);
+            if (fs.existsSync(wfPath)) {
+                warnings.push(`Overwriting existing ${WORKFLOW_DIR}/${filename}`);
+            }
+            fs.writeFileSync(wfPath, content, 'utf-8');
+            files.push(wfPath);
+        }
+
+        // --- Individual skill files ---
+        const skillsDir = path.join(projectRoot, SKILLS_DIR);
+        fs.mkdirSync(skillsDir, { recursive: true });
+        const skills = loadSkillTemplates(projectRoot);
+        for (const [filename, content] of skills) {
+            const skillPath = path.join(skillsDir, filename);
+            if (fs.existsSync(skillPath)) {
+                warnings.push(`Overwriting existing ${SKILLS_DIR}/${filename}`);
+            }
+            fs.writeFileSync(skillPath, content, 'utf-8');
+            files.push(skillPath);
+        }
+
         return { files, warnings };
     }
 
@@ -105,6 +134,32 @@ export class GeminiCliAdapter implements ClientAdapter {
             removed.push(geminiPath);
         }
 
+        // Remove individual workflow files (pm-*.md)
+        const wfDir = path.join(projectRoot, WORKFLOW_DIR);
+        if (fs.existsSync(wfDir)) {
+            for (const entry of fs.readdirSync(wfDir)) {
+                if (entry.startsWith('pm-') && entry.endsWith('.md')) {
+                    const wfPath = path.join(wfDir, entry);
+                    fs.unlinkSync(wfPath);
+                    removed.push(wfPath);
+                }
+            }
+        }
+
+        // Remove individual skill files (pm-*.md)
+        const skDir = path.join(projectRoot, SKILLS_DIR);
+        if (fs.existsSync(skDir)) {
+            for (const entry of fs.readdirSync(skDir)) {
+                if (entry.startsWith('pm-') && entry.endsWith('.md')) {
+                    const skPath = path.join(skDir, entry);
+                    fs.unlinkSync(skPath);
+                    removed.push(skPath);
+                }
+            }
+        }
+
+        // Do NOT remove .agent/ directories — may have other files
+
         return { removed, skipped };
     }
 
@@ -112,7 +167,7 @@ export class GeminiCliAdapter implements ClientAdapter {
         return {
             type: 'gemini-cli',
             name: 'Gemini CLI',
-            configPaths: [GEMINI_FILE],
+            configPaths: [GEMINI_FILE, `${WORKFLOW_DIR}/pm-*.md`, `${SKILLS_DIR}/pm-*.md`],
             configFormat: 'markdown',
         };
     }
