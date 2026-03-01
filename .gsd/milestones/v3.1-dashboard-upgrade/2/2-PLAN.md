@@ -2,103 +2,82 @@
 phase: 2
 plan: 2
 wave: 1
+title: "Update StatsCards & Overview with Milestone/Phase UI"
 ---
 
-# Plan 2.2: Add Milestone/Phase Types & fetchProgress Client
+# Plan 2.2 — Update StatsCards & Overview with Milestone/Phase UI
 
-## Objective
-Add `Milestone`, `Phase`, and `ProgressResponse` types to the dashboard API layer, and create a `fetchProgress()` function that calls the existing backend `/api/progress` endpoint. This prepares the frontend data layer for the progress widget in Plan 2.3.
+## Goal
+
+Enhance the Overview page and StatsCards component to display milestone context and phase progress, making the dashboard truly reflect the workflow engine state.
 
 ## Context
-- src/db/types.ts — backend `Milestone` and `Phase` interfaces (source of truth)
-- src/server/routes/progress.ts — backend `/api/progress` endpoint returns `{ milestone, phases, summary }`
-- dashboard/src/api/types.ts — currently has `Plan`, `Agent`, `ContextEntry`, `StatusResponse`
-- dashboard/src/api/client.ts — currently has `fetchStatus`, `fetchAgents`, `fetchContext`, etc.
-- dashboard/src/api/index.ts — barrel exports
+
+- `dashboard/src/components/StatsCards.tsx` — currently shows Plans/InProgress/Agents/Context cards
+- `dashboard/src/pages/Overview.tsx` — shows StatsCards + ActivityFeed + AgentList
+- `dashboard/src/api/types.ts` — will have Milestone/PhasesSummary types from Plan 2.1
 
 ## Tasks
 
-<task type="auto">
-  <name>Add Milestone, Phase, ProgressResponse types</name>
-  <files>dashboard/src/api/types.ts</files>
-  <action>
-    1. Add `Milestone` interface matching `src/db/types.ts`:
-       ```ts
-       export interface Milestone {
-         id: string;
-         name: string;
-         goal: string | null;
-         status: 'planned' | 'active' | 'completed' | 'archived';
-         created_by: string;
-         created_at: string;
-         completed_at: string | null;
-       }
-       ```
+<task id="2.2.1">
+### Task 1: Update StatsCards with milestone & phase cards
 
-    2. Add `Phase` interface matching `src/db/types.ts`:
-       ```ts
-       export interface Phase {
-         id: number;
-         milestone_id: string;
-         number: number;
-         name: string;
-         description: string | null;
-         status: 'not_started' | 'planning' | 'in_progress' | 'completed' | 'skipped';
-         created_at: string;
-         completed_at: string | null;
-       }
-       ```
+**File:** `dashboard/src/components/StatsCards.tsx`
 
-    3. Add `EnrichedPhase` (phase + plan counts from progress endpoint):
-       ```ts
-       export interface EnrichedPhase extends Phase {
-         plans_total: number;
-         plans_done: number;
-         plans_failed: number;
-       }
-       ```
+1. Replace the 4-card grid with a 5-card grid:
+   - **Milestone** (new) — name of active milestone + status badge
+   - **Phases** (new) — total phases with completed/in_progress/not_started bar
+   - **Plans** (existing) — total plans with status bar
+   - **In Progress** (existing) — count of in-progress plans
+   - **Agents** (existing) — total agents with human/AI breakdown
+2. Remove the "Context Entries" card (low value for overview)
+3. Add CSS for the milestone card with gradient accent
 
-    4. Add `ProgressResponse` matching backend `/api/progress` response:
-       ```ts
-       export interface ProgressResponse {
-         milestone: Milestone;
-         phases: EnrichedPhase[];
-         summary: {
-           phases_total: number;
-           phases_complete: number;
-           phases_pct: number;
-         };
-       }
-       ```
-  </action>
-  <verify>npx tsc --noEmit --project dashboard/tsconfig.json 2>&1 | head -20</verify>
-  <done>Milestone, Phase, EnrichedPhase, ProgressResponse types added to types.ts</done>
+**Also update:** `dashboard/src/components/StatsCards.css` for 5-column responsive grid
+
+<verify>
+```bash
+cd dashboard && npx tsc --noEmit 2>&1 | tail -10
+```
+</verify>
 </task>
 
-<task type="auto">
-  <name>Add fetchProgress client function + barrel export</name>
-  <files>dashboard/src/api/client.ts, dashboard/src/api/index.ts</files>
-  <action>
-    1. In `client.ts`:
-       - Add import: `ProgressResponse`
-       - Add function:
-         ```ts
-         /** Fetch active milestone progress. */
-         export function fetchProgress(): Promise<ProgressResponse> {
-           return apiFetch<ProgressResponse>('/api/progress');
-         }
-         ```
+<task id="2.2.2">
+### Task 2: Add MilestoneProgress component to Overview
 
-    2. In `index.ts`:
-       - Add type exports: `Milestone`, `Phase`, `EnrichedPhase`, `ProgressResponse`
-       - Add function export: `fetchProgress`
-  </action>
-  <verify>npx tsc --noEmit --project dashboard/tsconfig.json 2>&1 | head -20</verify>
-  <done>fetchProgress function exists, all new types exported from barrel</done>
+**File:** `dashboard/src/pages/Overview.tsx`
+
+1. Add a milestone progress banner below StatsCards showing:
+   - Active milestone name + goal (if available)
+   - Phase progress bar (completed / total)
+   - Current phase indicator
+2. Keep the existing ActivityFeed + AgentList panels below
+
+**File:** `dashboard/src/pages/Overview.css` — add styles for the milestone progress section
+
+<verify>
+```bash
+cd dashboard && npx tsc --noEmit 2>&1 | tail -10
+```
+</verify>
+</task>
+
+<task id="2.2.3">
+### Task 3: Full build verification
+
+Run full build and test verification.
+
+<verify>
+```bash
+npm run build 2>&1 | tail -10
+npm test 2>&1 | tail -15
+```
+</verify>
 </task>
 
 ## Success Criteria
-- [ ] `Milestone`, `Phase`, `EnrichedPhase`, `ProgressResponse` types exist in `types.ts`
-- [ ] `fetchProgress()` function exists in `client.ts` calling `/api/progress`
-- [ ] All new types and function exported from `api/index.ts`
-- [ ] Full TypeScript compilation passes
+
+- [ ] StatsCards shows milestone name, phase progress, and plan stats
+- [ ] Overview page shows milestone context with progress visualization
+- [ ] Full project build passes (backend + dashboard)
+- [ ] All existing tests pass
