@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { ClientAdapter, ClientConfig, GenerateResult, CleanResult } from '../types.js';
 import { registerAdapter } from '../registry.js';
-import { loadCanonicalTemplate, loadWorkflowTemplates } from '../template.js';
+import { loadCanonicalTemplate, loadWorkflowTemplates, loadSkillTemplates } from '../template.js';
 
 const WORKFLOW_DIR = '.agent/workflows';
 const WORKFLOW_FILE = 'pm-guide.md';
@@ -11,6 +11,8 @@ const WORKFLOW_PATH = `${WORKFLOW_DIR}/${WORKFLOW_FILE}`;
 const RULES_DIR = '.agent/rules';
 const RULES_FILE = 'pm-cli.md';
 const RULES_PATH = `${RULES_DIR}/${RULES_FILE}`;
+
+const SKILLS_DIR = '.agent/skills';
 
 /** YAML frontmatter prepended to the workflow file. */
 const WORKFLOW_FRONTMATTER = `---
@@ -33,9 +35,7 @@ This project uses the \`pm\` CLI for project management. Always follow the PM CL
 /**
  * Antigravity adapter.
  *
- * Generates two files:
- * 1. \`.agent/workflows/pm-guide.md\` — full AGENT_INSTRUCTIONS with YAML frontmatter
- * 2. \`.agent/rules/pm-cli.md\` — always-active rule with key instructions
+ * Generates files in \`.agent/\`
  */
 export class AntigravityAdapter implements ClientAdapter {
     detect(projectRoot: string): boolean {
@@ -90,6 +90,20 @@ export class AntigravityAdapter implements ClientAdapter {
             files.push(wfPath);
         }
 
+        // --- 4. Individual skill files ---
+        const skillsDir = path.join(projectRoot, SKILLS_DIR);
+        fs.mkdirSync(skillsDir, { recursive: true });
+
+        const skills = loadSkillTemplates(projectRoot);
+        for (const [filename, content] of skills) {
+            const skillPath = path.join(projectRoot, SKILLS_DIR, filename);
+            if (fs.existsSync(skillPath)) {
+                warnings.push(`Overwriting existing ${SKILLS_DIR}/${filename}`);
+            }
+            fs.writeFileSync(skillPath, content, 'utf-8');
+            files.push(skillPath);
+        }
+
         return { files, warnings };
     }
 
@@ -127,6 +141,18 @@ export class AntigravityAdapter implements ClientAdapter {
             }
         }
 
+        // Remove individual skill files
+        const skDir = path.join(projectRoot, SKILLS_DIR);
+        if (fs.existsSync(skDir)) {
+            for (const entry of fs.readdirSync(skDir)) {
+                if (entry.startsWith('pm-') && entry.endsWith('.md')) {
+                    const skPath = path.join(skDir, entry);
+                    fs.unlinkSync(skPath);
+                    removed.push(skPath);
+                }
+            }
+        }
+
         // Do NOT remove .agent/ directories — may have other files
 
         return { removed, skipped };
@@ -136,7 +162,7 @@ export class AntigravityAdapter implements ClientAdapter {
         return {
             type: 'antigravity',
             name: 'Antigravity',
-            configPaths: [WORKFLOW_PATH, RULES_PATH, '.agent/workflows/pm-*.md'],
+            configPaths: [WORKFLOW_PATH, RULES_PATH, '.agent/workflows/pm-*.md', '.agent/skills/pm-*.md'],
             configFormat: 'markdown+yaml-frontmatter',
         };
     }

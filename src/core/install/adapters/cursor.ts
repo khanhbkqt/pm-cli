@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { ClientAdapter, ClientConfig, GenerateResult, CleanResult } from '../types.js';
 import { registerAdapter } from '../registry.js';
-import { loadCanonicalTemplate, loadWorkflowTemplates } from '../template.js';
+import { loadCanonicalTemplate, loadWorkflowTemplates, loadSkillTemplates } from '../template.js';
 
 const RULES_DIR = '.cursor/rules';
 const RULES_FILE = 'pm-guide.mdc';
@@ -20,8 +20,9 @@ alwaysApply: true
 /**
  * Cursor adapter.
  *
- * Generates `.cursor/rules/pm-guide.mdc` with MDC-format YAML frontmatter
- * wrapping the canonical AGENT_INSTRUCTIONS template.
+ * Generates \`.cursor/rules/pm-guide.mdc\` with MDC-format YAML frontmatter
+ * wrapping the canonical AGENT_INSTRUCTIONS template. Also generates 
+ * individual .mdc files for workflows and skills.
  */
 export class CursorAdapter implements ClientAdapter {
     detect(projectRoot: string): boolean {
@@ -55,34 +56,41 @@ export class CursorAdapter implements ClientAdapter {
         fs.writeFileSync(outputPath, content, 'utf-8');
         files.push(outputPath);
 
-        // --- Individual workflow .mdc files ---
-        const workflows = loadWorkflowTemplates(projectRoot);
-        for (const [filename, wfContent] of workflows) {
-            // Extract description from original frontmatter
-            const fmMatch = wfContent.match(/^---\s*\n([\s\S]*?)\n---/);
-            let description = '';
-            let body = wfContent;
-            if (fmMatch) {
-                const descMatch = fmMatch[1].match(/^description:\s*(.+)$/m);
-                if (descMatch) {
-                    description = descMatch[1].trim();
+        // Helper to process markdown files into MDC
+        const processMarkdown = (items: Map<string, string>) => {
+            for (const [filename, fileContent] of items) {
+                // Extract description from original frontmatter
+                const fmMatch = fileContent.match(/^---\s*\n([\s\S]*?)\n---/);
+                let description = '';
+                let body = fileContent;
+                if (fmMatch) {
+                    const descMatch = fmMatch[1].match(/^description:\s*(.+)$/m);
+                    if (descMatch) {
+                        description = descMatch[1].trim();
+                    }
+                    // Strip original frontmatter, keep body
+                    body = fileContent.slice(fmMatch[0].length).trimStart();
                 }
-                // Strip original frontmatter, keep body
-                body = wfContent.slice(fmMatch[0].length).trimStart();
-            }
 
-            // Build MDC frontmatter
-            const mdcContent = `---\ndescription: ${description}\nglobs: "**/*"\nalwaysApply: true\n---\n\n${body}`;
+                // Build MDC frontmatter (alwaysApply false for sub-skills/workflows, they are loaded via glob context by Cursor if needed, or by active prompt)
+                const mdcContent = `---\ndescription: ${description}\nglobs: "**/*"\nalwaysApply: false\n---\n\n${body}`;
 
-            // Write as .mdc
-            const mdcFilename = filename.replace(/\.md$/, '.mdc');
-            const mdcPath = path.join(projectRoot, RULES_DIR, mdcFilename);
-            if (fs.existsSync(mdcPath)) {
-                warnings.push(`Overwriting existing ${RULES_DIR}/${mdcFilename}`);
+                // Write as .mdc
+                const mdcFilename = filename.replace(/\.md$/, '.mdc');
+                const mdcPath = path.join(projectRoot, RULES_DIR, mdcFilename);
+                if (fs.existsSync(mdcPath)) {
+                    warnings.push(`Overwriting existing ${RULES_DIR}/${mdcFilename}`);
+                }
+                fs.writeFileSync(mdcPath, mdcContent, 'utf-8');
+                files.push(mdcPath);
             }
-            fs.writeFileSync(mdcPath, mdcContent, 'utf-8');
-            files.push(mdcPath);
-        }
+        };
+
+        // --- Individual workflow .mdc files ---
+        processMarkdown(loadWorkflowTemplates(projectRoot));
+
+        // --- Individual skill .mdc files ---
+        processMarkdown(loadSkillTemplates(projectRoot));
 
         return { files, warnings };
     }
@@ -100,7 +108,7 @@ export class CursorAdapter implements ClientAdapter {
             skipped.push(outputPath);
         }
 
-        // Remove individual workflow .mdc files (pm-*.mdc but not pm-guide.mdc)
+        // Remove individual workflow/skill .mdc files (pm-*.mdc but not pm-guide.mdc)
         const cursorRulesDir = path.join(projectRoot, RULES_DIR);
         if (fs.existsSync(cursorRulesDir)) {
             for (const entry of fs.readdirSync(cursorRulesDir)) {

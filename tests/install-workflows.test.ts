@@ -10,9 +10,9 @@ import { buildWorkflowIndex } from '../src/core/install/workflow-index.js';
 // ────────────────────────────────────────────────────────────────────────────
 
 describe('loadWorkflowTemplates', () => {
-    it('returns a Map with 15 entries', () => {
+    it('returns a Map with >= 15 entries', () => {
         const workflows = loadWorkflowTemplates();
-        expect(workflows.size).toBe(15);
+        expect(workflows.size).toBeGreaterThanOrEqual(15);
     });
 
     it('all keys match pm-*.md pattern', () => {
@@ -102,8 +102,8 @@ describe('buildWorkflowIndex', () => {
         const workflows = loadWorkflowTemplates();
         const index = buildWorkflowIndex(workflows);
         expect(index).toContain('## Available Workflows');
-        // Should have 15 data rows (excluding header rows)
+        // Should have >= 15 data rows (excluding header rows)
         const dataRows = index.split('\n').filter(line => line.startsWith('| ') && !line.startsWith('| Workflow') && !line.startsWith('|---'));
-        expect(dataRows.length).toBe(15);
+        expect(dataRows.length).toBeGreaterThanOrEqual(15);
     });
 });

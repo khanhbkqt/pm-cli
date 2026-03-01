@@ -50,17 +50,23 @@ Create or update files such as:
 
 ## Step 3: Record Final Decisions & References in DB
 
+To interact with the project database, you must first register yourself if you haven't already:
+
+```bash
+pm agent register architect --role architect --type ai
+```
+
 Once a decision is finalized, use `pm-cli` to store the high-level decision and a **reference** to the relevant Markdown document. This allows other agents to discover _where_ to read the full context.
 
 ```bash
 # Store a pointer to the ideation document
-pm context set "ref:ideation-flows" "file:.gsd/IDEATION.md" --category summary --agent architect
+pm context set "ref:ideation-flows" "file:.gsd/IDEATION.md" --category note --agent architect
 
 # Store the final high-level decision
 pm context set "decision:target-platform" "Web Application" --category decision --agent architect
 
 # Store a pointer to the architectural decision record (ADR)
-pm context set "ref:adr-auth" "file:docs/decisions/0001-auth-strategy.md" --category reference --agent architect
+pm context set "ref:adr-auth" "file:docs/decisions/0001-auth-strategy.md" --category note --agent architect
 ```
 
 ---

@@ -113,3 +113,53 @@ export function loadWorkflowTemplates(projectRoot?: string): Map<string, string>
 
     return workflows;
 }
+
+/** Default relative path from project root to the skill templates directory. */
+const SKILLS_RELATIVE_PATH = 'docs/agent-guide/skills';
+
+/**
+ * Resolve the absolute path to the skill templates directory.
+ */
+export function getSkillsDir(projectRoot?: string): string {
+    if (projectRoot) {
+        const fromRoot = path.resolve(projectRoot, SKILLS_RELATIVE_PATH);
+        if (fs.existsSync(fromRoot) && fs.statSync(fromRoot).isDirectory()) {
+            return fromRoot;
+        }
+    }
+
+    const devPackageRoot = path.resolve(__dirname, '..', '..', '..');
+    const devFromPackage = path.join(devPackageRoot, SKILLS_RELATIVE_PATH);
+    if (fs.existsSync(devFromPackage) && fs.statSync(devFromPackage).isDirectory()) {
+        return devFromPackage;
+    }
+
+    const distPackageRoot = path.resolve(__dirname, '..');
+    const distFromPackage = path.join(distPackageRoot, SKILLS_RELATIVE_PATH);
+    if (fs.existsSync(distFromPackage) && fs.statSync(distFromPackage).isDirectory()) {
+        return distFromPackage;
+    }
+
+    throw new Error(
+        `Cannot find skill templates at '${SKILLS_RELATIVE_PATH}'. ` +
+        'Ensure the pm package is installed correctly.'
+    );
+}
+
+/**
+ * Load all pm-*.md skill template files from the skills directory.
+ */
+export function loadSkillTemplates(projectRoot?: string): Map<string, string> {
+    const skillsDir = getSkillsDir(projectRoot);
+    const entries = fs.readdirSync(skillsDir);
+    const skills = new Map<string, string>();
+
+    for (const entry of entries) {
+        if (entry.startsWith('pm-') && entry.endsWith('.md')) {
+            const content = fs.readFileSync(path.join(skillsDir, entry), 'utf-8');
+            skills.set(entry, content);
+        }
+    }
+
+    return skills;
+}
