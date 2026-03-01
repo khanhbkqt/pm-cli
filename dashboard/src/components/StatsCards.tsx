@@ -62,9 +62,69 @@ function StatusBar({ byStatus }: { byStatus: Record<string, number> }) {
     );
 }
 
+function PhaseBar({ phases }: { phases: { total: number; completed: number; in_progress: number; not_started: number } }) {
+    if (phases.total === 0) return null;
+
+    const segments = [
+        { key: 'completed', color: 'var(--accent-green)', value: phases.completed },
+        { key: 'in_progress', color: 'var(--accent-blue)', value: phases.in_progress },
+        { key: 'not_started', color: 'var(--text-secondary)', value: phases.not_started },
+    ];
+
+    return (
+        <div className="status-bar" title={segments.map(s => `${s.key}: ${s.value}`).join(', ')}>
+            {segments.map((seg) =>
+                seg.value > 0 ? (
+                    <div
+                        key={seg.key}
+                        className="status-bar__segment"
+                        style={{
+                            width: `${(seg.value / phases.total) * 100}%`,
+                            background: seg.color,
+                        }}
+                    />
+                ) : null,
+            )}
+        </div>
+    );
+}
+
+function formatMilestoneStatus(status: string): string {
+    return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
 export function StatsCards({ status }: StatsCardsProps) {
     return (
         <div className="stats-grid">
+            <div className="stat-card stat-card--milestone">
+                <div className="stat-card__icon">🎯</div>
+                <div className="stat-card__body">
+                    <div className="stat-card__value stat-card__value--text">
+                        {status.milestone?.name ?? 'None'}
+                    </div>
+                    <div className="stat-card__label">Active Milestone</div>
+                    {status.milestone && (
+                        <div className="stat-card__meta">
+                            <span className="stat-card__badge" data-status={status.milestone.status}>
+                                {formatMilestoneStatus(status.milestone.status)}
+                            </span>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div className="stat-card stat-card--phases">
+                <div className="stat-card__icon">🔶</div>
+                <div className="stat-card__body">
+                    <div className="stat-card__value">
+                        <AnimatedCount value={status.phases.completed} />
+                        <span className="stat-card__value-suffix"> / {status.phases.total}</span>
+                    </div>
+                    <div className="stat-card__label">Phases Complete</div>
+                    <PhaseBar phases={status.phases} />
+                </div>
+            </div>
+
             <div className="stat-card stat-card--plans">
                 <div className="stat-card__icon">📋</div>
                 <div className="stat-card__body">
@@ -96,16 +156,6 @@ export function StatsCards({ status }: StatsCardsProps) {
                     <div className="stat-card__meta">
                         {status.agents.by_type.human ?? 0} human · {status.agents.by_type.ai ?? 0} AI
                     </div>
-                </div>
-            </div>
-
-            <div className="stat-card stat-card--context">
-                <div className="stat-card__icon">📦</div>
-                <div className="stat-card__body">
-                    <div className="stat-card__value">
-                        <AnimatedCount value={status.context.total} />
-                    </div>
-                    <div className="stat-card__label">Context Entries</div>
                 </div>
             </div>
         </div>
