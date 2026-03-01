@@ -1,13 +1,13 @@
 ---
-milestone: v2.1-multi-client
-version: 2.0.0
-updated: 2026-03-01T06:30:00+07:00
+milestone: v3.0-workflow-engine
+version: 3.0.0
+updated: 2026-03-01T07:55:00+07:00
 ---
 
 # Roadmap
 
-> **Current Milestone**: v2.1-multi-client — Multi-Client Installation
-> **Last Completed**: v2.0-agent-workflow
+> **Current Milestone**: v3.0-workflow-engine — Workflow Engine
+> **Last Completed**: v2.1-multi-client
 
 ## Previous Milestones
 
@@ -100,8 +100,6 @@ Create comprehensive workflow guides and instruction documents that teach AI cod
 
 </details>
 
----
-
 <details>
 <summary>✅ v2.1-multi-client — Multi-Client Installation (Complete)</summary>
 
@@ -143,4 +141,38 @@ Make the agent workflow guide installable on multiple AI coding clients, transla
 **Summary**: `.gsd/milestones/v2.1-multi-client/SUMMARY.md`
 
 </details>
+
+---
+
+## Active Milestone: v3.0-workflow-engine — Workflow Engine
+
+### Goal
+
+Xây dựng workflow engine tương tự GSD methodology, tích hợp trực tiếp vào pm-cli — biến pm-cli từ tool quản lý task thành project lifecycle manager hoàn chỉnh. Workflow state machine (SPEC → PLAN → EXECUTE → VERIFY → COMMIT) được quản lý qua CLI commands với dữ liệu lưu trữ trong SQLite.
+
+### Must-Haves
+
+- [ ] Milestone management — `pm milestone create/list/show/complete`
+- [ ] Phase management — `pm phase add/list/show/update` (thuộc milestone)
+- [ ] Workflow state machine — lifecycle transitions, validation rules
+- [ ] Plan management — `pm plan create/list/show` (execution plans)
+- [ ] Progress tracking — `pm progress` hiển thị tiến độ milestone/phase
+- [ ] State persistence — session state lưu DB, resume-friendly
+
+### Nice-to-Haves
+
+- [ ] Wave-based execution grouping
+- [ ] Proof/evidence attachment cho verification
+- [ ] Export markdown (tương thích GSD format)
+
+### Phases
+
+| Phase | Name | Status | Plans |
+|-------|------|--------|-------|
+| 1 | DB Schema & Models | ⬜ Not Started | — |
+| 2 | Milestone & Phase CLI | ⬜ Not Started | — |
+| 3 | Workflow State Machine | ⬜ Not Started | — |
+| 4 | Plan & Execution CLI | ⬜ Not Started | — |
+| 5 | Progress & Dashboard | ⬜ Not Started | — |
+| 6 | Tests & Documentation | ⬜ Not Started | — |
 
