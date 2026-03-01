@@ -308,3 +308,63 @@ export function formatPlanList(plans: Plan[], json: boolean): string {
 
     return formatTable(headers, rows);
 }
+
+/**
+ * Phase enriched with plan statistics.
+ */
+interface PhaseProgress extends Phase {
+    plans_total: number;
+    plans_done: number;
+    plans_failed: number;
+}
+
+/**
+ * Data structure for progress display.
+ */
+interface ProgressData {
+    milestone: Milestone;
+    phases: PhaseProgress[];
+    summary: { phases_total: number; phases_complete: number; phases_pct: number };
+}
+
+const STATUS_ICONS: Record<string, string> = {
+    completed: '✅',
+    in_progress: '▶',
+    planning: '🔵',
+    skipped: '⏭',
+    not_started: '⬜',
+};
+
+/**
+ * Format milestone progress for display.
+ */
+export function formatProgress(data: ProgressData, json: boolean): string {
+    if (json) {
+        return JSON.stringify(data, null, 2);
+    }
+
+    const { milestone, phases, summary } = data;
+
+    const header = [
+        `Active Milestone: ${milestone.name}${milestone.goal ? ' — ' + milestone.goal : ''}`,
+        `Status: ${milestone.status}`,
+        '',
+    ];
+
+    if (phases.length === 0) {
+        return [...header, 'No phases defined.', '', `Progress: 0/0 phases complete (0%)`].join('\n');
+    }
+
+    const headers = ['', '#', 'Name', 'Plans'];
+    const rows = phases.map(p => [
+        STATUS_ICONS[p.status] ?? '⬜',
+        String(p.number),
+        p.name,
+        `${p.plans_done}/${p.plans_total}`,
+    ]);
+
+    const table = formatTable(headers, rows);
+    const footer = `\nProgress: ${summary.phases_complete}/${summary.phases_total} phases complete (${summary.phases_pct}%)`;
+
+    return [...header, 'Phases:', table, footer].join('\n');
+}

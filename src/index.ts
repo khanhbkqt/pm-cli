@@ -9,6 +9,7 @@ import { registerContextCommands } from './cli/commands/context.js';
 import { registerStatusCommand } from './cli/commands/status.js';
 import { registerDashboardCommand } from './cli/commands/dashboard.js';
 import { registerInstallCommand } from './cli/commands/install.js';
+import { registerProgressCommand } from './cli/commands/progress.js';
 
 // Register commands
 registerInitCommand(program);
@@ -21,6 +22,7 @@ registerInstallCommand(program);
 registerMilestoneCommands(program);
 registerPhaseCommands(program);
 registerPlanCommands(program);
+registerProgressCommand(program);
 
 // Parse and execute
 program.parseAsync(process.argv);
