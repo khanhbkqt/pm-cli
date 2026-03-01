@@ -1,4 +1,6 @@
-# PROJECT_RULES.md — GSD Canonical Rules
+---
+trigger: always_on
+---
 
 > **Single Source of Truth** for the Get Shit Done methodology.
 > 
