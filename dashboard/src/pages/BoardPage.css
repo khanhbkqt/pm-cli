@@ -6,20 +6,96 @@
 
 .board-page__header {
     display: flex;
-    align-items: baseline;
-    gap: var(--space-3);
+    flex-direction: column;
+    gap: var(--space-4);
     margin-bottom: var(--space-5);
 }
 
-.board-page__header h1 {
+@media (min-width: 768px) {
+    .board-page__header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+}
+
+.board-page__header-title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+}
+
+.board-page__header-title h1 {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-primary);
+    margin: 0;
 }
 
 .board-page__subtitle {
     font-size: 0.8rem;
     color: var(--text-secondary);
+}
+
+.board-page__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.board-filter {
+    display: inline-flex;
+    background: var(--bg-tertiary);
+    padding: 2px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.board-filter__btn {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border-radius: calc(var(--radius-md) - 2px);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.board-filter__btn:hover {
+    color: var(--text-primary);
+}
+
+.board-filter__btn--active {
+    background: var(--surface);
+    color: var(--text-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-weight: 600;
+}
+
+.board-actions {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.board-action__btn {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.board-action__btn:hover {
+    background: var(--hover);
+    border-color: var(--text-tertiary);
 }
 
 /* ─── Status Badges ────────────────────────────────── */
@@ -124,8 +200,20 @@
     border-bottom: 1px solid var(--tree-line-color);
     padding: 0 var(--space-4);
     gap: var(--space-2);
-    transition: background 0.12s;
+    transition: all 0.2s ease;
     cursor: default;
+    position: relative;
+}
+
+.tree-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: transparent;
+    transition: background 0.2s ease;
 }
 
 .tree-row:last-child {
@@ -134,6 +222,18 @@
 
 .tree-row:hover {
     background: var(--hover);
+}
+
+.tree-row--milestone:hover::before {
+    background: var(--accent-blue);
+}
+
+.tree-row--phase:hover::before {
+    background: var(--accent-green);
+}
+
+.tree-row--plan:hover::before {
+    background: var(--text-secondary);
 }
 
 /* ─── Milestone Row ────────────────────────────────── */
