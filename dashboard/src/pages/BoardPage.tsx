@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useApi } from '../hooks/useApi';
 import { fetchBoard } from '../api/client';
@@ -57,8 +57,14 @@ function PlanRow({ plan }: { plan: Plan }) {
     );
 }
 
-function PhaseRow({ phase }: { phase: BoardPhase }) {
+function PhaseRow({ phase, expandAllSignal }: { phase: BoardPhase, expandAllSignal: { ts: number, expand: boolean } | null }) {
     const [expanded, setExpanded] = useState(phase.status === 'in_progress');
+
+    useEffect(() => {
+        if (expandAllSignal) {
+            setExpanded(expandAllSignal.expand);
+        }
+    }, [expandAllSignal]);
     const planCount = phase.plans.length;
     const completedPlans = phase.plans.filter(p => p.status === 'completed').length;
     const progress = planCount > 0 ? (completedPlans / planCount) * 100 : 0;
@@ -112,8 +118,14 @@ function PhaseRow({ phase }: { phase: BoardPhase }) {
     );
 }
 
-function MilestoneRow({ milestone }: { milestone: BoardMilestone }) {
+function MilestoneRow({ milestone, expandAllSignal }: { milestone: BoardMilestone, expandAllSignal: { ts: number, expand: boolean } | null }) {
     const [expanded, setExpanded] = useState(milestone.status === 'active');
+
+    useEffect(() => {
+        if (expandAllSignal) {
+            setExpanded(expandAllSignal.expand);
+        }
+    }, [expandAllSignal]);
     const phaseCount = milestone.phases.length;
     const totalPlans = milestone.phases.reduce((sum, p) => sum + p.plans.length, 0);
     const totalCompletedPlans = milestone.phases.reduce(
@@ -169,7 +181,7 @@ function MilestoneRow({ milestone }: { milestone: BoardMilestone }) {
                         <span className="tree-row__name">No phases in this milestone</span>
                     </div>
                 ) : (
-                    milestone.phases.map(phase => <PhaseRow key={phase.id} phase={phase} />)
+                    milestone.phases.map(phase => <PhaseRow key={phase.id} phase={phase} expandAllSignal={expandAllSignal} />)
                 )}
             </div>
         </>
@@ -180,6 +192,8 @@ export function BoardPage() {
     const { data: board, loading, error, refetch } = useApi(
         useCallback(() => fetchBoard(), [])
     );
+    const [statusFilter, setStatusFilter] = useState('all');
+    const [expandSignal, setExpandSignal] = useState<{ ts: number; expand: boolean } | null>(null);
 
     if (loading) {
         return (
@@ -198,21 +212,41 @@ export function BoardPage() {
     }
 
     const milestones = board || [];
+    const filteredMilestones = milestones.filter(m => statusFilter === 'all' || m.status === statusFilter);
 
     return (
         <div className="board-page">
             <div className="board-page__header">
-                <h1>Plans Board</h1>
-                <span className="board-page__subtitle">
-                    {milestones.length} milestone{milestones.length !== 1 ? 's' : ''}
-                </span>
+                <div className="board-page__header-title">
+                    <h1>Plans Board</h1>
+                    <span className="board-page__subtitle">
+                        {filteredMilestones.length} milestone{filteredMilestones.length !== 1 ? 's' : ''}
+                    </span>
+                </div>
+                <div className="board-page__controls">
+                    <div className="board-filter" role="group" aria-label="Filter by milestone status">
+                        {['all', 'active', 'planned', 'completed', 'archived'].map(status => (
+                            <button
+                                key={status}
+                                className={`board-filter__btn ${statusFilter === status ? 'board-filter__btn--active' : ''}`}
+                                onClick={() => setStatusFilter(status)}
+                            >
+                                {status.charAt(0).toUpperCase() + status.slice(1)}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="board-actions">
+                        <button className="board-action__btn" onClick={() => setExpandSignal({ ts: Date.now(), expand: true })}>Expand All</button>
+                        <button className="board-action__btn" onClick={() => setExpandSignal({ ts: Date.now(), expand: false })}>Collapse All</button>
+                    </div>
+                </div>
             </div>
 
-            {milestones.length === 0 ? (
+            {filteredMilestones.length === 0 ? (
                 <EmptyState
                     icon="📋"
-                    title="No milestones yet"
-                    description="Run pm new-milestone to create your first milestone."
+                    title={milestones.length === 0 ? "No milestones yet" : "No milestones found"}
+                    description={milestones.length === 0 ? "Run pm new-milestone to create your first milestone." : "Try adjusting your filters."}
                 />
             ) : (
                 <div className="board-tree" role="tree" aria-label="Plans hierarchy">
@@ -223,8 +257,8 @@ export function BoardPage() {
                         <span className="board-tree__col-details">Details</span>
                     </div>
                     <div className="board-tree__body">
-                        {milestones.map(m => (
-                            <MilestoneRow key={m.id} milestone={m} />
+                        {filteredMilestones.map(m => (
+                            <MilestoneRow key={m.id} milestone={m} expandAllSignal={expandSignal} />
                         ))}
                     </div>
                 </div>
