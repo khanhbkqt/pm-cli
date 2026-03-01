@@ -6,10 +6,13 @@ import {
     updatePhase,
 } from '../../core/phase.js';
 import { getActiveMilestone } from '../../core/milestone.js';
+import { transitionPhase } from '../../core/workflow.js';
+import { listPlans } from '../../core/plan.js';
 import { resolveIdentity, getProjectDb } from '../../core/identity.js';
 import {
     formatPhase,
     formatPhaseList,
+    formatPlanList,
 } from '../../output/formatter.js';
 
 /**
@@ -115,7 +118,17 @@ export function registerPhaseCommands(program: Command): void {
                     process.exit(1);
                 }
 
-                console.log(formatPhase(found, json));
+                const plans = listPlans(db, found.id);
+
+                if (json) {
+                    console.log(JSON.stringify({ ...found, plans }, null, 2));
+                } else {
+                    console.log(formatPhase(found, false));
+                    if (plans.length > 0) {
+                        console.log('\nPlans:');
+                        console.log(formatPlanList(plans, false));
+                    }
+                }
                 db.close();
             } catch (error) {
                 if (error instanceof Error) {
@@ -134,15 +147,26 @@ export function registerPhaseCommands(program: Command): void {
         .option('--name <name>', 'New name')
         .option('--description <text>', 'New description')
         .option('--status <status>', 'New status')
-        .action(async (id: string, opts: { name?: string; description?: string; status?: string }) => {
+        .option('--force', 'Bypass transition validation')
+        .action(async (id: string, opts: { name?: string; description?: string; status?: string; force?: boolean }) => {
             try {
                 const db = getProjectDb();
                 resolveIdentity(db, { agent: program.opts().agent }); // enforce identity
-                const updated = updatePhase(db, parseInt(id, 10), {
-                    name: opts.name,
-                    description: opts.description,
-                    status: opts.status,
-                });
+
+                // If --status provided, route through workflow transitions
+                if (opts.status) {
+                    transitionPhase(db, parseInt(id, 10), opts.status as any, { force: opts.force });
+                }
+
+                // Apply non-status updates via raw CRUD
+                const otherUpdates: { name?: string; description?: string } = {};
+                if (opts.name !== undefined) otherUpdates.name = opts.name;
+                if (opts.description !== undefined) otherUpdates.description = opts.description;
+                if (Object.keys(otherUpdates).length > 0) {
+                    updatePhase(db, parseInt(id, 10), otherUpdates);
+                }
+
+                const updated = getPhaseById(db, parseInt(id, 10))!;
                 const json = program.opts().json;
 
                 if (json) {

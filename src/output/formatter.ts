@@ -1,4 +1,4 @@
-import type { Agent, Task, TaskComment, ContextEntry, Milestone, Phase } from '../db/types.js';
+import type { Agent, Task, TaskComment, ContextEntry, Milestone, Phase, Plan } from '../db/types.js';
 
 /**
  * Format a simple ASCII table from headers and rows.
@@ -257,6 +257,51 @@ export function formatPhaseList(phases: Phase[], json: boolean): string {
     const rows = phases.map(p => [
         String(p.number),
         p.name,
+        p.status,
+        p.created_at.split('T')[0] || p.created_at,
+    ]);
+
+    return formatTable(headers, rows);
+}
+
+/**
+ * Format a single plan for display.
+ */
+export function formatPlan(plan: Plan, json: boolean): string {
+    if (json) {
+        return JSON.stringify(plan, null, 2);
+    }
+
+    return [
+        `ID:        ${plan.id}`,
+        `Number:    ${plan.number}`,
+        `Name:      ${plan.name}`,
+        `Phase:     ${plan.phase_id}`,
+        `Wave:      ${plan.wave}`,
+        `Status:    ${plan.status}`,
+        plan.content ? `Content:   ${plan.content}` : null,
+        `Created:   ${plan.created_at}`,
+        plan.completed_at ? `Completed: ${plan.completed_at}` : null,
+    ].filter(Boolean).join('\n');
+}
+
+/**
+ * Format a list of plans for display.
+ */
+export function formatPlanList(plans: Plan[], json: boolean): string {
+    if (json) {
+        return JSON.stringify(plans, null, 2);
+    }
+
+    if (plans.length === 0) {
+        return 'No plans found.';
+    }
+
+    const headers = ['#', 'Name', 'Wave', 'Status', 'Created'];
+    const rows = plans.map(p => [
+        String(p.number),
+        p.name,
+        String(p.wave),
         p.status,
         p.created_at.split('T')[0] || p.created_at,
     ]);

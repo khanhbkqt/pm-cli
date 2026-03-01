@@ -7,6 +7,7 @@ import {
     getActiveMilestone,
 } from '../../core/milestone.js';
 import { listPhases } from '../../core/phase.js';
+import { transitionMilestone } from '../../core/workflow.js';
 import { resolveIdentity, getProjectDb } from '../../core/identity.js';
 import {
     formatMilestone,
@@ -121,15 +122,26 @@ export function registerMilestoneCommands(program: Command): void {
         .option('--name <name>', 'New name')
         .option('--goal <text>', 'New goal')
         .option('--status <status>', 'New status')
-        .action(async (id: string, opts: { name?: string; goal?: string; status?: string }) => {
+        .option('--force', 'Bypass transition validation')
+        .action(async (id: string, opts: { name?: string; goal?: string; status?: string; force?: boolean }) => {
             try {
                 const db = getProjectDb();
                 resolveIdentity(db, { agent: program.opts().agent }); // enforce identity
-                const updated = updateMilestone(db, id, {
-                    name: opts.name,
-                    goal: opts.goal,
-                    status: opts.status,
-                });
+
+                // If --status provided, route through workflow transitions
+                if (opts.status) {
+                    transitionMilestone(db, id, opts.status as any, { force: opts.force });
+                }
+
+                // Apply non-status updates via raw CRUD
+                const otherUpdates: { name?: string; goal?: string } = {};
+                if (opts.name !== undefined) otherUpdates.name = opts.name;
+                if (opts.goal !== undefined) otherUpdates.goal = opts.goal;
+                if (Object.keys(otherUpdates).length > 0) {
+                    updateMilestone(db, id, otherUpdates);
+                }
+
+                const updated = getMilestoneById(db, id)!;
                 const json = program.opts().json;
 
                 if (json) {
