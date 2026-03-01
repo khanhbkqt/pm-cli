@@ -2,6 +2,7 @@
 phase: 7
 level: 2
 researched_at: 2026-03-01
+validated_at: 2026-03-01
 ---
 
 # Phase 7 Research — Agent Workflow Templates
@@ -13,6 +14,7 @@ researched_at: 2026-03-01
 3. Where do workflow files live in the project source?
 4. Which workflows are essential vs. nice-to-have?
 5. How should workflow files be structured to teach agents effectively?
+6. What are the exact CLI commands and status values available? (validated)
 
 ## Findings
 
@@ -136,6 +138,54 @@ Each file follows this structure (adapted from GSD's design, simplified for port
 6. **Success criteria** — how to verify it worked
 7. **Next steps** — what workflow to run next
 
+### Q6: Validated CLI Commands & Status Values (Post Phase 5)
+
+All commands verified against actual TypeScript implementations:
+
+**Milestone commands** (`src/cli/commands/milestone.ts`):
+| Command | Signature | Notes |
+|---|---|---|
+| `pm milestone create <id> <name>` | `--goal <text>` | `id` is slug (e.g. `v3.0-workflow-engine`) |
+| `pm milestone list` | `--status <status>` | Filter: planned, active, completed, archived |
+| `pm milestone show <id>` | — | Shows phases if any |
+| `pm milestone update <id>` | `--name`, `--goal`, `--status`, `--force` | `--status` routes through workflow transitions |
+
+**Phase commands** (`src/cli/commands/phase.ts`):
+| Command | Signature | Notes |
+|---|---|---|
+| `pm phase add <name>` | `--number <n>` (required), `--milestone <id>`, `--description` | Defaults to active milestone |
+| `pm phase list` | `--milestone <id>`, `--status <status>` | Defaults to active milestone |
+| `pm phase show <id>` | — | `id` is DB integer ID, shows plans |
+| `pm phase update <id>` | `--name`, `--description`, `--status`, `--force` | `--status` routes through workflow |
+
+**Plan commands** (`src/cli/commands/plan.ts`):
+| Command | Signature | Notes |
+|---|---|---|
+| `pm plan create <name>` | `--phase <id>` (required), `--number <n>` (required), `--wave <n>`, `--content` | `--phase` is DB integer ID |
+| `pm plan list` | `--phase <id>` (required), `--status`, `--wave` | Filter by status or wave |
+| `pm plan show <id>` | — | `id` is DB integer ID |
+| `pm plan update <id>` | `--name`, `--status`, `--content`, `--wave`, `--force` | `--status` routes through workflow |
+
+**Progress command** (`src/cli/commands/progress.ts`):
+| Command | Signature | Notes |
+|---|---|---|
+| `pm progress` | `--milestone <id>` | No `--agent` required (read-only) |
+
+**Status transitions** (`src/core/workflow.ts`):
+| Entity | Valid Transitions |
+|---|---|
+| Milestone | `planned → active → completed → archived` |
+| Phase | `not_started → planning → in_progress → completed`; also `→ skipped` from any non-terminal; `skipped → not_started` |
+| Plan | `pending → in_progress → completed/failed`; `failed → pending` (retry) |
+
+**Cascading behaviors:**
+- Plan `pending → in_progress` → auto-starts parent phase if `not_started`
+- All plans in phase `completed` → auto-completes phase
+- Milestone `completed` requires all phases `completed` or `skipped` (unless `--force`)
+- Activating a milestone deactivates any currently-active milestone (single-active rule)
+
+**Global flags:** `--json` (all commands), `--agent <name>` (write commands)
+
 ## Decisions Made
 
 | Decision | Choice | Rationale |
@@ -153,6 +203,7 @@ Each file follows this structure (adapted from GSD's design, simplified for port
 - Show cascade effects explicitly (e.g., "Starting a plan auto-starts its phase")
 - Include `--json` examples for programmatic use
 - Reference `pm progress` for state verification
+- Match format and depth of existing `task-lifecycle.md` (JSON output examples, tips, best practices)
 
 ## Anti-Patterns to Avoid
 
@@ -160,6 +211,7 @@ Each file follows this structure (adapted from GSD's design, simplified for port
 - Don't reference GSD file paths (`.planning/`, PLAN.md, SUMMARY.md) — pm-cli uses DB
 - Don't reference `allowed-tools` — not portable
 - Don't embed agent-type-specific instructions
+- Don't use `pm phase show <number>` — phase show takes DB integer ID, not phase number
 
 ## Dependencies Identified
 
@@ -170,7 +222,8 @@ No new code dependencies. Phase 7 is **documentation only**:
 ## Risks
 
 - **Volume**: 15 files is substantial — mitigated by consistent template structure
-- **Accuracy**: Workflow steps must match actual CLI behavior — mitigated by writing after Phase 5 (progress command) is complete
+- **Accuracy**: Workflow steps must match actual CLI behavior — mitigated by validating all commands against source code (done)
+- **Phase ID confusion**: Phase commands use DB integer IDs, not phase numbers — must be clearly documented in workflows
 - **Maintenance**: New commands require workflow updates — low risk for v3.0 scope
 
 ## Ready for Planning
@@ -180,3 +233,5 @@ No new code dependencies. Phase 7 is **documentation only**:
 - [x] Format decided (plain markdown, client-agnostic)
 - [x] File locations identified
 - [x] Priority tiers defined
+- [x] CLI commands validated against actual implementations (Phase 5 complete)
+- [x] Status transitions and cascading behaviors documented
