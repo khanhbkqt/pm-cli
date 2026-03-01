@@ -269,7 +269,7 @@ Redesign the Plans Board page into a premium Jira-style hierarchy tree view with
 | Phase | Name | Status | Plans |
 |-------|------|--------|-------|
 | 1 | Design System & Hierarchy Layout | ✅ Complete | 2 |
-| 2 | Tree Rows & Progress Indicators | ⬜ Not Started | 0 |
+| 2 | Tree Rows & Progress Indicators | ✅ Complete | 1 |
 | 3 | Filtering, Polish & Interactions | ⬜ Not Started | 0 |
 
 ---
@@ -282,7 +282,7 @@ Redesign the Plans Board page into a premium Jira-style hierarchy tree view with
 ---
 
 ### Phase 2: Tree Rows & Progress Indicators
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Implement milestone, phase, and plan rows as indented tree items with progress bars, status badges, and plan counts.
 **Depends on**: Phase 1
 

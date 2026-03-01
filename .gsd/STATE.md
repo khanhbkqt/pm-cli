@@ -4,19 +4,19 @@
 
 - **Milestone**: v3.3-board-redesign — Plans Board Redesign
 - **Phase**: 2 — Tree Rows & Progress Indicators
-- **Status**: Planning complete, ready for execution
+- **Status**: Completed
 
 ## Last Session Summary
 
-Phase 1 executed successfully. 2 plans, 3 tasks completed.
+Phase 2 executed successfully. 1 plan, 2 tasks completed.
 
-- Plan 1.1: Added all missing CSS design tokens (aliases, spacing, radius, tree-view) to `index.css`
-- Plan 1.2: Rewrote `BoardPage.tsx` and `BoardPage.css` as Jira-style hierarchy tree table
+- Plan 2.1: Created ProgressBar component and integrated it into the BoardPage tree rows.
 
 Commits:
-- `feat(phase-1): add missing CSS design tokens to index.css`
-- `feat(phase-1): rewrite BoardPage as Jira-style tree table layout`
+- `feat(phase-2): Create ProgressBar Component`
+- `feat(phase-2): Integrate ProgressBar into BoardPage`
+- `docs(phase-2): complete tree rows & progress indicators`
 
 ## Next Steps
 
-1. `/execute 2` — Execute Phase 2 plans
+1. `/plan 3` — Plan Phase 3 (Filtering, Polish & Interactions)
