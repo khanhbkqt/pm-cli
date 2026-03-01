@@ -148,6 +148,6 @@ Make the agent workflow guide installable on multiple AI coding clients, transla
 | 3 | Cursor & Codex | ✅ Complete | 1 |
 | 4 | OpenCode & CLI Command | ✅ Complete | 1 |
 | 5 | Gemini CLI & Antigravity Rules | ✅ Complete | 1 |
-| 6 | Tests & Documentation | Not Started | 1 |
+| 6 | Tests & Documentation | ✅ Complete | 1 |
 
 </details>
