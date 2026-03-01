@@ -4,7 +4,7 @@
 
 ## Overview
 
-PM CLI is a local-first project management tool with a CLI interface and web dashboard. All data is stored in a single SQLite database (`.pm/data.db`) per project. There is no background server process — the database is accessed directly, and the web dashboard runs an embedded Express server on demand.
+PM CLI is a local-first project management tool with a CLI interface, web dashboard, and GSD-inspired workflow engine. All data is stored in a single SQLite database (`.pm/data.db`) per project. There is no background server process — the database is accessed directly, and the web dashboard runs an embedded Express server on demand.
 
 ## System Diagram
 
@@ -14,10 +14,12 @@ PM CLI is a local-first project management tool with a CLI interface and web das
 │  (Commander.js)  │     │  (TypeScript) │     │  (better-sqlite3)│
 └─────────────────┘     └──────┬───────┘     └─────────────────┘
                                │
-                        ┌──────┴──────┐
-                        │   Express    │
-                        │   Server     │
-                        └──────┬──────┘
+              ┌────────────────┼────────────────┐
+              │                │                │
+       ┌──────┴──────┐  ┌──────┴──────┐  ┌──────┴──────┐
+       │   Workflow   │  │   Express    │  │   Install    │
+       │   Engine     │  │   Server     │  │   Adapters   │
+       └─────────────┘  └──────┬──────┘  └─────────────┘
                                │
                         ┌──────┴──────┐
                         │   React      │
@@ -43,6 +45,11 @@ Commander.js command definitions and argument parsing. Each command file in `src
 - `commands/context.ts` — `pm context set|get|list|search`
 - `commands/dashboard.ts` — `pm dashboard`
 - `commands/status.ts` — `pm status`
+- `commands/milestone.ts` — `pm milestone create|list|show|update|complete`
+- `commands/phase.ts` — `pm phase add|list|show|update`
+- `commands/plan.ts` — `pm plan create|list|show|update`
+- `commands/progress.ts` — `pm progress`
+- `commands/install.ts` — `pm install <client>`
 
 ### Core Layer (`src/core/`)
 
@@ -54,6 +61,11 @@ Pure business logic — no I/O formatting, no CLI concerns. Each module exposes 
 - `context.ts` — Context sharing (set, get, list, search)
 - `init.ts` — Project initialization (create DB, config)
 - `identity.ts` — Agent identity resolution (`--agent` flag or `PM_AGENT` env)
+- `milestone.ts` — Milestone CRUD (create, list, show, update, complete)
+- `phase.ts` — Phase management within milestones (add, list, show, update)
+- `plan.ts` — Execution plan management within phases (create, list, show, update)
+- `workflow.ts` — State machine (transitions, validation rules, cascading status)
+- `install/` — Multi-client adapter system (see Install Layer below)
 
 ### Database Layer (`src/db/`)
 
@@ -61,7 +73,7 @@ SQLite wrapper using `better-sqlite3` (synchronous API). Handles schema creation
 
 **Files:**
 - `connection.ts` — Database connection factory
-- `schema.ts` — Table definitions and migrations
+- `schema.ts` — Table definitions and migrations (includes `milestones`, `phases`, `plans`, `workflow_state` tables)
 - `types.ts` — TypeScript type definitions for DB rows
 - `index.ts` — Public exports
 
@@ -78,8 +90,24 @@ Express HTTP server with REST API routes. Started by `pm dashboard`, serves the 
 
 **Files:**
 - `app.ts` — Express app setup, middleware, static serving
-- `routes/` — API route handlers (tasks, agents, context, status)
+- `routes/` — API route handlers (tasks, agents, context, status, progress)
 - `utils.ts` — Server utilities (port finding, etc.)
+
+### Install Layer (`src/core/install/`)
+
+Multi-client adapter system that translates canonical agent workflow instructions into each AI client's native configuration format. Supports writing single files or directories of workflow markdown files.
+
+**Files:**
+- `registry.ts` — Client detection and adapter registry
+- `template.ts` — Template loader (`loadTemplate`, `loadWorkflowTemplates`, `getWorkflowsDir`)
+- `workflow-index.ts` — Builds the workflow index table (`buildWorkflowIndex`)
+- `adapters/antigravity.ts` — Writes `.agent/workflows/*.md` + `.agent/rules/*.md`
+- `adapters/claude-code.ts` — Writes `CLAUDE.md` with embedded workflow index
+- `adapters/cursor.ts` — Writes `.cursor/rules/*.mdc` workflow files
+- `adapters/codex.ts` — Writes `AGENTS.md` with embedded workflow index
+- `adapters/opencode.ts` — Writes `AGENTS.md` + `opencode.json`
+- `adapters/gemini-cli.ts` — Writes `GEMINI.md` with embedded workflow index
+- `index.ts` — Public exports
 
 ### Dashboard (`dashboard/`)
 
@@ -95,6 +123,16 @@ User types `pm task list --agent claude`
     → commands/task.ts calls core/task.ts
       → core/task.ts queries SQLite via db/connection.ts
         → output/formatter.ts renders result (table or JSON)
+```
+
+### Workflow Transition
+
+```
+User types `pm milestone update v1 --status active`
+  → commands/milestone.ts resolves identity
+    → core/milestone.ts calls core/workflow.ts
+      → workflow.ts validates transition (planning → active)
+        → SQLite update + cascading state changes
 ```
 
 ### Dashboard Request
@@ -116,6 +154,8 @@ React component fetches /api/tasks
 | Core logic separated from I/O | Testable, reusable by both CLI and API |
 | Synchronous DB (better-sqlite3) | Simpler code, no async overhead for local-only tool |
 | Express embedded (not standalone) | Dashboard is optional, no persistent process |
+| GSD-inspired workflow engine | Project lifecycle (milestones → phases → plans) enforced by a state machine — prevents invalid status transitions and ensures structured delivery |
+| Multi-client install adapters | Canonical workflow instructions adapted to each AI client's native config format — one source of truth, multiple targets |
 
 ## Key Files Reference
 
@@ -125,9 +165,16 @@ React component fetches /api/tasks
 | `src/core/task.ts` | Task business logic |
 | `src/core/agent.ts` | Agent business logic |
 | `src/core/context.ts` | Context business logic |
+| `src/core/milestone.ts` | Milestone CRUD and lifecycle |
+| `src/core/phase.ts` | Phase management within milestones |
+| `src/core/plan.ts` | Execution plan management |
+| `src/core/workflow.ts` | State machine transitions and validation |
+| `src/core/install/registry.ts` | Client detection and adapter lookup |
+| `src/core/install/template.ts` | Template and workflow file loader |
 | `src/db/schema.ts` | Database schema definitions |
 | `src/server/app.ts` | Express app configuration |
 | `dashboard/src/App.tsx` | React app entry |
+| `docs/agent-guide/` | Agent instruction files and workflow templates |
 | `package.json` | Scripts, dependencies |
 | `tsup.config.ts` | CLI build configuration |
 | `vitest.config.ts` | Test configuration |
