@@ -3,15 +3,16 @@
 ## Current Position
 
 - **Milestone**: v3.3-board-redesign — Plans Board Redesign
-- **Phase**: Not started
-- **Status**: Milestone planned
+- **Phase**: 1 — Design System & Hierarchy Layout
+- **Status**: Plans ready for execution
 
 ## Last Session Summary
 
-Created milestone v3.3-board-redesign to redesign the Plans Board into a Jira-style hierarchy tree view.
-Previous milestone v3.2-gsd-workflows completed and archived.
+Created Phase 1 execution plans for milestone v3.3-board-redesign.
+Plans are in `.gsd/phases/1/`.
 
 ## Next Steps
 
-1. `/plan 1` — Plan Phase 1: Design System & Hierarchy Layout
-2. `/execute 1` — Implement Phase 1
+1. `/execute 1` — Execute Phase 1 plans
+   - Wave 1: Plan 1.1 — Add missing CSS design tokens to `index.css`
+   - Wave 2: Plan 1.2 — Rewrite BoardPage as Jira-style tree table layout
