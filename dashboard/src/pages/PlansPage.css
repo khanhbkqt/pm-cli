@@ -1,0 +1,238 @@
+/* ─── Plans Page ───────────────────────────────────── */
+.plans-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ─── Breadcrumb ───────────────────────────────────── */
+.plans-page__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.plans-page__breadcrumb a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+}
+
+.plans-page__breadcrumb a:hover {
+    opacity: 0.8;
+}
+
+.plans-page__breadcrumb-sep {
+    opacity: 0.4;
+}
+
+.plans-page__breadcrumb-current {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* ─── Header ───────────────────────────────────────── */
+.plans-page__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.plans-page__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.plans-page__subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ─── Toolbar ──────────────────────────────────────── */
+.plans-page__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.plans-page__status-filter {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    border: 1px solid var(--border-color);
+}
+
+.plans-page__status-btn {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.plans-page__status-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.plans-page__status-btn--active {
+    background: var(--accent-blue);
+    color: #0f0f23;
+    font-weight: 600;
+}
+
+.plans-page__status-btn--active:hover {
+    background: var(--accent-blue);
+    color: #0f0f23;
+}
+
+/* ─── Kanban Board ─────────────────────────────────── */
+.plans-kanban {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    min-height: 300px;
+}
+
+.plans-kanban__column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.plans-kanban__column-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 4px;
+}
+
+.plans-kanban__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.plans-kanban__column-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.plans-kanban__column-count {
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: var(--bg-tertiary);
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.plans-kanban__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.plans-kanban__empty {
+    font-size: 12px;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    text-align: center;
+    padding: 24px 8px;
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-sm);
+}
+
+/* ─── Plan Card ────────────────────────────────────── */
+.plan-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.plan-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.plan-card__name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.plan-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.plan-card__wave {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(79, 195, 247, 0.1);
+    color: var(--accent-blue);
+}
+
+.plan-card__status {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.plan-card__time {
+    font-size: 11px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin-left: auto;
+}
+
+/* ─── Responsive ───────────────────────────────────── */
+@media (max-width: 1024px) {
+    .plans-kanban {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .plans-kanban {
+        grid-template-columns: 1fr;
+    }
+
+    .plans-page__toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .plans-page__status-filter {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
