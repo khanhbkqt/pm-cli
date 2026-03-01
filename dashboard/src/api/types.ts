@@ -86,5 +86,15 @@ export interface StatusResponse {
     context: {
         total: number;
     };
-    recent_plans: Plan[];
 }
+
+/** Board hierarchy types for /api/board */
+export interface BoardPhase extends Phase {
+    plans: Plan[];
+}
+
+export interface BoardMilestone extends Milestone {
+    phases: BoardPhase[];
+}
+
+export type BoardData = BoardMilestone[];

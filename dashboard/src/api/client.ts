@@ -1,4 +1,4 @@
-import type { StatusResponse, Plan, Agent, ContextEntry, Milestone, PhaseWithPlanCounts, PhasesSummary } from './types';
+import type { StatusResponse, Plan, Agent, ContextEntry, Milestone, PhaseWithPlanCounts, PhasesSummary, BoardMilestone } from './types';
 
 /**
  * Base GET fetch wrapper with error handling.
@@ -78,3 +78,9 @@ export async function fetchPlanById(id: number): Promise<Plan> {
 
 // Re-export Plan for downstream consumers
 export type { Plan };
+
+/** Fetch the full board hierarchy (Milestones → Phases → Plans). */
+export async function fetchBoard(): Promise<BoardMilestone[]> {
+    const res = await apiFetch<{ board: BoardMilestone[] }>('/api/board');
+    return res.board;
+}
