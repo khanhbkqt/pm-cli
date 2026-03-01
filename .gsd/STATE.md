@@ -3,20 +3,16 @@
 ## Current Position
 
 - **Milestone**: v3.1-dashboard-upgrade — Dashboard Upgrade
-- **Phase**: 7 (not started)
-- **Task**: Planning
-- **Status**: Phase 6 complete, Phase 7 added
+- **Phase**: 7
+- **Task**: Planning complete
+- **Status**: Ready for execution
 
 ## Last Session Summary
 
-Phase 6 executed successfully. 2 plans completed:
-- Removed dead `TasksBoard` code (import, route, files)
-- Fixed flaky CLI test timeouts (`testTimeout: 30000` in vitest config)
-- Full suite: 21/21 files, 253/253 tests PASS
-
-Phase 7 added: **Hierarchy Board View** — Plans board grouped by Milestone → Phase.
+Phase 7 planned successfully. 2 plans created across 2 waves:
+- Plan 7.1: Backend API for Board & Frontend Types (Wave 1)
+- Plan 7.2: Hierarchy Board UI (Wave 2)
 
 ## Next Steps
 
-1. `/plan 7` — Create execution plans for Hierarchy Board View phase
-2. `/execute 7` — Execute once plans are created
+1. `/execute 7` — run all plans
