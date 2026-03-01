@@ -12,7 +12,7 @@
 | Phase | Name | Status |
 |-------|------|--------|
 | 1 | DB Schema & Models | ✅ Complete |
-| 2 | Milestone & Phase CLI | 🔵 Planned |
+| 2 | Milestone & Phase CLI | ✅ Complete |
 | 3 | Workflow State Machine | ✅ Complete |
 | 4 | Plan & Execution CLI | ✅ Complete |
 | 5 | Progress & Dashboard | ✅ Complete |
