@@ -1,22 +1,15 @@
-import type { Task } from '../api';
+import type { Plan } from '../api';
 import './ActivityFeed.css';
 
 interface ActivityFeedProps {
-    tasks: Task[];
+    plans: Plan[];
 }
 
 const STATUS_COLORS: Record<string, string> = {
-    todo: 'var(--text-secondary)',
-    'in-progress': 'var(--accent-blue)',
-    done: 'var(--accent-green)',
-    blocked: 'var(--accent-red)',
-};
-
-const PRIORITY_COLORS: Record<string, string> = {
-    low: 'var(--accent-green)',
-    medium: 'var(--accent-orange)',
-    high: '#ff7043',
-    urgent: 'var(--accent-red)',
+    pending: 'var(--text-secondary)',
+    in_progress: 'var(--accent-blue)',
+    completed: 'var(--accent-green)',
+    failed: 'var(--accent-red)',
 };
 
 function formatStatus(status: string): string {
@@ -40,46 +33,41 @@ function relativeTime(dateStr: string): string {
     return `${Math.floor(days / 30)}mo ago`;
 }
 
-export function ActivityFeed({ tasks }: ActivityFeedProps) {
+export function ActivityFeed({ plans }: ActivityFeedProps) {
     return (
         <div className="activity-panel">
             <h3 className="panel-title">Recent Activity</h3>
-            {tasks.length === 0 ? (
+            {plans.length === 0 ? (
                 <div className="activity__empty">
                     <span className="activity__empty-icon">📝</span>
                     <p>No recent activity</p>
                 </div>
             ) : (
                 <div className="activity-feed">
-                    {tasks.map((task) => (
-                        <div key={task.id} className="activity-item">
+                    {plans.map((plan) => (
+                        <div key={plan.id} className="activity-item">
                             <div className="activity-item__timeline">
                                 <div
                                     className="activity-item__dot"
-                                    style={{ background: STATUS_COLORS[task.status] ?? 'var(--text-secondary)' }}
+                                    style={{ background: STATUS_COLORS[plan.status] ?? 'var(--text-secondary)' }}
                                 />
                                 <div className="activity-item__line" />
                             </div>
                             <div className="activity-item__content">
                                 <div className="activity-item__header">
-                                    <span
-                                        className="activity-item__priority"
-                                        style={{ background: PRIORITY_COLORS[task.priority] ?? 'var(--text-secondary)' }}
-                                        title={`Priority: ${task.priority}`}
-                                    />
-                                    <span className="activity-item__title">{task.title}</span>
+                                    <span className="activity-item__title">{plan.name}</span>
                                 </div>
                                 <div className="activity-item__footer">
                                     <span
                                         className="activity-item__status"
                                         style={{
-                                            color: STATUS_COLORS[task.status] ?? 'var(--text-secondary)',
-                                            background: `color-mix(in srgb, ${STATUS_COLORS[task.status] ?? 'var(--text-secondary)'} 12%, transparent)`,
+                                            color: STATUS_COLORS[plan.status] ?? 'var(--text-secondary)',
+                                            background: `color-mix(in srgb, ${STATUS_COLORS[plan.status] ?? 'var(--text-secondary)'} 12%, transparent)`,
                                         }}
                                     >
-                                        {formatStatus(task.status)}
+                                        {formatStatus(plan.status)}
                                     </span>
-                                    <span className="activity-item__time">{relativeTime(task.updated_at)}</span>
+                                    <span className="activity-item__time">{relativeTime(plan.created_at)}</span>
                                 </div>
                             </div>
                         </div>

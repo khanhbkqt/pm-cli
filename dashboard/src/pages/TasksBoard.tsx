@@ -1,138 +1,104 @@
-import { useState, useCallback } from 'react';
 import { useApi } from '../hooks/useApi';
-import { fetchTasks, fetchAgents, updateTask } from '../api/client';
-import type { Task } from '../api/types';
-import { FilterBar } from '../components/FilterBar';
-import { KanbanBoard } from '../components/KanbanBoard';
-import { ListView } from '../components/ListView';
-import { TaskDetailPanel } from '../components/TaskDetailPanel';
-import { CreateTaskModal } from '../components/CreateTaskModal';
+import { fetchStatus } from '../api';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { EmptyState } from '../components/EmptyState';
 import './TasksBoard.css';
 
+const STATUS_COLORS: Record<string, string> = {
+    pending: 'var(--text-secondary)',
+    in_progress: 'var(--accent-blue)',
+    completed: 'var(--accent-green)',
+    failed: 'var(--accent-red)',
+};
+
+function formatStatus(s: string) {
+    return s.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
 export function TasksBoard() {
-    // Filters
-    const [statusFilter, setStatusFilter] = useState('all');
-    const [priorityFilter, setPriorityFilter] = useState('all');
-    const [agentFilter, setAgentFilter] = useState('all');
-    const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
+    const { data: status, loading, error, refetch } = useApi(fetchStatus);
 
-    // CRUD state
-    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-    const [showCreateModal, setShowCreateModal] = useState(false);
-
-    // Data fetching
-    const fetchTasksCb = useCallback(() => fetchTasks(), []);
-    const fetchAgentsCb = useCallback(() => fetchAgents(), []);
-    const { data: tasks, loading: tasksLoading, error: tasksError, refetch: refetchTasks } = useApi(fetchTasksCb);
-    const { data: agents, loading: agentsLoading } = useApi(fetchAgentsCb);
-
-    // Client-side filtering
-    const filteredTasks = (tasks || []).filter((t) => {
-        if (statusFilter !== 'all' && t.status !== statusFilter) return false;
-        if (priorityFilter !== 'all' && t.priority !== priorityFilter) return false;
-        if (agentFilter !== 'all' && t.assigned_to !== agentFilter) return false;
-        return true;
-    });
-
-    // Drag-and-drop status change
-    const handleStatusChange = async (taskId: number, newStatus: string) => {
-        try {
-            await updateTask(taskId, { status: newStatus });
-            refetchTasks();
-        } catch (err) {
-            console.error('Failed to update task status:', err);
-        }
-    };
-
-    const handleTaskClick = (task: Task) => {
-        setSelectedTask(task);
-    };
-
-    const handleTaskUpdate = () => {
-        setSelectedTask(null);
-        refetchTasks();
-    };
-
-    const handleTaskCreated = () => {
-        refetchTasks();
-    };
-
-    if (tasksLoading || agentsLoading) {
+    if (loading) {
         return (
             <div className="tasks-board">
-                <LoadingSpinner message="Loading tasks..." />
+                <LoadingSpinner message="Loading plans..." />
             </div>
         );
     }
 
-    if (tasksError) {
+    if (error) {
         return (
             <div className="tasks-board">
-                <ErrorMessage message={tasksError} onRetry={refetchTasks} />
+                <ErrorMessage message={error} onRetry={refetch} />
             </div>
         );
     }
+
+    const plans = status?.recent_plans ?? [];
+
+    if (plans.length === 0) {
+        return (
+            <div className="tasks-board">
+                <EmptyState
+                    icon="📋"
+                    title="No plans found"
+                    description="Run pm plan to create execution plans for a phase."
+                />
+            </div>
+        );
+    }
+
+    // Group plans by status
+    const columns: Array<{ key: string; label: string }> = [
+        { key: 'pending', label: 'Pending' },
+        { key: 'in_progress', label: 'In Progress' },
+        { key: 'completed', label: 'Completed' },
+        { key: 'failed', label: 'Failed' },
+    ];
 
     return (
         <div className="tasks-board">
-            <FilterBar
-                statusFilter={statusFilter}
-                priorityFilter={priorityFilter}
-                agentFilter={agentFilter}
-                viewMode={viewMode}
-                agents={agents || []}
-                onStatusChange={setStatusFilter}
-                onPriorityChange={setPriorityFilter}
-                onAgentChange={setAgentFilter}
-                onViewModeChange={setViewMode}
-                onCreateClick={() => setShowCreateModal(true)}
-            />
-
-            {filteredTasks.length === 0 && (
-                <EmptyState
-                    icon="📋"
-                    title="No tasks found"
-                    description={tasks?.length === 0
-                        ? 'Create your first task to get started.'
-                        : 'Try adjusting the filters.'}
-                    action={tasks?.length === 0 ? {
-                        label: 'Create Task',
-                        onClick: () => setShowCreateModal(true),
-                    } : undefined}
-                />
-            )}
-
-            {filteredTasks.length > 0 && viewMode === 'kanban' && (
-                <KanbanBoard
-                    tasks={filteredTasks}
-                    onTaskClick={handleTaskClick}
-                    onStatusChange={handleStatusChange}
-                />
-            )}
-
-            {filteredTasks.length > 0 && viewMode === 'list' && (
-                <ListView tasks={filteredTasks} onTaskClick={handleTaskClick} />
-            )}
-
-            {selectedTask && (
-                <TaskDetailPanel
-                    task={selectedTask}
-                    agents={agents || []}
-                    onClose={() => setSelectedTask(null)}
-                    onUpdate={handleTaskUpdate}
-                />
-            )}
-
-            {showCreateModal && (
-                <CreateTaskModal
-                    agents={agents || []}
-                    onClose={() => setShowCreateModal(false)}
-                    onCreate={handleTaskCreated}
-                />
-            )}
+            <div className="board-header">
+                <h2 className="board-title">Plans Board</h2>
+                <span className="board-subtitle">{plans.length} recent plan{plans.length !== 1 ? 's' : ''}</span>
+            </div>
+            <div className="kanban-board">
+                {columns.map(col => {
+                    const colPlans = plans.filter(p => p.status === col.key);
+                    return (
+                        <div key={col.key} className="kanban-column">
+                            <div className="kanban-column__header">
+                                <span
+                                    className="kanban-column__dot"
+                                    style={{ background: STATUS_COLORS[col.key] }}
+                                />
+                                <span className="kanban-column__title">{col.label}</span>
+                                <span className="kanban-column__count">{colPlans.length}</span>
+                            </div>
+                            <div className="kanban-column__cards">
+                                {colPlans.length === 0 ? (
+                                    <div className="kanban-column__empty">No {col.label.toLowerCase()} plans</div>
+                                ) : (
+                                    colPlans.map(plan => (
+                                        <div key={plan.id} className="task-card">
+                                            <div className="task-card__title">{plan.name}</div>
+                                            <div className="task-card__meta">
+                                                <span
+                                                    className="task-card__status"
+                                                    style={{ color: STATUS_COLORS[plan.status] }}
+                                                >
+                                                    {formatStatus(plan.status)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 }

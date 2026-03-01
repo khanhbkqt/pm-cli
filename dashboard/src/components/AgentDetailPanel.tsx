@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import type { Agent, Task } from '../api/types';
-import { fetchAgentById, fetchTasks } from '../api/client';
+import type { Agent } from '../api/types';
+import { fetchAgentById } from '../api/client';
 import { getInitials, hashColor } from '../utils';
 import './AgentDetailPanel.css';
 
@@ -9,23 +9,14 @@ interface AgentDetailPanelProps {
     onClose: () => void;
 }
 
-const statusLabels: Record<string, string> = {
-    todo: 'To Do',
-    'in-progress': 'In Progress',
-    done: 'Done',
-    blocked: 'Blocked',
-};
-
 export function AgentDetailPanel({ agentId, onClose }: AgentDetailPanelProps) {
     const [agent, setAgent] = useState<Agent | null>(null);
-    const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!agentId) {
             setAgent(null);
-            setTasks([]);
             return;
         }
 
@@ -33,14 +24,10 @@ export function AgentDetailPanel({ agentId, onClose }: AgentDetailPanelProps) {
         setLoading(true);
         setError(null);
 
-        Promise.all([
-            fetchAgentById(agentId),
-            fetchTasks({ assigned_to: agentId }),
-        ])
-            .then(([agentData, taskData]) => {
+        fetchAgentById(agentId)
+            .then((agentData) => {
                 if (!cancelled) {
                     setAgent(agentData);
-                    setTasks(taskData);
                     setLoading(false);
                 }
             })
@@ -118,34 +105,7 @@ export function AgentDetailPanel({ agentId, onClose }: AgentDetailPanelProps) {
                                 </div>
                             </div>
 
-                            {/* Assigned Tasks */}
-                            <div className="agent-detail__tasks-section">
-                                <h4 className="agent-detail__tasks-title">
-                                    Assigned Tasks ({tasks.length})
-                                </h4>
-                                {tasks.length === 0 ? (
-                                    <p className="agent-detail__no-tasks">No tasks assigned</p>
-                                ) : (
-                                    <div className="agent-detail__tasks-list">
-                                        {tasks.map((t) => (
-                                            <div key={t.id} className="agent-detail__task-item">
-                                                <div className="agent-detail__task-title">
-                                                    <span className="agent-detail__task-id">#{t.id}</span>
-                                                    {t.title}
-                                                </div>
-                                                <div className="agent-detail__task-badges">
-                                                    <span className={`agent-detail__status-badge agent-detail__status-badge--${t.status}`}>
-                                                        {statusLabels[t.status] || t.status}
-                                                    </span>
-                                                    <span className={`agent-detail__priority-badge agent-detail__priority-badge--${t.priority}`}>
-                                                        {t.priority}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+
                         </>
                     ) : null}
                 </div>

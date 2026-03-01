@@ -10,25 +10,16 @@ export interface Agent {
     created_at: string;
 }
 
-export interface Task {
+export interface Plan {
     id: number;
-    title: string;
-    description: string | null;
-    status: string;
-    priority: 'low' | 'medium' | 'high' | 'urgent';
-    assigned_to: string | null;
-    created_by: string;
-    parent_id: number | null;
+    phase_id: number;
+    number: number;
+    name: string;
+    wave: number;
+    status: 'pending' | 'in_progress' | 'completed' | 'failed';
+    content: string | null;
     created_at: string;
-    updated_at: string;
-}
-
-export interface TaskComment {
-    id: number;
-    task_id: number;
-    agent_id: string;
-    content: string;
-    created_at: string;
+    completed_at: string | null;
 }
 
 export interface ContextEntry {
@@ -42,10 +33,9 @@ export interface ContextEntry {
 }
 
 export interface StatusResponse {
-    tasks: {
+    plans: {
         total: number;
         by_status: Record<string, number>;
-        by_priority: Record<string, number>;
     };
     agents: {
         total: number;
@@ -54,27 +44,5 @@ export interface StatusResponse {
     context: {
         total: number;
     };
-    recent_tasks: Task[];
-}
-
-/* ─── Mutation input types ─────────────────────────── */
-
-export interface CreateTaskInput {
-    title: string;
-    description?: string;
-    priority?: string;
-    assigned_to?: string;
-    created_by: string;
-}
-
-export interface UpdateTaskInput {
-    title?: string;
-    description?: string;
-    status?: string;
-    priority?: string;
-}
-
-export interface AddCommentInput {
-    agent_id: string;
-    content: string;
+    recent_plans: Plan[];
 }

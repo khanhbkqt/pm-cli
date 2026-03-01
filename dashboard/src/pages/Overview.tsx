@@ -46,7 +46,7 @@ export function Overview() {
         <div className="overview">
             <StatsCards status={status} />
             <div className="overview__panels">
-                <ActivityFeed tasks={status.recent_tasks} />
+                <ActivityFeed plans={status.recent_plans} />
                 <AgentList agents={agents ?? []} />
             </div>
         </div>

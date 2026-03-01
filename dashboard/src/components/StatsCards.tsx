@@ -38,10 +38,10 @@ function StatusBar({ byStatus }: { byStatus: Record<string, number> }) {
     if (total === 0) return null;
 
     const segments = [
-        { key: 'done', color: 'var(--accent-green)', value: byStatus.done ?? 0 },
+        { key: 'completed', color: 'var(--accent-green)', value: byStatus.completed ?? 0 },
         { key: 'in_progress', color: 'var(--accent-blue)', value: byStatus.in_progress ?? 0 },
-        { key: 'todo', color: 'var(--text-secondary)', value: byStatus.todo ?? 0 },
-        { key: 'blocked', color: 'var(--accent-red)', value: byStatus.blocked ?? 0 },
+        { key: 'pending', color: 'var(--text-secondary)', value: byStatus.pending ?? 0 },
+        { key: 'failed', color: 'var(--accent-red)', value: byStatus.failed ?? 0 },
     ];
 
     return (
@@ -65,14 +65,14 @@ function StatusBar({ byStatus }: { byStatus: Record<string, number> }) {
 export function StatsCards({ status }: StatsCardsProps) {
     return (
         <div className="stats-grid">
-            <div className="stat-card stat-card--tasks">
+            <div className="stat-card stat-card--plans">
                 <div className="stat-card__icon">📋</div>
                 <div className="stat-card__body">
                     <div className="stat-card__value">
-                        <AnimatedCount value={status.tasks.total} />
+                        <AnimatedCount value={status.plans.total} />
                     </div>
-                    <div className="stat-card__label">Total Tasks</div>
-                    <StatusBar byStatus={status.tasks.by_status} />
+                    <div className="stat-card__label">Total Plans</div>
+                    <StatusBar byStatus={status.plans.by_status} />
                 </div>
             </div>
 
@@ -80,7 +80,7 @@ export function StatsCards({ status }: StatsCardsProps) {
                 <div className="stat-card__icon">🔄</div>
                 <div className="stat-card__body">
                     <div className="stat-card__value">
-                        <AnimatedCount value={status.tasks.by_status.in_progress ?? 0} />
+                        <AnimatedCount value={status.plans.by_status.in_progress ?? 0} />
                     </div>
                     <div className="stat-card__label">In Progress</div>
                 </div>
