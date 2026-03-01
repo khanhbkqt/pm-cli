@@ -10,8 +10,7 @@
 
 <!-- Active todos below -->
 
-- [ ] Verify `pm` CLI name doesn't conflict with other tools `medium` — 2026-02-28
-- [ ] Research CLI framework options (Commander.js vs yargs vs oclif) `low` — 2026-02-28
+
 
 ---
 
