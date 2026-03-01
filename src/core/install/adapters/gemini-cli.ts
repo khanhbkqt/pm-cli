@@ -7,7 +7,7 @@ import { buildWorkflowIndex } from '../workflow-index.js';
 
 const GEMINI_FILE = 'GEMINI.md';
 
-const WORKFLOW_DIR = '.gemini/workflows';
+const COMMANDS_DIR = '.gemini/commands/pm';
 const SKILLS_DIR = '.gemini/skills';
 
 /** Section marker used to delimit PM CLI content inside GEMINI.md. */
@@ -75,16 +75,18 @@ export class GeminiCliAdapter implements ClientAdapter {
 
         files.push(geminiPath);
 
-        // --- Individual workflow files ---
-        const workflowDir = path.join(projectRoot, WORKFLOW_DIR);
-        fs.mkdirSync(workflowDir, { recursive: true });
+        // --- Individual workflow files → .gemini/commands/pm/<command>.md ---
+        const commandsDir = path.join(projectRoot, COMMANDS_DIR);
+        fs.mkdirSync(commandsDir, { recursive: true });
         for (const [filename, content] of workflows) {
-            const wfPath = path.join(workflowDir, filename);
-            if (fs.existsSync(wfPath)) {
-                warnings.push(`Overwriting existing ${WORKFLOW_DIR}/${filename}`);
+            // Strip the 'pm-' prefix: pm-execute-phase.md → execute-phase.md
+            const commandFilename = filename.replace(/^pm-/, '');
+            const cmdPath = path.join(commandsDir, commandFilename);
+            if (fs.existsSync(cmdPath)) {
+                warnings.push(`Overwriting existing ${COMMANDS_DIR}/${commandFilename}`);
             }
-            fs.writeFileSync(wfPath, content, 'utf-8');
-            files.push(wfPath);
+            fs.writeFileSync(cmdPath, content, 'utf-8');
+            files.push(cmdPath);
         }
 
         // --- Individual skill files ---
@@ -134,14 +136,14 @@ export class GeminiCliAdapter implements ClientAdapter {
             removed.push(geminiPath);
         }
 
-        // Remove individual workflow files (pm-*.md)
-        const wfDir = path.join(projectRoot, WORKFLOW_DIR);
-        if (fs.existsSync(wfDir)) {
-            for (const entry of fs.readdirSync(wfDir)) {
-                if (entry.startsWith('pm-') && entry.endsWith('.md')) {
-                    const wfPath = path.join(wfDir, entry);
-                    fs.unlinkSync(wfPath);
-                    removed.push(wfPath);
+        // Remove workflow command files (.gemini/commands/pm/*.md)
+        const cmdDir = path.join(projectRoot, COMMANDS_DIR);
+        if (fs.existsSync(cmdDir)) {
+            for (const entry of fs.readdirSync(cmdDir)) {
+                if (entry.endsWith('.md')) {
+                    const cmdPath = path.join(cmdDir, entry);
+                    fs.unlinkSync(cmdPath);
+                    removed.push(cmdPath);
                 }
             }
         }
@@ -167,7 +169,7 @@ export class GeminiCliAdapter implements ClientAdapter {
         return {
             type: 'gemini-cli',
             name: 'Gemini CLI',
-            configPaths: [GEMINI_FILE, `${WORKFLOW_DIR}/pm-*.md`, `${SKILLS_DIR}/pm-*.md`],
+            configPaths: [GEMINI_FILE, `${COMMANDS_DIR}/*.md`, `${SKILLS_DIR}/pm-*.md`],
             configFormat: 'markdown',
         };
     }
