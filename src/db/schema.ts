@@ -2,6 +2,8 @@
  * SQLite schema definition — 6 tables for project management + workflow engine.
  */
 
+export const SCHEMA_VERSION = 1;
+
 export const SCHEMA_SQL = `
 -- Agents table
 CREATE TABLE IF NOT EXISTS agents (

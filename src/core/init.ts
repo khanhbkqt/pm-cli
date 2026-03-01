@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { stringify } from 'yaml';
-import { getDatabase } from '../db/index.js';
+import { getDatabase, createDatabase, initializeSchema, runMigrations } from '../db/index.js';
 
 const PM_DIR = '.pm';
 const DB_FILE = 'data.db';
@@ -14,15 +14,30 @@ const CONFIG_FILE = 'config.yaml';
 export async function initProject(name: string, targetDir: string): Promise<void> {
     const pmDir = path.join(targetDir, PM_DIR);
 
-    // Check if already initialized
+    // If already initialized
     if (fs.existsSync(pmDir)) {
-        throw new Error('Project already initialized. .pm/ directory already exists.');
+        const dbPath = path.join(pmDir, DB_FILE);
+        if (fs.existsSync(dbPath)) {
+            // Run schema migrations and report
+            const db = createDatabase(dbPath);
+            const { migrated, fromVersion, toVersion } = runMigrations(db);
+            db.close();
+
+            if (migrated) {
+                console.log(`✓ Schema migrated: v${fromVersion} → v${toVersion}`);
+            } else {
+                console.log(`✓ Schema already up to date (v${toVersion})`);
+            }
+            return;
+        }
+
+        // `.pm/` exists but `data.db` is missing — rebuild DB below
+    } else {
+        // Create .pm/ directory
+        fs.mkdirSync(pmDir, { recursive: true });
     }
 
-    // Create .pm/ directory
-    fs.mkdirSync(pmDir, { recursive: true });
-
-    // Create and initialize SQLite database
+    // Create and initialize fresh SQLite database
     const dbPath = path.join(pmDir, DB_FILE);
     const db = getDatabase(dbPath);
     db.close();

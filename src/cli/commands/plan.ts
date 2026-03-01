@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { handleCommandError } from '../../cli/error.js';
 import {
     createPlan,
     listPlans,
@@ -49,12 +50,7 @@ export function registerPlanCommands(program: Command): void {
                 }
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -76,12 +72,7 @@ export function registerPlanCommands(program: Command): void {
                 console.log(formatPlanList(plans, json));
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -103,12 +94,7 @@ export function registerPlanCommands(program: Command): void {
                 console.log(formatPlan(found, json));
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -149,12 +135,7 @@ export function registerPlanCommands(program: Command): void {
                 }
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -171,12 +152,7 @@ export function registerPlanCommands(program: Command): void {
                 console.log(formatPlanBoard(plans, json));
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 }

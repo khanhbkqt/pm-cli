@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { handleCommandError } from '../../cli/error.js';
 import {
     addPhase,
     listPhases,
@@ -60,12 +61,7 @@ export function registerPhaseCommands(program: Command): void {
                 }
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -94,12 +90,7 @@ export function registerPhaseCommands(program: Command): void {
                 console.log(formatPhaseList(phases, json));
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -131,12 +122,7 @@ export function registerPhaseCommands(program: Command): void {
                 }
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -176,12 +162,7 @@ export function registerPhaseCommands(program: Command): void {
                 }
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 }

@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { handleCommandError } from '../../cli/error.js';
 import {
     createMilestone,
     listMilestones,
@@ -47,12 +48,7 @@ export function registerMilestoneCommands(program: Command): void {
                 }
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -69,12 +65,7 @@ export function registerMilestoneCommands(program: Command): void {
                 console.log(formatMilestoneList(milestones, json));
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -106,12 +97,7 @@ export function registerMilestoneCommands(program: Command): void {
                 }
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -151,12 +137,7 @@ export function registerMilestoneCommands(program: Command): void {
                 }
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 }

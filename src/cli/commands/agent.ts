@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { handleCommandError } from '../../cli/error.js';
 import { registerAgent, listAgents, getAgentByName } from '../../core/agent.js';
 import { resolveIdentity, getProjectDb } from '../../core/identity.js';
 import { formatAgent, formatAgentList } from '../../output/formatter.js';
@@ -30,12 +31,7 @@ export function registerAgentCommands(program: Command): void {
                 }
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -51,12 +47,7 @@ export function registerAgentCommands(program: Command): void {
                 console.log(formatAgentList(agents, json));
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -76,12 +67,7 @@ export function registerAgentCommands(program: Command): void {
                 console.log(formatAgent(found, json));
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 
@@ -97,12 +83,7 @@ export function registerAgentCommands(program: Command): void {
                 console.log(formatAgent(me, json));
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 }

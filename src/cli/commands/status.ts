@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { handleCommandError } from '../../cli/error.js';
 import { getProjectDb } from '../../core/identity.js';
 
 /**
@@ -44,12 +45,7 @@ export function registerStatusCommand(program: Command): void {
 
                 db.close();
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 }

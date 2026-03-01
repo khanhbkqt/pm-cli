@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { handleCommandError } from '../../cli/error.js';
 import type { ClientType, GenerateResult, DetectionResult } from '../../core/install/types.js';
 import { getAdapter, getAllAdapters } from '../../core/install/registry.js';
 import { getTemplatePath } from '../../core/install/template.js';
@@ -100,12 +101,7 @@ export function registerInstallCommand(program: Command): void {
 
                 handleInstallClient(clientArg as ClientType, projectRoot, opts.force ?? false, json);
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 }

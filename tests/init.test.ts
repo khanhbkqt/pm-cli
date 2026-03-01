@@ -70,12 +70,15 @@ describe('pm init', () => {
         ]);
     });
 
-    it('errors if .pm already exists', async () => {
+    it('succeeds and migrates if .pm already exists', async () => {
         // Create .pm directory manually
         fs.mkdirSync(path.join(tempDir, '.pm'));
 
-        await expect(initProject('test-project', tempDir)).rejects.toThrow(
-            'Project already initialized'
-        );
+        // Should not throw, should just initialize database inside it
+        await expect(initProject('test-project', tempDir)).resolves.not.toThrow();
+
+        // Ensure DB was actually created inside the existing folder
+        const dbPath = path.join(tempDir, '.pm', 'data.db');
+        expect(fs.existsSync(dbPath)).toBe(true);
     });
 });

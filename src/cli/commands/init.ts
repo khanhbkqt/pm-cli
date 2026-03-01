@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { handleCommandError } from '../../cli/error.js';
 import { initProject } from '../../core/init.js';
 import path from 'path';
 
@@ -13,12 +14,7 @@ export function registerInitCommand(program: Command): void {
             try {
                 await initProject(projectName, targetDir);
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 }

@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { handleCommandError } from '../../cli/error.js';
 import { getProjectDb } from '../../core/identity.js';
 import { createApp, getAvailablePort, openBrowser } from '../../server/index.js';
 
@@ -41,12 +42,7 @@ export function registerDashboardCommand(program: Command): void {
                 process.on('SIGINT', shutdown);
                 process.on('SIGTERM', shutdown);
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Error: ${error.message}`);
-                } else {
-                    console.error('An unexpected error occurred');
-                }
-                process.exit(1);
+                handleCommandError(error);
             }
         });
 }
