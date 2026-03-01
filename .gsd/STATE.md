@@ -3,9 +3,9 @@
 ## Current Position
 
 - **Milestone**: v3.0-workflow-engine — Workflow Engine
-- **Phase**: 7 — Agent Workflow Templates
-- **Task**: Planning complete
-- **Status**: Ready for execution
+- **Phase**: 7 — Agent Workflow Templates (completed)
+- **Task**: All tasks complete
+- **Status**: Verified
 
 ## Active Milestone Phase Status
 
@@ -17,16 +17,17 @@
 | 4 | Plan & Execution CLI | ✅ Complete |
 | 5 | Progress & Dashboard | ✅ Complete |
 | 6 | Tests & Documentation | ⬜ Not Started |
-| 7 | Agent Workflow Templates | 📋 Planned |
+| 7 | Agent Workflow Templates | ✅ Complete |
 | 8 | Install System | ⬜ Not Started |
 
 ## Last Session Summary
 
-Phase 7 planning complete. 3 plans created across 2 waves:
-- Plan 7.1 (wave 1): 6 must-have core lifecycle workflows
-- Plan 7.2 (wave 1): 5 should-have supporting workflows
-- Plan 7.3 (wave 2): 4 nice-to-have utility workflows + cross-verification
+Phase 7 executed successfully. 3 plans across 2 waves completed:
+- Wave 1: Plan 7.1 (6 must-have workflows) + Plan 7.2 (5 should-have workflows)
+- Wave 2: Plan 7.3 (4 nice-to-have workflows + cross-verification of all 15 files)
+
+All 15 pm-* workflow files verified: consistent structure, correct CLI commands, no client-specific directives.
 
 ## Next Steps
 
-1. /execute 7
+1. /execute 8 or /plan 8 — Install System (Multi-file Workflows)

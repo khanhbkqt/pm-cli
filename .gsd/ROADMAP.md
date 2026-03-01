@@ -175,22 +175,26 @@ Xây dựng workflow engine tương tự GSD methodology, tích hợp trực ti�
 | 4 | Plan & Execution CLI | ✅ Complete | 3 |
 | 5 | Progress & Dashboard | ✅ Complete | 2 |
 | 6 | Tests & Documentation | ⬜ Not Started | — |
-| 7 | Agent Workflow Templates | 📋 Planned | 3 |
+| 7 | Agent Workflow Templates | ✅ Complete | 3 |
 | 8 | Install System — Multi-file Workflows | ⬜ Not Started | — |
 
 ---
 
 ### Phase 7: Agent Workflow Templates
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Create GSD-style workflow instruction markdown files that teach agents how to use `pm` CLI for the full project lifecycle — plan, execute, verify, progress, milestone management and session.
 **Depends on**: Phase 5 (Progress & Dashboard), Phase 6 (Tests & Documentation)
 
-**Tasks**:
-- [ ] TBD (run /plan 7 to create)
+**Completed**:
+- [x] 6 must-have core lifecycle workflows (pm-plan-phase, pm-execute-phase, pm-verify-work, pm-progress, pm-new-milestone, pm-complete-milestone)
+- [x] 5 should-have supporting workflows (pm-discuss-phase, pm-audit-milestone, pm-pause, pm-resume, pm-add-phase)
+- [x] 4 nice-to-have utility workflows (pm-new-project, pm-debug, pm-add-todo, pm-check-todos)
+- [x] All 15 files cross-verified for consistency, accuracy, and client-agnostic format
 
 **Verification**:
-- All workflow files installable and readable by agents
-- Core lifecycle (plan → execute → verify → complete) fully described
+- All 15 workflow files exist in `docs/agent-guide/workflows/`
+- Zero XML directives or client-specific content
+- Consistent structure: YAML frontmatter, steps, cascading behavior, success criteria, next steps
 
 ---
 
