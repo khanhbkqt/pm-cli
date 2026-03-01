@@ -19,8 +19,22 @@ PM CLI (`pm`) is a local-first project management tool that serves as a shared p
 - 🕵️ **Agent System** — Register agents, identify who did what, track activity per agent
 - 📝 **Context Sharing** — Set, get, search key-value context entries across collaborators
 - 📊 **Web Dashboard** — Local browser-based project view with Kanban board, stats, and activity feed
+- 🔄 **Workflow Engine** — GSD-inspired lifecycle management (milestones → phases → plans) with state machine transitions
+- 📐 **Agent Workflow Templates** — 15 installable instruction files for plan/execute/verify patterns
 - 🔌 **Multi-Client Install** — One command to install agent guides for Antigravity, Claude Code, Cursor, Codex, OpenCode, and Gemini CLI
 - 🔒 **Local-first** — Everything stays on your machine, zero config, instant startup
+
+## Built on GSD Methodology
+
+PM CLI implements the **Get Shit Done (GSD)** workflow engine — a structured lifecycle for managing projects from specification to delivery:
+
+**SPEC → PLAN → EXECUTE → VERIFY → COMMIT**
+
+- **Milestones** — top-level goals with tracking and completion
+- **Phases** — ordered chunks of work within a milestone
+- **Plans** — atomic execution units with verification criteria
+- **State Machine** — enforced status transitions prevent invalid workflows
+- **Agent Templates** — 15 workflow instruction files teach AI agents the full lifecycle
 
 ## Quick Start
 
@@ -211,6 +225,40 @@ pm install --all
 | `pm context get <key>` | Get a context entry |
 | `pm context list` | List all context entries |
 | `pm context search <query>` | Search context entries |
+
+### Milestones
+
+| Command | Description |
+|---------|-------------|
+| `pm milestone create <id> <name>` | Create a new milestone |
+| `pm milestone list` | List all milestones |
+| `pm milestone show <id>` | Show milestone details and phase summary |
+| `pm milestone update <id>` | Update milestone fields or transition status |
+| `pm milestone complete <id>` | Mark a milestone as complete |
+
+### Phases
+
+| Command | Description |
+|---------|-------------|
+| `pm phase add <name>` | Add a phase to the active milestone |
+| `pm phase list` | List phases for the active milestone |
+| `pm phase show <id>` | Show phase details and associated plans |
+| `pm phase update <id>` | Update phase fields or transition status |
+
+### Plans
+
+| Command | Description |
+|---------|-------------|
+| `pm plan create <name>` | Create an execution plan within a phase |
+| `pm plan list` | List plans (filter by `--phase`, `--status`) |
+| `pm plan show <id>` | Show plan details |
+| `pm plan update <id>` | Update plan fields or transition status |
+
+### Progress
+
+| Command | Description |
+|---------|-------------|
+| `pm progress` | Show current milestone progress dashboard |
 
 ### Install
 
