@@ -7,18 +7,17 @@ updated: 2026-03-01T08:07:00+07:00
 ## Current Position
 
 **Milestone:** v3.0-workflow-engine
-**Phase:** 1 — DB Schema & Models
-**Task:** Phase complete
-**Status:** Ready for Phase 2
+**Phase:** 2 — Milestone & Phase CLI
+**Task:** Planning complete
+**Status:** Ready for execution
 
 ## Last Session Summary
 
-Phase 1 executed: 4 workflow tables added to schema (milestones, phases, plans, workflow_state), 4 TypeScript interfaces, 3 CRUD modules (milestone.ts, phase.ts, plan.ts) with 14 exported functions, plus 3 test files. All 179 tests pass.
+Phase 2 planned: 2 plans across 2 waves. Plan 2.1 (wave 1): output formatters + CLI commands for milestone and phase. Plan 2.2 (wave 2): CLI integration tests.
 
 ## Next Steps
 
-1. `/plan 2` — Plan Phase 2 (Milestone & Phase CLI)
-2. `/execute 2` — Execute Phase 2
+1. `/execute 2` — Execute Phase 2
 
 ## Active Decisions
 
