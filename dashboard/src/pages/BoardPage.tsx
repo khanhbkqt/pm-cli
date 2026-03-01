@@ -34,92 +34,129 @@ function formatStatus(s: string): string {
     return s.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
-function PlanCard({ plan }: { plan: Plan }) {
+function PlanRow({ plan }: { plan: Plan }) {
     return (
-        <Link to={`/plans/${plan.id}`} className="board-plan-card__link">
-            <div className="board-plan-card">
-                <div className="board-plan-card__header">
-                    <span className="board-plan-card__number">#{plan.number}</span>
-                    <span className={`board-badge ${PLAN_STATUS_CLASS[plan.status] || ''}`}>
-                        {formatStatus(plan.status)}
-                    </span>
-                </div>
-                <div className="board-plan-card__name">{plan.name}</div>
-                <div className="board-plan-card__meta">
-                    <span className="board-plan-card__wave">Wave {plan.wave}</span>
-                </div>
-            </div>
+        <Link
+            to={`/plans/${plan.id}`}
+            className="tree-row tree-row--plan"
+            aria-label={`Plan ${plan.number}: ${plan.name}`}
+        >
+            <span className="tree-row__expand" aria-hidden="true" />
+            <span className="tree-row__icon" aria-hidden="true">📄</span>
+            <span className="tree-row__id">#{plan.number}</span>
+            <span className="tree-row__name">{plan.name}</span>
+            <span className="tree-row__status">
+                <span className={`board-badge ${PLAN_STATUS_CLASS[plan.status] || ''}`}>
+                    {formatStatus(plan.status)}
+                </span>
+            </span>
+            <span className="tree-row__meta">Wave {plan.wave}</span>
         </Link>
     );
 }
 
-function PhaseSection({ phase }: { phase: BoardPhase }) {
-    const [collapsed, setCollapsed] = useState(false);
+function PhaseRow({ phase }: { phase: BoardPhase }) {
+    const [expanded, setExpanded] = useState(phase.status === 'in_progress');
     const planCount = phase.plans.length;
 
     return (
-        <div className="board-phase">
-            <button
-                className="board-phase__header"
-                onClick={() => setCollapsed(c => !c)}
-                aria-expanded={!collapsed}
+        <>
+            <div
+                className="tree-row tree-row--phase"
+                onClick={() => setExpanded(e => !e)}
+                aria-expanded={expanded}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => e.key === 'Enter' && setExpanded(v => !v)}
             >
-                <span className="board-phase__toggle">{collapsed ? '▶' : '▼'}</span>
-                <span className="board-phase__number">Phase {phase.number}</span>
-                <span className="board-phase__name">{phase.name}</span>
-                <span className={`board-badge ${PHASE_STATUS_CLASS[phase.status] || ''}`}>
-                    {formatStatus(phase.status)}
+                <button
+                    className="tree-row__expand"
+                    onClick={ev => { ev.stopPropagation(); setExpanded(v => !v); }}
+                    aria-label={expanded ? 'Collapse phase' : 'Expand phase'}
+                >
+                    {expanded ? '▼' : '▶'}
+                </button>
+                <span className="tree-row__icon" aria-hidden="true">📁</span>
+                <span className="tree-row__id">P{phase.number}</span>
+                <span className="tree-row__name">{phase.name}</span>
+                <span className="tree-row__status">
+                    <span className={`board-badge ${PHASE_STATUS_CLASS[phase.status] || ''}`}>
+                        {formatStatus(phase.status)}
+                    </span>
                 </span>
-                <span className="board-phase__count">{planCount} plan{planCount !== 1 ? 's' : ''}</span>
-            </button>
+                <span className="tree-row__meta">
+                    {planCount} plan{planCount !== 1 ? 's' : ''}
+                </span>
+            </div>
 
-            {!collapsed && (
-                <div className="board-phase__plans">
-                    {planCount === 0 ? (
-                        <div className="board-phase__empty">No plans in this phase</div>
-                    ) : (
-                        phase.plans.map(plan => <PlanCard key={plan.id} plan={plan} />)
-                    )}
-                </div>
-            )}
-        </div>
+            <div
+                className={`tree-children${expanded ? '' : ' tree-children--collapsed'}`}
+                style={{ maxHeight: expanded ? planCount * 44 + 'px' : undefined }}
+            >
+                {planCount === 0 ? (
+                    <div className="tree-row tree-row--plan" style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>
+                        <span className="tree-row__name">No plans in this phase</span>
+                    </div>
+                ) : (
+                    phase.plans.map(plan => <PlanRow key={plan.id} plan={plan} />)
+                )}
+            </div>
+        </>
     );
 }
 
-function MilestoneSection({ milestone }: { milestone: BoardMilestone }) {
-    const [collapsed, setCollapsed] = useState(false);
+function MilestoneRow({ milestone }: { milestone: BoardMilestone }) {
+    const [expanded, setExpanded] = useState(milestone.status === 'active');
     const phaseCount = milestone.phases.length;
     const totalPlans = milestone.phases.reduce((sum, p) => sum + p.plans.length, 0);
+    const childHeight = milestone.phases.reduce(
+        (sum, p) => sum + 44 + (p.status === 'in_progress' ? p.plans.length * 44 : 0),
+        0
+    );
 
     return (
-        <div className="board-milestone">
-            <button
-                className="board-milestone__header"
-                onClick={() => setCollapsed(c => !c)}
-                aria-expanded={!collapsed}
+        <>
+            <div
+                className="tree-row tree-row--milestone"
+                onClick={() => setExpanded(e => !e)}
+                aria-expanded={expanded}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => e.key === 'Enter' && setExpanded(v => !v)}
             >
-                <span className="board-milestone__toggle">{collapsed ? '▶' : '▼'}</span>
-                <span className="board-milestone__icon">🎯</span>
-                <span className="board-milestone__id">{milestone.id}</span>
-                <span className="board-milestone__name">{milestone.name}</span>
-                <span className={`board-badge ${MILESTONE_STATUS_CLASS[milestone.status] || ''}`}>
-                    {formatStatus(milestone.status)}
+                <button
+                    className="tree-row__expand"
+                    onClick={ev => { ev.stopPropagation(); setExpanded(v => !v); }}
+                    aria-label={expanded ? 'Collapse milestone' : 'Expand milestone'}
+                >
+                    {expanded ? '▼' : '▶'}
+                </button>
+                <span className="tree-row__icon" aria-hidden="true">🎯</span>
+                <span className="tree-row__id">{milestone.id}</span>
+                <span className="tree-row__name">{milestone.name}</span>
+                <span className="tree-row__status">
+                    <span className={`board-badge ${MILESTONE_STATUS_CLASS[milestone.status] || ''}`}>
+                        {formatStatus(milestone.status)}
+                    </span>
                 </span>
-                <span className="board-milestone__meta">
+                <span className="tree-row__meta">
                     {phaseCount} phase{phaseCount !== 1 ? 's' : ''} · {totalPlans} plan{totalPlans !== 1 ? 's' : ''}
                 </span>
-            </button>
+            </div>
 
-            {!collapsed && (
-                <div className="board-milestone__phases">
-                    {phaseCount === 0 ? (
-                        <div className="board-milestone__empty">No phases in this milestone</div>
-                    ) : (
-                        milestone.phases.map(phase => <PhaseSection key={phase.id} phase={phase} />)
-                    )}
-                </div>
-            )}
-        </div>
+            <div
+                className={`tree-children${expanded ? '' : ' tree-children--collapsed'}`}
+                style={{ maxHeight: expanded ? childHeight + 400 + 'px' : undefined }}
+            >
+                {phaseCount === 0 ? (
+                    <div className="tree-row tree-row--phase" style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>
+                        <span className="tree-row__name">No phases in this milestone</span>
+                    </div>
+                ) : (
+                    milestone.phases.map(phase => <PhaseRow key={phase.id} phase={phase} />)
+                )}
+            </div>
+        </>
     );
 }
 
@@ -149,6 +186,7 @@ export function BoardPage() {
     return (
         <div className="board-page">
             <div className="board-page__header">
+                <h1>Plans Board</h1>
                 <span className="board-page__subtitle">
                     {milestones.length} milestone{milestones.length !== 1 ? 's' : ''}
                 </span>
@@ -161,10 +199,17 @@ export function BoardPage() {
                     description="Run pm new-milestone to create your first milestone."
                 />
             ) : (
-                <div className="board-page__milestones">
-                    {milestones.map(m => (
-                        <MilestoneSection key={m.id} milestone={m} />
-                    ))}
+                <div className="board-tree" role="tree" aria-label="Plans hierarchy">
+                    <div className="board-tree__header" aria-hidden="true">
+                        <span className="board-tree__col-name">Name</span>
+                        <span className="board-tree__col-status">Status</span>
+                        <span className="board-tree__col-details">Details</span>
+                    </div>
+                    <div className="board-tree__body">
+                        {milestones.map(m => (
+                            <MilestoneRow key={m.id} milestone={m} />
+                        ))}
+                    </div>
                 </div>
             )}
         </div>
