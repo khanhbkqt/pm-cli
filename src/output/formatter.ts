@@ -1,4 +1,4 @@
-import type { Agent, Task, TaskComment, ContextEntry } from '../db/types.js';
+import type { Agent, Task, TaskComment, ContextEntry, Milestone, Phase } from '../db/types.js';
 
 /**
  * Format a simple ASCII table from headers and rows.
@@ -178,3 +178,88 @@ export function formatContextList(entries: ContextEntry[], json: boolean): strin
     return formatTable(headers, rows);
 }
 
+/**
+ * Format a single milestone for display.
+ */
+export function formatMilestone(milestone: Milestone, json: boolean): string {
+    if (json) {
+        return JSON.stringify(milestone, null, 2);
+    }
+
+    return [
+        `ID:        ${milestone.id}`,
+        `Name:      ${milestone.name}`,
+        `Goal:      ${milestone.goal || 'none'}`,
+        `Status:    ${milestone.status}`,
+        `Creator:   ${milestone.created_by}`,
+        `Created:   ${milestone.created_at}`,
+        milestone.completed_at ? `Completed: ${milestone.completed_at}` : null,
+    ].filter(Boolean).join('\n');
+}
+
+/**
+ * Format a list of milestones for display.
+ */
+export function formatMilestoneList(milestones: Milestone[], json: boolean): string {
+    if (json) {
+        return JSON.stringify(milestones, null, 2);
+    }
+
+    if (milestones.length === 0) {
+        return 'No milestones found.';
+    }
+
+    const headers = ['ID', 'Name', 'Status', 'Creator', 'Created'];
+    const rows = milestones.map(m => [
+        m.id,
+        m.name,
+        m.status,
+        m.created_by,
+        m.created_at.split('T')[0] || m.created_at,
+    ]);
+
+    return formatTable(headers, rows);
+}
+
+/**
+ * Format a single phase for display.
+ */
+export function formatPhase(phase: Phase, json: boolean): string {
+    if (json) {
+        return JSON.stringify(phase, null, 2);
+    }
+
+    return [
+        `ID:          ${phase.id}`,
+        `Number:      ${phase.number}`,
+        `Name:        ${phase.name}`,
+        `Milestone:   ${phase.milestone_id}`,
+        `Status:      ${phase.status}`,
+        phase.description ? `Description: ${phase.description}` : null,
+        `Created:     ${phase.created_at}`,
+        phase.completed_at ? `Completed:   ${phase.completed_at}` : null,
+    ].filter(Boolean).join('\n');
+}
+
+/**
+ * Format a list of phases for display.
+ */
+export function formatPhaseList(phases: Phase[], json: boolean): string {
+    if (json) {
+        return JSON.stringify(phases, null, 2);
+    }
+
+    if (phases.length === 0) {
+        return 'No phases found.';
+    }
+
+    const headers = ['#', 'Name', 'Status', 'Created'];
+    const rows = phases.map(p => [
+        String(p.number),
+        p.name,
+        p.status,
+        p.created_at.split('T')[0] || p.created_at,
+    ]);
+
+    return formatTable(headers, rows);
+}
