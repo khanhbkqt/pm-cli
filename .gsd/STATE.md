@@ -3,8 +3,8 @@
 ## Current Position
 
 - **Milestone**: v3.3-board-redesign — Plans Board Redesign
-- **Phase**: 2 — Tree Rows & Progress Indicators
-- **Status**: Completed
+- **Phase**: 3 — Filtering, Polish & Interactions
+- **Status**: Planning complete
 
 ## Last Session Summary
 
@@ -19,4 +19,4 @@ Commits:
 
 ## Next Steps
 
-1. `/plan 3` — Plan Phase 3 (Filtering, Polish & Interactions)
+1. `/execute 3` — Execute plans for Phase 3
