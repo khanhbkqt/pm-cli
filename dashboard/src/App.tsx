@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Overview } from './pages/Overview';
-import { TasksBoard } from './pages/TasksBoard';
 import { AgentsPage } from './pages/AgentsPage';
 import { ContextPage } from './pages/ContextPage';
 import { MilestonesPage } from './pages/MilestonesPage';
@@ -22,7 +21,6 @@ function App() {
                         <Route path="/milestones/:milestoneId/phases" element={<PhasesPage />} />
                         <Route path="/phases/:phaseId/plans" element={<PlansPage />} />
                         <Route path="/plans/:planId" element={<PlanDetailPage />} />
-                        <Route path="/tasks" element={<TasksBoard />} />
                         <Route path="/agents" element={<AgentsPage />} />
                         <Route path="/context" element={<ContextPage />} />
                     </Routes>
