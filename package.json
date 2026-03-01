@@ -7,7 +7,8 @@
     "pm": "./dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "docs"
   ],
   "engines": {
     "node": ">=18.0.0"

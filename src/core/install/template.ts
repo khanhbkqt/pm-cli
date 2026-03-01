@@ -24,12 +24,18 @@ export function getTemplatePath(projectRoot?: string): string {
         }
     }
 
-    // Fallback: relative to this package's install location
-    // src/core/install/template.ts → ../../.. → package root
-    const packageRoot = path.resolve(__dirname, '..', '..', '..');
-    const fromPackage = path.join(packageRoot, TEMPLATE_RELATIVE_PATH);
-    if (fs.existsSync(fromPackage)) {
-        return fromPackage;
+    // Fallback 1: we might be in development (src/core/install/template.ts)
+    const devPackageRoot = path.resolve(__dirname, '..', '..', '..');
+    const devFromPackage = path.join(devPackageRoot, TEMPLATE_RELATIVE_PATH);
+    if (fs.existsSync(devFromPackage)) {
+        return devFromPackage;
+    }
+
+    // Fallback 2: relative to this package's install location (bundled in dist/index.js)
+    const distPackageRoot = path.resolve(__dirname, '..');
+    const distFromPackage = path.join(distPackageRoot, TEMPLATE_RELATIVE_PATH);
+    if (fs.existsSync(distFromPackage)) {
+        return distFromPackage;
     }
 
     throw new Error(
@@ -68,11 +74,18 @@ export function getWorkflowsDir(projectRoot?: string): string {
         }
     }
 
-    // Fallback: relative to this package's install location
-    const packageRoot = path.resolve(__dirname, '..', '..', '..');
-    const fromPackage = path.join(packageRoot, WORKFLOWS_RELATIVE_PATH);
-    if (fs.existsSync(fromPackage) && fs.statSync(fromPackage).isDirectory()) {
-        return fromPackage;
+    // Fallback 1: we might be in development (src/core/install/template.ts)
+    const devPackageRoot = path.resolve(__dirname, '..', '..', '..');
+    const devFromPackage = path.join(devPackageRoot, WORKFLOWS_RELATIVE_PATH);
+    if (fs.existsSync(devFromPackage) && fs.statSync(devFromPackage).isDirectory()) {
+        return devFromPackage;
+    }
+
+    // Fallback 2: relative to this package's install location (bundled in dist/index.js)
+    const distPackageRoot = path.resolve(__dirname, '..');
+    const distFromPackage = path.join(distPackageRoot, WORKFLOWS_RELATIVE_PATH);
+    if (fs.existsSync(distFromPackage) && fs.statSync(distFromPackage).isDirectory()) {
+        return distFromPackage;
     }
 
     throw new Error(
