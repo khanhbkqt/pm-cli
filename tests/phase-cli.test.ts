@@ -36,6 +36,10 @@ describe('phase CLI commands', () => {
         // Initialize project, register agent, create and activate milestone
         run('init test-project', tempDir);
         run('agent register alice --role developer --type human', tempDir);
+
+        fs.mkdirSync(path.join(tempDir, '.gsd/templates'), { recursive: true });
+        fs.writeFileSync(path.join(tempDir, '.gsd/templates/phase-summary.md'), '# Phase {{phaseNumber}}: {{name}}');
+
         run('--agent alice milestone create v1 "Version 1"', tempDir);
         run('--agent alice milestone update v1 --status active', tempDir);
     });
@@ -48,6 +52,8 @@ describe('phase CLI commands', () => {
         const output = run('--agent alice phase add "Setup" --number 1', tempDir);
         expect(output).toContain('Phase #1 added');
         expect(output).toContain("milestone 'v1'");
+
+        expect(fs.existsSync(path.join(tempDir, '.pm/milestones/v1/1/PHASE.md'))).toBe(true);
     });
 
     it('pm phase add without --agent shows identity error', () => {

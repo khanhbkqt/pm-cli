@@ -9,7 +9,7 @@ import {
 import { getActiveMilestone } from '../../core/milestone.js';
 import { transitionPhase } from '../../core/workflow.js';
 import { listPlans } from '../../core/plan.js';
-import { resolveIdentity, getProjectDb } from '../../core/identity.js';
+import { resolveIdentity, getProjectDb, findProjectRoot } from '../../core/identity.js';
 import {
     formatPhase,
     formatPhaseList,
@@ -34,6 +34,7 @@ export function registerPhaseCommands(program: Command): void {
         .action(async (name: string, opts: { number: string; milestone?: string; description?: string }) => {
             try {
                 const db = getProjectDb();
+                const projectRoot = findProjectRoot();
                 resolveIdentity(db, { agent: program.opts().agent }); // enforce identity
 
                 let milestoneId = opts.milestone;
@@ -51,6 +52,7 @@ export function registerPhaseCommands(program: Command): void {
                     number: parseInt(opts.number, 10),
                     name,
                     description: opts.description,
+                    projectRoot,
                 });
                 const json = program.opts().json;
 
@@ -58,6 +60,7 @@ export function registerPhaseCommands(program: Command): void {
                     console.log(JSON.stringify(created, null, 2));
                 } else {
                     console.log(`✓ Phase #${created.number} added to milestone '${milestoneId}'`);
+                    console.log(`  Content populated at: .pm/milestones/${milestoneId}/${created.number}/PHASE.md`);
                 }
                 db.close();
             } catch (error) {

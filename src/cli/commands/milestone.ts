@@ -9,7 +9,7 @@ import {
 } from '../../core/milestone.js';
 import { listPhases } from '../../core/phase.js';
 import { transitionMilestone } from '../../core/workflow.js';
-import { resolveIdentity, getProjectDb } from '../../core/identity.js';
+import { resolveIdentity, getProjectDb, findProjectRoot } from '../../core/identity.js';
 import {
     formatMilestone,
     formatMilestoneList,
@@ -32,12 +32,14 @@ export function registerMilestoneCommands(program: Command): void {
         .action(async (id: string, name: string, opts: { goal?: string }) => {
             try {
                 const db = getProjectDb();
+                const projectRoot = findProjectRoot();
                 const me = resolveIdentity(db, { agent: program.opts().agent });
                 const created = createMilestone(db, {
                     id,
                     name,
                     goal: opts.goal,
                     created_by: me.id,
+                    projectRoot,
                 });
                 const json = program.opts().json;
 
@@ -45,6 +47,7 @@ export function registerMilestoneCommands(program: Command): void {
                     console.log(JSON.stringify(created, null, 2));
                 } else {
                     console.log(`✓ Milestone '${created.id}' created: "${created.name}"`);
+                    console.log(`  Content populated at: .pm/milestones/${created.id}/MILESTONE.md`);
                 }
                 db.close();
             } catch (error) {

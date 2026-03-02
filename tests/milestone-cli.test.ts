@@ -36,6 +36,9 @@ describe('milestone CLI commands', () => {
         // Initialize project and register agent
         run('init test-project', tempDir);
         run('agent register alice --role developer --type human', tempDir);
+
+        fs.mkdirSync(path.join(tempDir, '.gsd/templates'), { recursive: true });
+        fs.writeFileSync(path.join(tempDir, '.gsd/templates/milestone.md'), '# Milestone {{name}}');
     });
 
     afterEach(() => {
@@ -46,6 +49,8 @@ describe('milestone CLI commands', () => {
         const output = run('--agent alice milestone create v1 "Version 1"', tempDir);
         expect(output).toContain("Milestone 'v1' created");
         expect(output).toContain('Version 1');
+
+        expect(fs.existsSync(path.join(tempDir, '.pm/milestones/v1/MILESTONE.md'))).toBe(true);
     });
 
     it('pm milestone create without --agent shows identity error', () => {
