@@ -37,8 +37,8 @@ describe('milestone CLI commands', () => {
         run('init test-project', tempDir);
         run('agent register alice --role developer --type human', tempDir);
 
-        fs.mkdirSync(path.join(tempDir, '.gsd/templates'), { recursive: true });
-        fs.writeFileSync(path.join(tempDir, '.gsd/templates/milestone.md'), '# Milestone {{name}}');
+        fs.mkdirSync(path.join(tempDir, '.pm/templates'), { recursive: true });
+        fs.writeFileSync(path.join(tempDir, '.pm/templates/milestone.md'), '# Milestone {{name}}');
     });
 
     afterEach(() => {

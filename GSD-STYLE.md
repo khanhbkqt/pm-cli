@@ -30,7 +30,7 @@ Specialized agent behaviors. Each skill:
 - Contains detailed methodology
 - Is referenced by parent workflows
 
-### Templates (`.gsd/templates/*.md`)
+### Templates (`.pm/templates/*.md`)
 
 Reusable document structures. Copy, don't reference.
 

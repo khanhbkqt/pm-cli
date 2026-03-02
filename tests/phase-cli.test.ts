@@ -37,8 +37,8 @@ describe('phase CLI commands', () => {
         run('init test-project', tempDir);
         run('agent register alice --role developer --type human', tempDir);
 
-        fs.mkdirSync(path.join(tempDir, '.gsd/templates'), { recursive: true });
-        fs.writeFileSync(path.join(tempDir, '.gsd/templates/phase-summary.md'), '# Phase {{phaseNumber}}: {{name}}');
+        fs.mkdirSync(path.join(tempDir, '.pm/templates'), { recursive: true });
+        fs.writeFileSync(path.join(tempDir, '.pm/templates/phase-summary.md'), '# Phase {{phaseNumber}}: {{name}}');
 
         run('--agent alice milestone create v1 "Version 1"', tempDir);
         run('--agent alice milestone update v1 --status active', tempDir);

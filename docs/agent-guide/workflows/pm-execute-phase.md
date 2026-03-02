@@ -62,6 +62,12 @@ pm plan update <plan-id> --status in_progress
 
 ### 2b. Do the Work
 
+Read the full plan from the filesystem (the DB only stores a brief):
+
+```bash
+cat .pm/milestones/<milestone-id>/<phase-number>/<plan-number>-PLAN.md
+```
+
 Implement what the plan describes. Follow task blocks in order:
 1. Load plan context
 2. Execute tasks
@@ -131,6 +137,13 @@ npm test
 git add -A
 git commit -m "docs(phase-{N}): complete {phase-name}"
 ```
+
+### Update Project Files
+
+After committing, update the project state files:
+
+1. **`.pm/ROADMAP.md`** — update phase status, plan completion counts
+2. **`.pm/STATE.md`** — update current position, last action, next steps
 
 ---
 

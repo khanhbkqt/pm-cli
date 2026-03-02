@@ -90,47 +90,30 @@ pm context set "phase-{N}-research" "{key findings}" --category decision
 
 ## Step 4: Create Plans
 
-For each plan, create it with its content. Content is stored as a file at
-`.pm/milestones/<milestone-id>/<phase-number>/<plan-number>-PLAN.md`.
+Each `pm plan create` does **two things**:
 
-**Option A — Inline content (CLI writes the file automatically):**
+1. **Database** — stores a brief metadata record (name, phase, wave, status)
+2. **Filesystem** — auto-generates a comprehensive Markdown file from `.pm/templates/PLAN.md`
 
-```bash
-pm plan create "<plan-name>" \
-  --phase <phase-id> \
-  --number <N> \
-  --wave <wave-number> \
-  --content "<objective, tasks, verification, success criteria>"
-```
-
-**Option B — Write the file directly, then register:**
+The file is written to: `.pm/milestones/<milestone-id>/<phase-number>/<plan-number>-PLAN.md`
 
 ```bash
-# Write content file first
-mkdir -p .pm/milestones/<milestone-id>/<phase-number>
-cat > .pm/milestones/<milestone-id>/<phase-number>/<N>-PLAN.md << 'EOF'
-# Plan <N>: <Name>
-
-## Objective
-...
-
-## Tasks
-...
-
-## Success Criteria
-...
-EOF
-
-# Register plan in DB (links to file above)
 pm plan create "<plan-name>" \
   --phase <phase-id> \
   --number <N> \
   --wave <wave-number>
 ```
 
+After creation, edit the auto-generated file directly to flesh out the plan details:
+
+```bash
+# Edit the auto-generated plan file
+$EDITOR .pm/milestones/<milestone-id>/<phase-number>/<N>-PLAN.md
+```
+
 ### Plan Content Structure
 
-Each plan file (`.pm/milestones/.../<N>-PLAN.md`) should include:
+Each auto-generated plan file (`.pm/milestones/.../<N>-PLAN.md`) is pre-populated with:
 - **Objective** — What and why
 - **Context** — File references needed
 - **Tasks** — Specific implementation steps with verification
@@ -141,6 +124,14 @@ To view a plan's full content:
 pm plan show <plan-id>
 # or read directly:
 cat .pm/milestones/<milestone-id>/<phase-number>/<plan-number>-PLAN.md
+```
+
+### Updating Plan Content
+
+To update a plan's file content after creation:
+```bash
+pm plan update <plan-id> --content "<updated content>"
+pm plan update <plan-id> --status in_progress
 ```
 
 
@@ -172,6 +163,10 @@ pm phase update <phase-id> --status planning
 git add -A
 git commit -m "docs(phase-{N}): create execution plans"
 ```
+
+### Update Project Files
+
+Update **`.pm/ROADMAP.md`** with plan counts per phase.
 
 ---
 

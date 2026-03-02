@@ -45,27 +45,21 @@ export function createPlan(
     requirePhaseExists(db, phase_id);
 
     const id = crypto.randomUUID();
-    // content column always NULL — full content lives on filesystem
+    // Store brief content in DB for dashboard/CLI quick view
     db.prepare(
-        'INSERT INTO plans (id, phase_id, number, name, wave, content) VALUES (?, ?, ?, ?, ?, NULL)'
-    ).run(id, phase_id, number, name, wave ?? 1);
+        'INSERT INTO plans (id, phase_id, number, name, wave, content) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run(id, phase_id, number, name, wave ?? 1, content ?? null);
 
     const plan = db.prepare('SELECT * FROM plans WHERE id = ?').get(id) as Plan;
 
-    // Write content to filesystem when projectRoot is provided
+    // Always write comprehensive template to filesystem when projectRoot is provided
     if (projectRoot) {
         const phase = db.prepare('SELECT number, milestone_id FROM phases WHERE id = ?').get(phase_id) as { number: number; milestone_id: string };
 
-        if (content !== undefined) {
-            // Explicit content takes priority — write as-is
-            writePlanContent(projectRoot, phase.milestone_id, phase.number, number, content);
-        } else {
-            // Auto-populate from template when no explicit content given
-            const raw = loadGsdTemplate(projectRoot, 'PLAN.md');
-            if (raw !== null) {
-                const populated = populatePlanTemplate(raw, { phaseNumber: phase.number, planNumber: number, wave: wave ?? 1, name });
-                writePlanContent(projectRoot, phase.milestone_id, phase.number, number, populated);
-            }
+        const raw = loadGsdTemplate(projectRoot, 'PLAN.md');
+        if (raw !== null) {
+            const populated = populatePlanTemplate(raw, { phaseNumber: phase.number, planNumber: number, wave: wave ?? 1, name });
+            writePlanContent(projectRoot, phase.milestone_id, phase.number, number, populated);
         }
     }
 
@@ -159,6 +153,10 @@ export function updatePlan(
     if (updates.wave !== undefined) {
         setClauses.push('wave = ?');
         values.push(updates.wave);
+    }
+    if (updates.content !== undefined) {
+        setClauses.push('content = ?');
+        values.push(updates.content);
     }
 
     if (setClauses.length > 0) {

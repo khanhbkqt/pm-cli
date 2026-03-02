@@ -156,7 +156,7 @@ describe('phase core', () => {
     // --- addPhase template generation ---
 
     it('addPhase with projectRoot writes PHASE.md from template when template exists', () => {
-        const tplDir = path.join(tempDir, '.gsd', 'templates');
+        const tplDir = path.join(tempDir, '.pm', 'templates');
         fs.mkdirSync(tplDir, { recursive: true });
         fs.writeFileSync(
             path.join(tplDir, 'phase-summary.md'),

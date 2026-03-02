@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const GSD_TEMPLATES_DIR = '.gsd/templates';
+const GSD_TEMPLATES_DIR = '.pm/templates';
 
 /**
  * Load a GSD template file by name.

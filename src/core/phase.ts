@@ -26,7 +26,7 @@ function requirePhase(db: Database.Database, id: string): Phase {
 
 /**
  * Add a new phase to a milestone.
- * If `projectRoot` is provided and a `.gsd/templates/phase-summary.md` template exists,
+ * If `projectRoot` is provided and a `.pm/templates/phase-summary.md` template exists,
  * writes a populated PHASE.md to `.pm/milestones/<milestoneId>/<number>/PHASE.md`.
  */
 export function addPhase(

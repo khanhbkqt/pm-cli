@@ -56,7 +56,15 @@ describe('plan core', () => {
         expect(plan.completed_at).toBeNull();
     });
 
-    it('createPlan with wave and content writes to filesystem', () => {
+    it('createPlan with wave and content stores brief in DB and template in file', () => {
+        // Set up a PLAN.md template
+        const tplDir = path.join(tempDir, '.pm', 'templates');
+        fs.mkdirSync(tplDir, { recursive: true });
+        fs.writeFileSync(
+            path.join(tplDir, 'PLAN.md'),
+            '# Plan {N}.{M}: {Descriptive Name}\n\n## Objective\nTODO\n',
+        );
+
         const plan = createPlan(db, {
             phase_id: phaseId,
             number: 1,
@@ -67,11 +75,12 @@ describe('plan core', () => {
         });
 
         expect(plan.wave).toBe(2);
-        // DB content is always null — stored on filesystem
-        expect(plan.content).toBeNull();
-        // Verify content was written to file
+        // Brief content stored in DB for quick views
+        expect(plan.content).toBe('# Plan content');
+        // File gets the comprehensive template version
         const fileContent = getPlanContent(db, plan.id, tempDir);
-        expect(fileContent).toBe('# Plan content');
+        expect(fileContent).toContain('# Plan 1.1: Schema');
+        expect(fileContent).toContain('## Objective');
     });
 
     it('createPlan throws if phase does not exist', () => {
@@ -135,8 +144,8 @@ describe('plan core', () => {
         const updated = updatePlan(db, plan.id, { name: 'New', content: '# Updated', projectRoot: tempDir });
 
         expect(updated.name).toBe('New');
-        // DB content always null
-        expect(updated.content).toBeNull();
+        // Brief content updated in DB
+        expect(updated.content).toBe('# Updated');
         // File content updated
         const fileContent = getPlanContent(db, plan.id, tempDir);
         expect(fileContent).toBe('# Updated');
@@ -172,7 +181,7 @@ describe('plan core', () => {
     // --- createPlan template auto-population ---
 
     it('createPlan with projectRoot and no content auto-populates from PLAN.md template', () => {
-        const tplDir = path.join(tempDir, '.gsd', 'templates');
+        const tplDir = path.join(tempDir, '.pm', 'templates');
         fs.mkdirSync(tplDir, { recursive: true });
         fs.writeFileSync(
             path.join(tplDir, 'PLAN.md'),

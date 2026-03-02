@@ -151,7 +151,7 @@ describe('milestone core', () => {
     // --- createMilestone template generation ---
 
     it('createMilestone with projectRoot writes MILESTONE.md from template when template exists', () => {
-        const tplDir = path.join(tempDir, '.gsd', 'templates');
+        const tplDir = path.join(tempDir, '.pm', 'templates');
         fs.mkdirSync(tplDir, { recursive: true });
         fs.writeFileSync(
             path.join(tplDir, 'milestone.md'),

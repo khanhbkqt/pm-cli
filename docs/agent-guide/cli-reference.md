@@ -236,6 +236,8 @@ pm milestone create <id> <name> [options]
 | `<name>` | Yes | Human-readable milestone name |
 | `--goal <text>` | No | Goal description |
 
+**Dual storage:** Stores brief metadata in the database and auto-generates `.pm/milestones/<id>/MILESTONE.md` from `.pm/templates/milestone.md` (if template exists).
+
 **Exit codes:** `0` success, `1` error.
 
 ---
@@ -289,6 +291,8 @@ pm milestone update <id> [options]
 
 **Workflow transitions:** `planned → active → completed → archived`
 
+**Filesystem:** Status changes update the database record. Milestone content file at `.pm/milestones/<id>/MILESTONE.md` is not modified by status updates — edit it directly.
+
 **Exit codes:** `0` success, `1` error.
 
 ---
@@ -307,6 +311,8 @@ pm phase add <name> [options]
 | `--number <n>` | Yes | Phase ordering number |
 | `--milestone <slug>` | No | Milestone slug (defaults to active milestone) |
 | `--description <text>` | No | Phase description |
+
+**Dual storage:** Stores brief metadata in the database and auto-generates `.pm/milestones/<milestone>/<N>/PHASE.md` from `.pm/templates/phase-summary.md` (if template exists).
 
 **Exit codes:** `0` success, `1` error.
 
@@ -363,6 +369,8 @@ pm phase update <id> [options]
 
 **Workflow transitions:** `not_started → planning → in_progress → completed` (also: `→ skipped`)
 
+**Filesystem:** Status changes update the database record. Phase content file at `.pm/milestones/<milestone>/<N>/PHASE.md` is not modified by status updates — edit it directly.
+
 **Exit codes:** `0` success, `1` error.
 
 ---
@@ -381,7 +389,9 @@ pm plan create <name> [options]
 | `--phase <id>` | Yes | Phase DB integer ID |
 | `--number <n>` | Yes | Plan number within the phase |
 | `--wave <n>` | No | Wave number for parallel execution (default: `1`) |
-| `--content <text>` | No | Plan content/description |
+| `--content <text>` | No | Plan content (written as-is to the file instead of auto-generating from template) |
+
+**Dual storage:** Stores brief metadata in the database and auto-generates `.pm/milestones/<milestone>/<phase>/<N>-PLAN.md` from `.pm/templates/PLAN.md` (if template exists). If `--content` is provided, that content is written to the file instead of the template.
 
 **Exit codes:** `0` success, `1` error.
 
@@ -435,6 +445,8 @@ pm plan update <id> [options]
 | `--content <text>` | No | Updated plan content |
 
 **Workflow transitions:** `pending → in_progress → completed` (also: `→ failed`)
+
+**Filesystem:** If `--content` is provided, updates the plan's file at `.pm/milestones/<milestone>/<phase>/<N>-PLAN.md`. Status-only updates do not modify the file — edit it directly for content changes.
 
 **Exit codes:** `0` success, `1` error.
 

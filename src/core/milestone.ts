@@ -27,7 +27,7 @@ function requireMilestone(db: Database.Database, id: string): Milestone {
 
 /**
  * Create a new milestone.
- * If `projectRoot` is provided and a `.gsd/templates/milestone.md` template exists,
+ * If `projectRoot` is provided and a `.pm/templates/milestone.md` template exists,
  * writes a populated MILESTONE.md to `.pm/milestones/<id>/MILESTONE.md`.
  */
 export function createMilestone(
