@@ -279,12 +279,12 @@ When `pm milestone create`, `pm phase add`, or `pm plan create` is called, autom
 
 ### Must-Haves
 
-- [ ] `pm milestone create` → writes `.pm/milestones/<id>/MILESTONE.md` from `.gsd/templates/milestone.md`
-- [ ] `pm phase add` → writes `.pm/milestones/<id>/<num>/PHASE.md` from `.gsd/templates/phase-summary.md`
-- [ ] `pm plan create` → always writes `.pm/milestones/<id>/<phase>/<num>-PLAN.md` from `.gsd/templates/PLAN.md` (auto-populated with name, number, wave)
-- [ ] Template variables replaced: name, IDs, numbers, phase context
-- [ ] Graceful fallback if `.gsd/templates/` doesn't exist (write minimal stub)
-- [ ] All existing tests continue to pass
+- [x] `pm milestone create` → writes `.pm/milestones/<id>/MILESTONE.md` from `.gsd/templates/milestone.md`
+- [x] `pm phase add` → writes `.pm/milestones/<id>/<num>/PHASE.md` from `.gsd/templates/phase-summary.md`
+- [x] `pm plan create` → always writes `.pm/milestones/<id>/<phase>/<num>-PLAN.md` from `.gsd/templates/PLAN.md` (auto-populated with name, number, wave)
+- [x] Template variables replaced: name, IDs, numbers, phase context
+- [x] Graceful fallback if `.gsd/templates/` doesn't exist (write minimal stub)
+- [x] All existing tests continue to pass
 
 ### Phases
 
@@ -292,7 +292,7 @@ When `pm milestone create`, `pm phase add`, or `pm plan create` is called, autom
 |-------|------|--------|-------|
 | 1 | Template Loader & Content Helpers | ✅ Complete | 1 |
 | 2 | Domain Logic — Milestone, Phase & Plan | ✅ Complete | 2 |
-| 3 | CLI Passthrough & Tests | ⬜ Not Started | 1 |
+| 3 | CLI Passthrough & Tests | ✅ Complete | 1 |
 
 ---
 
@@ -311,7 +311,7 @@ When `pm milestone create`, `pm phase add`, or `pm plan create` is called, autom
 ---
 
 ### Phase 3: CLI Passthrough & Tests
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Pass `projectRoot` through to `createMilestone` and `addPhase` in their CLI command handlers. Update/add tests in `tests/milestone.test.ts`, `tests/phase.test.ts`, and `tests/plan*.test.ts`.
 **Depends on**: Phase 2
 

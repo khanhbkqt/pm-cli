@@ -2,23 +2,22 @@
 
 ## Current Position
 
-- **Milestone**: v3.4-gsd-templates — GSD Template Integration
-- **Phase**: 2 (completed)
+- **Milestone**: v3.4-gsd-templates (completed)
+- **Phase**: 3 (completed)
 - **Task**: All tasks complete
 - **Status**: Verified ✅
 
 ## Last Session Summary
 
-Phase 2 (Domain Logic — Milestone, Phase & Plan) executed successfully. 2 plans, 2 tasks completed.
+Phase 3 (CLI Passthrough & Tests) executed successfully. 1 plan completed.
 
-**Phase 2 Delivered:**
-- `src/core/milestone.ts` — `createMilestone` accepts optional `projectRoot`, writes `MILESTONE.md` from template
-- `src/core/phase.ts` — `addPhase` accepts optional `projectRoot`, writes `PHASE.md` from template
-- `src/core/plan.ts` — `createPlan` auto-populates from `PLAN.md` template when `projectRoot` given but no `content`
-- 5 new unit tests added (2 milestone, 2 phase, 1 plan) — all green
-- `npx tsc --noEmit` — zero errors
+**Phase 3 Delivered:**
+- `src/cli/commands/milestone.ts` — `findProjectRoot` added and passed to `createMilestone`
+- `src/cli/commands/phase.ts` — `findProjectRoot` added and passed to `addPhase`
+- Added filesystem assertions to `tests/milestone-cli.test.ts`
+- Added filesystem assertions to `tests/phase-cli.test.ts`
+- 24/24 integration tests pass
 
 ## Next Steps
 
-1. `/plan 3` — plan Phase 3 (CLI Passthrough & Tests)
-2. `/execute 3` — implement Phase 3
+1. Milestone `v3.4-gsd-templates` is fully verified and complete. Proceed to next milestone or polish.
