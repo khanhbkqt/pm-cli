@@ -1,13 +1,13 @@
 ---
-milestone: v3.3-board-redesign
-version: 3.3.0
-updated: 2026-03-01T19:57:00+07:00
+milestone: v3.4-gsd-templates
+version: 3.4.0
+updated: 2026-03-02T14:55:00+07:00
 ---
 
 # Roadmap
 
-> **Current Milestone**: v3.3-board-redesign — Plans Board Redesign
-> **Last Completed**: v3.2-gsd-workflows
+> **Current Milestone**: v3.4-gsd-templates — GSD Template Integration
+> **Last Completed**: v3.3-board-redesign
 
 ## Previous Milestones
 
@@ -242,7 +242,8 @@ Update the pm-cli workflow documents to include ROADMAP and STATE context loadin
 
 ---
 
-## Active Milestone: v3.3-board-redesign — Plans Board Redesign
+<details>
+<summary>✅ v3.3-board-redesign — Plans Board Redesign (Complete)</summary>
 
 ### Goal
 
@@ -250,19 +251,13 @@ Redesign the Plans Board page into a premium Jira-style hierarchy tree view with
 
 ### Must-Haves
 
-- [ ] Jira-style hierarchy tree layout (indented rows, expand/collapse)
-- [ ] Progress bars per milestone and phase (completion %)
-- [ ] Rich status badges with consistent design language
-- [ ] Smooth expand/collapse animations
-- [ ] Milestone filter toolbar (All / Active / Completed / Planned)
-- [ ] Hover highlighting and interactive row states
-- [ ] Responsive design (desktop + mobile)
-
-### Nice-to-Haves
-
-- [ ] Expand all / Collapse all controls
-- [ ] Keyboard navigation between rows
-- [ ] Animated progress bar fills
+- [x] Jira-style hierarchy tree layout (indented rows, expand/collapse)
+- [x] Progress bars per milestone and phase (completion %)
+- [x] Rich status badges with consistent design language
+- [x] Smooth expand/collapse animations
+- [x] Milestone filter toolbar (All / Active / Completed / Planned)
+- [x] Hover highlighting and interactive row states
+- [x] Responsive design (desktop + mobile)
 
 ### Phases
 
@@ -272,24 +267,52 @@ Redesign the Plans Board page into a premium Jira-style hierarchy tree view with
 | 2 | Tree Rows & Progress Indicators | ✅ Complete | 1 |
 | 3 | Filtering, Polish & Interactions | ✅ Complete | 1 |
 
+</details>
+
 ---
 
-### Phase 1: Design System & Hierarchy Layout
-**Status**: ✅ Complete
-**Objective**: Add missing CSS custom properties and build the core Jira-style tree table layout container.
+## Active Milestone: v3.4-gsd-templates — GSD Template Integration
+
+### Goal
+
+When `pm milestone create`, `pm phase add`, or `pm plan create` is called, automatically generate a comprehensive Markdown file from the corresponding GSD template in `.gsd/templates/`. The SQLite database continues to store brief metadata; the template-populated filesystem file becomes the detailed working document.
+
+### Must-Haves
+
+- [ ] `pm milestone create` → writes `.pm/milestones/<id>/MILESTONE.md` from `.gsd/templates/milestone.md`
+- [ ] `pm phase add` → writes `.pm/milestones/<id>/<num>/PHASE.md` from `.gsd/templates/phase-summary.md`
+- [ ] `pm plan create` → always writes `.pm/milestones/<id>/<phase>/<num>-PLAN.md` from `.gsd/templates/PLAN.md` (auto-populated with name, number, wave)
+- [ ] Template variables replaced: name, IDs, numbers, phase context
+- [ ] Graceful fallback if `.gsd/templates/` doesn't exist (write minimal stub)
+- [ ] All existing tests continue to pass
+
+### Phases
+
+| Phase | Name | Status | Plans |
+|-------|------|--------|-------|
+| 1 | Template Loader & Content Helpers | ⬜ Not Started | 1 |
+| 2 | Domain Logic — Milestone, Phase & Plan | ⬜ Not Started | 1 |
+| 3 | CLI Passthrough & Tests | ⬜ Not Started | 1 |
+
+---
+
+### Phase 1: Template Loader & Content Helpers
+**Status**: ⬜ Not Started
+**Objective**: Create `src/core/template_gsd.ts` with template-loading functions, and extend `src/core/content.ts` with `writeMilestoneContent` and `writePhaseContent` helpers.
 **Depends on**: None
 
 ---
 
-### Phase 2: Tree Rows & Progress Indicators
-**Status**: ✅ Complete
-**Objective**: Implement milestone, phase, and plan rows as indented tree items with progress bars, status badges, and plan counts.
+### Phase 2: Domain Logic — Milestone, Phase & Plan
+**Status**: ⬜ Not Started
+**Objective**: Update `src/core/milestone.ts`, `src/core/phase.ts`, and `src/core/plan.ts` to call the template loaders and write populated Markdown files on creation.
 **Depends on**: Phase 1
 
 ---
 
-### Phase 3: Filtering, Polish & Interactions
-**Status**: ✅ Complete
-**Objective**: Add milestone status filter, hover effects, animations, responsive layout, and overall visual polish.
+### Phase 3: CLI Passthrough & Tests
+**Status**: ⬜ Not Started
+**Objective**: Pass `projectRoot` through to `createMilestone` and `addPhase` in their CLI command handlers. Update/add tests in `tests/milestone.test.ts`, `tests/phase.test.ts`, and `tests/plan*.test.ts`.
 **Depends on**: Phase 2
+
 

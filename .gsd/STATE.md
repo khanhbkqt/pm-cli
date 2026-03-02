@@ -2,22 +2,21 @@
 
 ## Current Position
 
-- **Milestone**: v3.3-board-redesign — Plans Board Redesign
-- **Phase**: 3 (completed)
-- **Task**: All tasks complete
-- **Status**: Verified
+- **Milestone**: v3.4-gsd-templates — GSD Template Integration
+- **Phase**: 1 (ready for execution)
+- **Task**: Planning complete
+- **Status**: Ready for execution
 
 ## Last Session Summary
 
-Phase 3 executed successfully. 1 plan, 2 tasks completed.
+Planning complete for v3.4-gsd-templates milestone.
 
-- Plan 3.1: Added milestone status filter, expand/collapse all controls, and visual polish to the hierarchy tree.
+3 phases, 3 PLAN.md files created:
 
-Commits:
-- `feat(phase-3): Milestone Filter and Expand/Collapse Controls`
-- `feat(phase-3): Visual Polish and Animations`
-- `docs(phase-3): complete Filtering, Polish & Interactions`
+- Phase 1: Template Loader & Content Helpers — creates `template_gsd.ts` + extends `content.ts`
+- Phase 2: Domain Logic — updates `milestone.ts`, `phase.ts`, `plan.ts` to generate Markdown from templates
+- Phase 3: CLI Passthrough & Tests — wires `projectRoot` into CLI handlers, adds test coverage
 
 ## Next Steps
 
-1. Milestone v3.3-board-redesign is now complete. Review and test or `/complete-milestone`.
+1. `/execute 1` — implement Phase 1 (template loader + content helpers)
