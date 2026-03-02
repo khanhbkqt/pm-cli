@@ -184,11 +184,15 @@ function escapeRegex(str: string): string {
  * Convert a markdown workflow file (with optional YAML frontmatter) into a
  * valid gemini-cli TOML command file.
  *
+ * Uses TOML *literal* multiline strings ('''...''') for the prompt so that
+ * backslashes in shell regexes, markdown, etc. are never interpreted as
+ * TOML escape sequences.
+ *
  * Schema:
- *   description = "one-line summary"   # optional
- *   prompt = """
+ *   description = "one-line summary"   # optional, basic string
+ *   prompt = '''
  *   <markdown body>
- *   """
+ *   '''
  */
 function markdownToToml(markdown: string): string {
     let description = '';
@@ -204,17 +208,19 @@ function markdownToToml(markdown: string): string {
         body = markdown.slice(fmMatch[0].length).trimStart();
     }
 
-    // Escape any triple-quote sequences in body to prevent TOML parse errors
-    const safeBody = body.replace(/"""/g, '""\\"');
+    // TOML literal multiline strings cannot contain ''' — replace with '' + ' split across lines
+    // In practice our markdown never contains ''' but guard anyway.
+    const safeBody = body.replace(/'''/g, "''\\''");
 
     const lines: string[] = [];
     if (description) {
         lines.push(`description = "${description}"`);
         lines.push('');
     }
-    lines.push(`prompt = """`);
+    // Use literal multiline string (single quotes) — backslashes are NOT escape chars
+    lines.push(`prompt = '''`);
     lines.push(safeBody.trimEnd());
-    lines.push(`"""`);
+    lines.push(`'''`);
     lines.push('');
 
     return lines.join('\n');
