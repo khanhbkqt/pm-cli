@@ -3,22 +3,22 @@
 ## Current Position
 
 - **Milestone**: v3.4-gsd-templates — GSD Template Integration
-- **Phase**: 2 (planning complete, ready for execution)
-- **Task**: Planning complete
-- **Status**: 2 plans created, ready for /execute 2
+- **Phase**: 2 (completed)
+- **Task**: All tasks complete
+- **Status**: Verified ✅
 
 ## Last Session Summary
 
-Phase 1 (Template Loader & Content Helpers) complete. Phase 2 plans created.
+Phase 2 (Domain Logic — Milestone, Phase & Plan) executed successfully. 2 plans, 2 tasks completed.
 
-**Phase 1 Delivered:**
-- `src/core/template_gsd.ts` — 4 exported functions: `loadGsdTemplate`, `populatePlanTemplate`, `populateMilestoneTemplate`, `populatePhaseTemplate`
-- `src/core/content.ts` extended — milestone helpers: `getMilestoneContentPath`, `writeMilestoneContent`, `readMilestoneContent`; phase helpers: `getPhaseContentPath`, `writePhaseContent`, `readPhaseContent`
-
-**Phase 2 Plans:**
-- Plan 2.1 — Extend `createMilestone` and `addPhase` to accept optional `projectRoot`, write template-populated `.md` files
-- Plan 2.2 — Auto-populate `PLAN.md` template in `createPlan` when `projectRoot` provided but no `content`; add 5 unit tests
+**Phase 2 Delivered:**
+- `src/core/milestone.ts` — `createMilestone` accepts optional `projectRoot`, writes `MILESTONE.md` from template
+- `src/core/phase.ts` — `addPhase` accepts optional `projectRoot`, writes `PHASE.md` from template
+- `src/core/plan.ts` — `createPlan` auto-populates from `PLAN.md` template when `projectRoot` given but no `content`
+- 5 new unit tests added (2 milestone, 2 phase, 1 plan) — all green
+- `npx tsc --noEmit` — zero errors
 
 ## Next Steps
 
-1. `/execute 2` — implement Phase 2
+1. `/plan 3` — plan Phase 3 (CLI Passthrough & Tests)
+2. `/execute 3` — implement Phase 3

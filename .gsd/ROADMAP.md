@@ -291,7 +291,7 @@ When `pm milestone create`, `pm phase add`, or `pm plan create` is called, autom
 | Phase | Name | Status | Plans |
 |-------|------|--------|-------|
 | 1 | Template Loader & Content Helpers | ✅ Complete | 1 |
-| 2 | Domain Logic — Milestone, Phase & Plan | ⬜ Not Started | 1 |
+| 2 | Domain Logic — Milestone, Phase & Plan | ✅ Complete | 2 |
 | 3 | CLI Passthrough & Tests | ⬜ Not Started | 1 |
 
 ---
@@ -304,7 +304,7 @@ When `pm milestone create`, `pm phase add`, or `pm plan create` is called, autom
 ---
 
 ### Phase 2: Domain Logic — Milestone, Phase & Plan
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Update `src/core/milestone.ts`, `src/core/phase.ts`, and `src/core/plan.ts` to call the template loaders and write populated Markdown files on creation.
 **Depends on**: Phase 1
 
