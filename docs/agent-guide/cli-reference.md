@@ -389,9 +389,9 @@ pm plan create <name> [options]
 | `--phase <id>` | Yes | Phase DB integer ID |
 | `--number <n>` | Yes | Plan number within the phase |
 | `--wave <n>` | No | Wave number for parallel execution (default: `1`) |
-| `--content <text>` | No | Plan content (written as-is to the file instead of auto-generating from template) |
+| `--content <text>` | No | Short brief stored in DB for dashboard/CLI quick view |
 
-**Dual storage:** Stores brief metadata in the database and auto-generates `.pm/milestones/<milestone>/<phase>/<N>-PLAN.md` from `.pm/templates/PLAN.md` (if template exists). If `--content` is provided, that content is written to the file instead of the template.
+**Dual storage:** `--content` stores a short brief in the database for quick views. A comprehensive doc is always generated from `.pm/templates/PLAN.md` and written to `.pm/milestones/<milestone>/<phase>/<N>-PLAN.md`.
 
 **Exit codes:** `0` success, `1` error.
 

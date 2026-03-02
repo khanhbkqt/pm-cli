@@ -26,8 +26,9 @@ function requirePlan(db: Database.Database, id: string): Plan {
 
 /**
  * Create a new plan within a phase.
- * If `content` and `projectRoot` are provided, plan content is written to
- * .pm/milestones/<milestoneId>/<phaseNumber>/<planNumber>-PLAN.md
+ * - `content` (brief) is stored in the DB for dashboard/CLI quick view.
+ * - A comprehensive doc is always generated from `.pm/templates/PLAN.md` and written to
+ *   `.pm/milestones/<milestoneId>/<phaseNumber>/<planNumber>-PLAN.md`
  */
 export function createPlan(
     db: Database.Database,
@@ -45,23 +46,13 @@ export function createPlan(
     requirePhaseExists(db, phase_id);
 
     const id = crypto.randomUUID();
-    // Store brief content in DB for dashboard/CLI quick view
+    // Store brief in DB for dashboard/CLI quick view
     db.prepare(
         'INSERT INTO plans (id, phase_id, number, name, wave, content) VALUES (?, ?, ?, ?, ?, ?)'
     ).run(id, phase_id, number, name, wave ?? 1, content ?? null);
 
     const plan = db.prepare('SELECT * FROM plans WHERE id = ?').get(id) as Plan;
 
-    // Always write comprehensive template to filesystem when projectRoot is provided
-    if (projectRoot) {
-        const phase = db.prepare('SELECT number, milestone_id FROM phases WHERE id = ?').get(phase_id) as { number: number; milestone_id: string };
-
-        const raw = loadGsdTemplate(projectRoot, 'PLAN.md');
-        if (raw !== null) {
-            const populated = populatePlanTemplate(raw, { phaseNumber: phase.number, planNumber: number, wave: wave ?? 1, name });
-            writePlanContent(projectRoot, phase.milestone_id, phase.number, number, populated);
-        }
-    }
 
     return plan;
 }
