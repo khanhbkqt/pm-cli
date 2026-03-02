@@ -3,20 +3,19 @@
 ## Current Position
 
 - **Milestone**: v3.4-gsd-templates — GSD Template Integration
-- **Phase**: 1 (ready for execution)
-- **Task**: Planning complete
-- **Status**: Ready for execution
+- **Phase**: 2 (ready for execution)
+- **Task**: Phase 1 complete
+- **Status**: Phase 1 verified, ready for Phase 2
 
 ## Last Session Summary
 
-Planning complete for v3.4-gsd-templates milestone.
+Phase 1 (Template Loader & Content Helpers) complete.
 
-3 phases, 3 PLAN.md files created:
-
-- Phase 1: Template Loader & Content Helpers — creates `template_gsd.ts` + extends `content.ts`
-- Phase 2: Domain Logic — updates `milestone.ts`, `phase.ts`, `plan.ts` to generate Markdown from templates
-- Phase 3: CLI Passthrough & Tests — wires `projectRoot` into CLI handlers, adds test coverage
+**Delivered:**
+- `src/core/template_gsd.ts` — 4 exported functions: `loadGsdTemplate`, `populatePlanTemplate`, `populateMilestoneTemplate`, `populatePhaseTemplate`
+- `src/core/content.ts` extended — milestone helpers: `getMilestoneContentPath`, `writeMilestoneContent`, `readMilestoneContent`; phase helpers: `getPhaseContentPath`, `writePhaseContent`, `readPhaseContent`
+- `npx tsc --noEmit` → ✅ zero errors
 
 ## Next Steps
 
-1. `/execute 1` — implement Phase 1 (template loader + content helpers)
+1. `/execute 2` — implement Phase 2 (domain logic: update milestone.ts, phase.ts, plan.ts to call template loaders)

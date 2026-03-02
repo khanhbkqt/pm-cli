@@ -290,14 +290,14 @@ When `pm milestone create`, `pm phase add`, or `pm plan create` is called, autom
 
 | Phase | Name | Status | Plans |
 |-------|------|--------|-------|
-| 1 | Template Loader & Content Helpers | ⬜ Not Started | 1 |
+| 1 | Template Loader & Content Helpers | ✅ Complete | 1 |
 | 2 | Domain Logic — Milestone, Phase & Plan | ⬜ Not Started | 1 |
 | 3 | CLI Passthrough & Tests | ⬜ Not Started | 1 |
 
 ---
 
 ### Phase 1: Template Loader & Content Helpers
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Create `src/core/template_gsd.ts` with template-loading functions, and extend `src/core/content.ts` with `writeMilestoneContent` and `writePhaseContent` helpers.
 **Depends on**: None
 
