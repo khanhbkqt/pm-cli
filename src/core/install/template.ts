@@ -163,3 +163,40 @@ export function loadSkillTemplates(projectRoot?: string): Map<string, string> {
 
     return skills;
 }
+
+/** Default relative path from project root to the GSD template files. */
+const GSD_TEMPLATES_RELATIVE_PATH = 'docs/templates';
+
+/**
+ * Resolve the absolute path to the canonical GSD templates directory
+ * (the distributed copy, NOT the project-local .pm/templates/).
+ *
+ * Lookup order (same as other template resolvers):
+ * 1. Relative to the given project root (development / source checkout)
+ * 2. Relative to the package install location (npm global install)
+ */
+export function getGsdTemplatesDir(projectRoot?: string): string {
+    if (projectRoot) {
+        const fromRoot = path.resolve(projectRoot, GSD_TEMPLATES_RELATIVE_PATH);
+        if (fs.existsSync(fromRoot) && fs.statSync(fromRoot).isDirectory()) {
+            return fromRoot;
+        }
+    }
+
+    const devPackageRoot = path.resolve(__dirname, '..', '..', '..');
+    const devFromPackage = path.join(devPackageRoot, GSD_TEMPLATES_RELATIVE_PATH);
+    if (fs.existsSync(devFromPackage) && fs.statSync(devFromPackage).isDirectory()) {
+        return devFromPackage;
+    }
+
+    const distPackageRoot = path.resolve(__dirname, '..');
+    const distFromPackage = path.join(distPackageRoot, GSD_TEMPLATES_RELATIVE_PATH);
+    if (fs.existsSync(distFromPackage) && fs.statSync(distFromPackage).isDirectory()) {
+        return distFromPackage;
+    }
+
+    throw new Error(
+        `Cannot find GSD templates at '${GSD_TEMPLATES_RELATIVE_PATH}'. ` +
+        'Ensure the pm package is installed correctly.'
+    );
+}
