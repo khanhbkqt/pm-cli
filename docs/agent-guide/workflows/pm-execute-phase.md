@@ -15,6 +15,12 @@ After plans have been created for a phase (via the Plan Phase workflow) and you'
 - Phase has plans (`pm plan list --phase <phase-id> --json`)
 - Plans are in `pending` status
 
+## Rules
+
+- Never execute a plan without reading the full plan from the filesystem
+- Never execute a plan without verifying the plan
+- Delegate the plan to a sub-agent to implement what the plan describes, keep the context small and focused
+
 ---
 
 ## Step 0: Quick Trace (Context Recovery)
@@ -68,7 +74,7 @@ Read the full plan from the filesystem (the DB only stores a brief):
 cat .pm/milestones/<milestone-id>/<phase-number>/<plan-number>-PLAN.md
 ```
 
-Implement what the plan describes. Follow task blocks in order:
+Delegate the plan to a developer agent to implement what the plan describes. Follow task blocks in order:
 1. Load plan context
 2. Execute tasks
 3. Verify each task with empirical evidence (never "it should work")
