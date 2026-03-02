@@ -1,6 +1,8 @@
 import type Database from 'better-sqlite3';
 import type { Milestone } from '../db/types.js';
 import { getAgentById } from './agent.js';
+import { loadGsdTemplate, populateMilestoneTemplate } from './template_gsd.js';
+import { writeMilestoneContent } from './content.js';
 
 /**
  * Validate that an agent exists. Throws if not found.
@@ -25,18 +27,29 @@ function requireMilestone(db: Database.Database, id: string): Milestone {
 
 /**
  * Create a new milestone.
+ * If `projectRoot` is provided and a `.gsd/templates/milestone.md` template exists,
+ * writes a populated MILESTONE.md to `.pm/milestones/<id>/MILESTONE.md`.
  */
 export function createMilestone(
     db: Database.Database,
-    params: { id: string; name: string; goal?: string; created_by: string }
+    params: { id: string; name: string; goal?: string; created_by: string; projectRoot?: string }
 ): Milestone {
-    const { id, name, goal, created_by } = params;
+    const { id, name, goal, created_by, projectRoot } = params;
 
     requireAgent(db, created_by, 'Creator');
 
     db.prepare(
         'INSERT INTO milestones (id, name, goal, created_by) VALUES (?, ?, ?, ?)'
     ).run(id, name, goal ?? null, created_by);
+
+    if (projectRoot) {
+        const date = new Date().toISOString().slice(0, 10);
+        const raw = loadGsdTemplate(projectRoot, 'milestone.md');
+        if (raw !== null) {
+            const content = populateMilestoneTemplate(raw, { id, name, date });
+            writeMilestoneContent(projectRoot, id, content);
+        }
+    }
 
     return db.prepare('SELECT * FROM milestones WHERE id = ?').get(id) as Milestone;
 }

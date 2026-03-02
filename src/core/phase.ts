@@ -1,5 +1,7 @@
 import type Database from 'better-sqlite3';
 import type { Phase } from '../db/types.js';
+import { loadGsdTemplate, populatePhaseTemplate } from './template_gsd.js';
+import { writePhaseContent } from './content.js';
 
 /**
  * Validate that a milestone exists. Throws if not found.
@@ -24,12 +26,14 @@ function requirePhase(db: Database.Database, id: string): Phase {
 
 /**
  * Add a new phase to a milestone.
+ * If `projectRoot` is provided and a `.gsd/templates/phase-summary.md` template exists,
+ * writes a populated PHASE.md to `.pm/milestones/<milestoneId>/<number>/PHASE.md`.
  */
 export function addPhase(
     db: Database.Database,
-    params: { milestone_id: string; number: number; name: string; description?: string }
+    params: { milestone_id: string; number: number; name: string; description?: string; projectRoot?: string }
 ): Phase {
-    const { milestone_id, number, name, description } = params;
+    const { milestone_id, number, name, description, projectRoot } = params;
 
     requireMilestoneExists(db, milestone_id);
 
@@ -37,6 +41,15 @@ export function addPhase(
     db.prepare(
         'INSERT INTO phases (id, milestone_id, number, name, description) VALUES (?, ?, ?, ?, ?)'
     ).run(id, milestone_id, number, name, description ?? null);
+
+    if (projectRoot) {
+        const date = new Date().toISOString().slice(0, 10);
+        const raw = loadGsdTemplate(projectRoot, 'phase-summary.md');
+        if (raw !== null) {
+            const content = populatePhaseTemplate(raw, { phaseNumber: number, name, date });
+            writePhaseContent(projectRoot, milestone_id, number, content);
+        }
+    }
 
     return db.prepare('SELECT * FROM phases WHERE id = ?').get(id) as Phase;
 }

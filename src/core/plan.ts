@@ -1,6 +1,7 @@
 import type Database from 'better-sqlite3';
 import type { Plan } from '../db/types.js';
 import { writePlanContent, readPlanContent } from './content.js';
+import { loadGsdTemplate, populatePlanTemplate } from './template_gsd.js';
 
 /**
  * Validate that a phase exists. Throws if not found.
@@ -51,10 +52,21 @@ export function createPlan(
 
     const plan = db.prepare('SELECT * FROM plans WHERE id = ?').get(id) as Plan;
 
-    // Write content to filesystem if provided
-    if (content !== undefined && projectRoot) {
+    // Write content to filesystem when projectRoot is provided
+    if (projectRoot) {
         const phase = db.prepare('SELECT number, milestone_id FROM phases WHERE id = ?').get(phase_id) as { number: number; milestone_id: string };
-        writePlanContent(projectRoot, phase.milestone_id, phase.number, number, content);
+
+        if (content !== undefined) {
+            // Explicit content takes priority — write as-is
+            writePlanContent(projectRoot, phase.milestone_id, phase.number, number, content);
+        } else {
+            // Auto-populate from template when no explicit content given
+            const raw = loadGsdTemplate(projectRoot, 'PLAN.md');
+            if (raw !== null) {
+                const populated = populatePlanTemplate(raw, { phaseNumber: phase.number, planNumber: number, wave: wave ?? 1, name });
+                writePlanContent(projectRoot, phase.milestone_id, phase.number, number, populated);
+            }
+        }
     }
 
     return plan;

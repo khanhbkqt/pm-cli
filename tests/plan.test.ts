@@ -168,5 +168,35 @@ describe('plan core', () => {
         const same = updatePlan(db, plan.id, {});
         expect(same.name).toBe('Same');
     });
+
+    // --- createPlan template auto-population ---
+
+    it('createPlan with projectRoot and no content auto-populates from PLAN.md template', () => {
+        const tplDir = path.join(tempDir, '.gsd', 'templates');
+        fs.mkdirSync(tplDir, { recursive: true });
+        fs.writeFileSync(
+            path.join(tplDir, 'PLAN.md'),
+            '---\nphase: {N}\nplan: {M}\nwave: {W}\n---\n\n# Plan {N}.{M}: {Descriptive Name}\n\n## Objective\nTODO\n',
+        );
+
+        const plan = createPlan(db, {
+            phase_id: phaseId,
+            number: 3,
+            name: 'Auto-Populated Plan',
+            wave: 2,
+            projectRoot: tempDir,
+        });
+
+        const fileContent = getPlanContent(db, plan.id, tempDir);
+        expect(fileContent).not.toBeNull();
+        expect(fileContent).toContain('phase: 1');
+        expect(fileContent).toContain('plan: 3');
+        expect(fileContent).toContain('wave: 2');
+        expect(fileContent).toContain('Auto-Populated Plan');
+        expect(fileContent).not.toContain('{N}');
+        expect(fileContent).not.toContain('{M}');
+        expect(fileContent).not.toContain('{W}');
+        expect(fileContent).not.toContain('{Descriptive Name}');
+    });
 });
 

@@ -4,6 +4,7 @@ import path from 'path';
 import os from 'os';
 import { getDatabase } from '../src/db/index.js';
 import { registerAgent } from '../src/core/agent.js';
+import { getMilestoneContentPath } from '../src/core/content.js';
 import {
     createMilestone,
     listMilestones,
@@ -145,5 +146,44 @@ describe('milestone core', () => {
 
         const active = getActiveMilestone(db);
         expect(active).toBeUndefined();
+    });
+
+    // --- createMilestone template generation ---
+
+    it('createMilestone with projectRoot writes MILESTONE.md from template when template exists', () => {
+        const tplDir = path.join(tempDir, '.gsd', 'templates');
+        fs.mkdirSync(tplDir, { recursive: true });
+        fs.writeFileSync(
+            path.join(tplDir, 'milestone.md'),
+            '# {name}\n\n**ID**: {milestone-name}\n**Status**: planning | active | complete | archived\n**Created**: [ISO timestamp]\n',
+        );
+
+        const ms = createMilestone(db, {
+            id: 'v-template',
+            name: 'Template MS',
+            created_by: testAgent.id,
+            projectRoot: tempDir,
+        });
+
+        const contentPath = getMilestoneContentPath(tempDir, ms.id);
+        expect(fs.existsSync(contentPath)).toBe(true);
+        const written = fs.readFileSync(contentPath, 'utf-8');
+        expect(written).toContain('Template MS');
+        expect(written).toContain('v-template');
+        expect(written).toContain('planning');
+        expect(written).not.toContain('{name}');
+        expect(written).not.toContain('{milestone-name}');
+    });
+
+    it('createMilestone with projectRoot silently skips if no template', () => {
+        const ms = createMilestone(db, {
+            id: 'v-no-tpl',
+            name: 'No Template',
+            created_by: testAgent.id,
+            projectRoot: tempDir,
+        });
+
+        const contentPath = getMilestoneContentPath(tempDir, ms.id);
+        expect(fs.existsSync(contentPath)).toBe(false);
     });
 });

@@ -5,6 +5,7 @@ import os from 'os';
 import { getDatabase } from '../src/db/index.js';
 import { registerAgent } from '../src/core/agent.js';
 import { createMilestone } from '../src/core/milestone.js';
+import { getPhaseContentPath } from '../src/core/content.js';
 import {
     addPhase,
     listPhases,
@@ -150,6 +151,45 @@ describe('phase core', () => {
     it('getPhaseByNumber returns undefined when not found', () => {
         const phase = getPhaseByNumber(db, milestoneId, 99);
         expect(phase).toBeUndefined();
+    });
+
+    // --- addPhase template generation ---
+
+    it('addPhase with projectRoot writes PHASE.md from template when template exists', () => {
+        const tplDir = path.join(tempDir, '.gsd', 'templates');
+        fs.mkdirSync(tplDir, { recursive: true });
+        fs.writeFileSync(
+            path.join(tplDir, 'phase-summary.md'),
+            '# Phase {N}: {Phase Name}\n\n**Status**: Not Started\n**Created**: YYYY-MM-DD\n\n## Objective\n{What this phase set out to accomplish.}\n',
+        );
+
+        const phase = addPhase(db, {
+            milestone_id: milestoneId,
+            number: 1,
+            name: 'Template Phase',
+            projectRoot: tempDir,
+        });
+
+        const contentPath = getPhaseContentPath(tempDir, milestoneId, phase.number);
+        expect(fs.existsSync(contentPath)).toBe(true);
+        const written = fs.readFileSync(contentPath, 'utf-8');
+        expect(written).toContain('Phase 1:');
+        expect(written).toContain('Template Phase');
+        expect(written).not.toContain('{N}');
+        expect(written).not.toContain('{Phase Name}');
+        expect(written).not.toContain('YYYY-MM-DD');
+    });
+
+    it('addPhase with projectRoot silently skips if no template', () => {
+        const phase = addPhase(db, {
+            milestone_id: milestoneId,
+            number: 2,
+            name: 'No Template Phase',
+            projectRoot: tempDir,
+        });
+
+        const contentPath = getPhaseContentPath(tempDir, milestoneId, phase.number);
+        expect(fs.existsSync(contentPath)).toBe(false);
     });
 });
 
