@@ -8,9 +8,9 @@ import { createProgressRouter } from './routes/progress.js';
 
 /**
  * Create an Express app for the dashboard.
- * Accepts a database connection for API routes and static file serving.
+ * Accepts a database connection and project root for API routes and static file serving.
  */
-export function createApp(db: Database.Database): express.Express {
+export function createApp(db: Database.Database, projectRoot: string): express.Express {
     const app = express();
     app.use(express.json());
 
@@ -27,7 +27,7 @@ export function createApp(db: Database.Database): express.Express {
     app.use(createProgressRouter(db));
     app.use(createMilestoneRoutes(db));
     app.use(createPhaseRoutes(db));
-    app.use(createPlanRoutes(db));
+    app.use(createPlanRoutes(db, projectRoot));
     app.use(createBoardRoutes(db));
 
     // Serve static dashboard files if the directory exists

@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { handleCommandError } from '../../cli/error.js';
-import { getProjectDb } from '../../core/identity.js';
+import { getProjectDb, findProjectRoot } from '../../core/identity.js';
 import { createApp, getAvailablePort, openBrowser } from '../../server/index.js';
 
 /**
@@ -15,8 +15,9 @@ export function registerDashboardCommand(program: Command): void {
         .option('--no-open', "Don't auto-open browser")
         .action(async (opts) => {
             try {
-                const db = getProjectDb();
-                const app = createApp(db);
+                const projectRoot = findProjectRoot();
+                const db = getProjectDb(projectRoot);
+                const app = createApp(db, projectRoot);
                 const preferredPort = parseInt(opts.port, 10);
                 const resolvedPort = await getAvailablePort(preferredPort);
                 const url = `http://localhost:${resolvedPort}`;

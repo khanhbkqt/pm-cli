@@ -90,7 +90,10 @@ pm context set "phase-{N}-research" "{key findings}" --category decision
 
 ## Step 4: Create Plans
 
-For each plan:
+For each plan, create it with its content. Content is stored as a file at
+`.pm/milestones/<milestone-id>/<phase-number>/<plan-number>-PLAN.md`.
+
+**Option A — Inline content (CLI writes the file automatically):**
 
 ```bash
 pm plan create "<plan-name>" \
@@ -100,15 +103,47 @@ pm plan create "<plan-name>" \
   --content "<objective, tasks, verification, success criteria>"
 ```
 
+**Option B — Write the file directly, then register:**
+
+```bash
+# Write content file first
+mkdir -p .pm/milestones/<milestone-id>/<phase-number>
+cat > .pm/milestones/<milestone-id>/<phase-number>/<N>-PLAN.md << 'EOF'
+# Plan <N>: <Name>
+
+## Objective
+...
+
+## Tasks
+...
+
+## Success Criteria
+...
+EOF
+
+# Register plan in DB (links to file above)
+pm plan create "<plan-name>" \
+  --phase <phase-id> \
+  --number <N> \
+  --wave <wave-number>
+```
+
 ### Plan Content Structure
 
-Each plan's `--content` should include:
+Each plan file (`.pm/milestones/.../<N>-PLAN.md`) should include:
 - **Objective** — What and why
 - **Context** — File references needed
 - **Tasks** — Specific implementation steps with verification
 - **Success criteria** — Measurable outcomes
 
----
+To view a plan's full content:
+```bash
+pm plan show <plan-id>
+# or read directly:
+cat .pm/milestones/<milestone-id>/<phase-number>/<plan-number>-PLAN.md
+```
+
+
 
 ## Step 5: Verify Plans (Checker Logic)
 

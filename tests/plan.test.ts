@@ -11,7 +11,9 @@ import {
     listPlans,
     getPlanById,
     updatePlan,
+    getPlanContent,
 } from '../src/core/plan.js';
+import { getPlanContentPath } from '../src/core/content.js';
 
 describe('plan core', () => {
     let tempDir: string;
@@ -49,22 +51,27 @@ describe('plan core', () => {
         expect(plan.name).toBe('Schema');
         expect(plan.wave).toBe(1);
         expect(plan.status).toBe('pending');
-        expect(plan.content).toBeNull();
+        expect(plan.content).toBeNull();  // content always null in DB
         expect(plan.created_at).toBeDefined();
         expect(plan.completed_at).toBeNull();
     });
 
-    it('createPlan with wave and content', () => {
+    it('createPlan with wave and content writes to filesystem', () => {
         const plan = createPlan(db, {
             phase_id: phaseId,
             number: 1,
             name: 'Schema',
             wave: 2,
             content: '# Plan content',
+            projectRoot: tempDir,
         });
 
         expect(plan.wave).toBe(2);
-        expect(plan.content).toBe('# Plan content');
+        // DB content is always null — stored on filesystem
+        expect(plan.content).toBeNull();
+        // Verify content was written to file
+        const fileContent = getPlanContent(db, plan.id, tempDir);
+        expect(fileContent).toBe('# Plan content');
     });
 
     it('createPlan throws if phase does not exist', () => {
@@ -123,12 +130,16 @@ describe('plan core', () => {
 
     // --- updatePlan ---
 
-    it('updatePlan updates name and content', () => {
-        const plan = createPlan(db, { phase_id: phaseId, number: 1, name: 'Old' });
-        const updated = updatePlan(db, plan.id, { name: 'New', content: '# Updated' });
+    it('updatePlan updates name and content via filesystem', () => {
+        const plan = createPlan(db, { phase_id: phaseId, number: 1, name: 'Old', projectRoot: tempDir });
+        const updated = updatePlan(db, plan.id, { name: 'New', content: '# Updated', projectRoot: tempDir });
 
         expect(updated.name).toBe('New');
-        expect(updated.content).toBe('# Updated');
+        // DB content always null
+        expect(updated.content).toBeNull();
+        // File content updated
+        const fileContent = getPlanContent(db, plan.id, tempDir);
+        expect(fileContent).toBe('# Updated');
     });
 
     it('updatePlan sets completed_at when status changes to completed', () => {

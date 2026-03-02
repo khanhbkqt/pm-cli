@@ -5,9 +5,10 @@ import {
     listPlans,
     getPlanById,
     updatePlan,
+    getPlanContent,
 } from '../../core/plan.js';
 import { transitionPlan } from '../../core/workflow.js';
-import { resolveIdentity, getProjectDb } from '../../core/identity.js';
+import { resolveIdentity, getProjectDb, findProjectRoot } from '../../core/identity.js';
 import {
     formatPlan,
     formatPlanList,
@@ -29,17 +30,19 @@ export function registerPlanCommands(program: Command): void {
         .requiredOption('--phase <id>', 'Phase DB ID')
         .requiredOption('--number <n>', 'Plan number')
         .option('--wave <n>', 'Wave number (default: 1)')
-        .option('--content <text>', 'Plan content/description')
+        .option('--content <text>', 'Plan content (written to .pm/milestones/... file)')
         .action(async (name: string, opts: { phase: string; number: string; wave?: string; content?: string }) => {
             try {
                 const db = getProjectDb();
                 resolveIdentity(db, { agent: program.opts().agent });
+                const projectRoot = findProjectRoot();
                 const created = createPlan(db, {
                     phase_id: opts.phase,
                     number: parseInt(opts.number, 10),
                     name,
                     wave: opts.wave ? parseInt(opts.wave, 10) : 1,
                     content: opts.content,
+                    projectRoot,
                 });
                 const json = program.opts().json;
 
@@ -47,6 +50,9 @@ export function registerPlanCommands(program: Command): void {
                     console.log(JSON.stringify(created, null, 2));
                 } else {
                     console.log(`✓ Plan #${created.number} created in phase '${opts.phase}'`);
+                    if (opts.content) {
+                        console.log(`  Content written to: .pm/milestones/.../${created.number}-PLAN.md`);
+                    }
                 }
                 db.close();
             } catch (error) {
@@ -83,6 +89,7 @@ export function registerPlanCommands(program: Command): void {
         .action(async (id: string) => {
             try {
                 const db = getProjectDb();
+                const projectRoot = findProjectRoot();
                 const json = program.opts().json;
                 const found = getPlanById(db, id);
 
@@ -91,7 +98,8 @@ export function registerPlanCommands(program: Command): void {
                     process.exit(1);
                 }
 
-                console.log(formatPlan(found, json));
+                const content = getPlanContent(db, id, projectRoot);
+                console.log(formatPlan(found, json, content ?? undefined));
                 db.close();
             } catch (error) {
                 handleCommandError(error);
@@ -104,21 +112,25 @@ export function registerPlanCommands(program: Command): void {
         .description('Update plan fields')
         .option('--name <name>', 'New name')
         .option('--status <status>', 'New status (routed through workflow transitions)')
-        .option('--content <text>', 'New content')
+        .option('--content <text>', 'New content (written to .pm/milestones/... file)')
         .option('--wave <n>', 'New wave number')
         .option('--force', 'Bypass transition validation')
         .action(async (id: string, opts: { name?: string; status?: string; content?: string; wave?: string; force?: boolean }) => {
             try {
                 const db = getProjectDb();
+                const projectRoot = findProjectRoot();
                 resolveIdentity(db, { agent: program.opts().agent });
                 if (opts.status) {
                     transitionPlan(db, id, opts.status as any, { force: opts.force });
                 }
 
-                // Apply non-status updates via raw CRUD
-                const otherUpdates: { name?: string; content?: string; wave?: number } = {};
+                // Apply non-status updates
+                const otherUpdates: { name?: string; content?: string; wave?: number; projectRoot?: string } = {};
                 if (opts.name !== undefined) otherUpdates.name = opts.name;
-                if (opts.content !== undefined) otherUpdates.content = opts.content;
+                if (opts.content !== undefined) {
+                    otherUpdates.content = opts.content;
+                    otherUpdates.projectRoot = projectRoot;
+                }
                 if (opts.wave !== undefined) otherUpdates.wave = parseInt(opts.wave, 10);
 
                 if (Object.keys(otherUpdates).length > 0) {

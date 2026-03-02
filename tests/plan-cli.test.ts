@@ -54,7 +54,7 @@ describe('plan CLI commands', () => {
     it('pm plan create creates a plan', { timeout: 15000 }, () => {
         const output = run(`--agent alice plan create "My Plan" --phase ${phaseId} --number 1`, tempDir);
         expect(output).toContain('Plan #1 created');
-        expect(output).toContain(`phase #${phaseId}`);
+        expect(output).toContain(`in phase '${phaseId}'`);
     });
 
     it('pm plan create without --agent shows identity error', { timeout: 15000 }, () => {

@@ -195,23 +195,29 @@ export function formatPhaseList(phases: Phase[], json: boolean): string {
 
 /**
  * Format a single plan for display.
+ * `content` is loaded from the filesystem (.pm/milestones/...) by the caller.
  */
-export function formatPlan(plan: Plan, json: boolean): string {
+export function formatPlan(plan: Plan, json: boolean, content?: string): string {
     if (json) {
-        return JSON.stringify(plan, null, 2);
+        return JSON.stringify({ ...plan, content: content ?? null }, null, 2);
     }
 
-    return [
+    const lines = [
         `ID:        ${plan.id}`,
         `Number:    ${plan.number}`,
         `Name:      ${plan.name}`,
         `Phase:     ${plan.phase_id}`,
         `Wave:      ${plan.wave}`,
         `Status:    ${plan.status}`,
-        plan.content ? `Content:   ${plan.content}` : null,
         `Created:   ${plan.created_at}`,
         plan.completed_at ? `Completed: ${plan.completed_at}` : null,
-    ].filter(Boolean).join('\n');
+    ].filter(Boolean) as string[];
+
+    if (content) {
+        lines.push('', '--- Content ---', content);
+    }
+
+    return lines.join('\n');
 }
 
 /**

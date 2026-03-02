@@ -14,8 +14,8 @@ let server: Server;
 let baseUrl: string;
 let testAgentId: string;
 let milestoneId: string;
-let phaseId: number;
-let planId: number;
+let phaseId: string;
+let planId: string;
 
 beforeAll(async () => {
     db = new Database(':memory:');
@@ -31,10 +31,11 @@ beforeAll(async () => {
     const phase = addPhase(db, { milestone_id: milestoneId, number: 1, name: 'Phase One', description: 'First phase' });
     phaseId = phase.id;
 
-    const plan = createPlan(db, { phase_id: phaseId, number: 1, name: 'Plan Alpha', wave: 1, content: 'Do things' });
+    const plan = createPlan(db, { phase_id: phaseId, number: 1, name: 'Plan Alpha', wave: 1 });
     planId = plan.id;
 
-    const app = createApp(db);
+    // projectRoot not needed for plan content in these tests (no --content used)
+    const app = createApp(db, '/tmp');
     const port = await getAvailablePort(5200);
     server = app.listen(port);
     baseUrl = `http://localhost:${port}`;
@@ -168,6 +169,8 @@ describe('Plan Endpoints', () => {
         const body = await res.json();
         expect(body.plan.id).toBe(planId);
         expect(body.plan.name).toBe('Plan Alpha');
+        // content is null in DB; file not found in /tmp so it's also null
+        expect(body.plan.content).toBeNull();
     });
 
     it('GET /api/plans/99999 — returns 404 for non-existent', async () => {

@@ -1,5 +1,6 @@
 import type Database from 'better-sqlite3';
 import type { Plan } from '../db/types.js';
+import { writePlanContent, readPlanContent } from './content.js';
 
 /**
  * Validate that a phase exists. Throws if not found.
@@ -24,21 +25,39 @@ function requirePlan(db: Database.Database, id: string): Plan {
 
 /**
  * Create a new plan within a phase.
+ * If `content` and `projectRoot` are provided, plan content is written to
+ * .pm/milestones/<milestoneId>/<phaseNumber>/<planNumber>-PLAN.md
  */
 export function createPlan(
     db: Database.Database,
-    params: { phase_id: string; number: number; name: string; wave?: number; content?: string }
+    params: {
+        phase_id: string;
+        number: number;
+        name: string;
+        wave?: number;
+        content?: string;
+        projectRoot?: string;
+    }
 ): Plan {
-    const { phase_id, number, name, wave, content } = params;
+    const { phase_id, number, name, wave, content, projectRoot } = params;
 
     requirePhaseExists(db, phase_id);
 
     const id = crypto.randomUUID();
+    // content column always NULL — full content lives on filesystem
     db.prepare(
-        'INSERT INTO plans (id, phase_id, number, name, wave, content) VALUES (?, ?, ?, ?, ?, ?)'
-    ).run(id, phase_id, number, name, wave ?? 1, content ?? null);
+        'INSERT INTO plans (id, phase_id, number, name, wave, content) VALUES (?, ?, ?, ?, ?, NULL)'
+    ).run(id, phase_id, number, name, wave ?? 1);
 
-    return db.prepare('SELECT * FROM plans WHERE id = ?').get(id) as Plan;
+    const plan = db.prepare('SELECT * FROM plans WHERE id = ?').get(id) as Plan;
+
+    // Write content to filesystem if provided
+    if (content !== undefined && projectRoot) {
+        const phase = db.prepare('SELECT number, milestone_id FROM phases WHERE id = ?').get(phase_id) as { number: number; milestone_id: string };
+        writePlanContent(projectRoot, phase.milestone_id, phase.number, number, content);
+    }
+
+    return plan;
 }
 
 /**
@@ -74,12 +93,40 @@ export function getPlanById(db: Database.Database, id: string): Plan | undefined
 }
 
 /**
+ * Read the filesystem content for a plan.
+ * Resolves phase number and milestone ID from the DB, then reads the file.
+ * Returns null if the content file does not exist.
+ */
+export function getPlanContent(
+    db: Database.Database,
+    planId: string,
+    projectRoot: string,
+): string | null {
+    const row = db.prepare(`
+        SELECT pl.number as plan_number, ph.number as phase_number, ph.milestone_id
+        FROM plans pl
+        JOIN phases ph ON ph.id = pl.phase_id
+        WHERE pl.id = ?
+    `).get(planId) as { plan_number: number; phase_number: number; milestone_id: string } | undefined;
+
+    if (!row) return null;
+    return readPlanContent(projectRoot, row.milestone_id, row.phase_number, row.plan_number);
+}
+
+/**
  * Update plan fields. Only non-undefined fields are updated.
+ * If `content` and `projectRoot` are provided, writes content to filesystem.
  */
 export function updatePlan(
     db: Database.Database,
     id: string,
-    updates: { name?: string; status?: string; content?: string; wave?: number }
+    updates: {
+        name?: string;
+        status?: string;
+        content?: string;
+        wave?: number;
+        projectRoot?: string;
+    }
 ): Plan {
     requirePlan(db, id);
 
@@ -97,21 +144,27 @@ export function updatePlan(
             setClauses.push('completed_at = CURRENT_TIMESTAMP');
         }
     }
-    if (updates.content !== undefined) {
-        setClauses.push('content = ?');
-        values.push(updates.content);
-    }
     if (updates.wave !== undefined) {
         setClauses.push('wave = ?');
         values.push(updates.wave);
     }
 
-    if (setClauses.length === 0) {
-        return db.prepare('SELECT * FROM plans WHERE id = ?').get(id) as Plan;
+    if (setClauses.length > 0) {
+        values.push(id);
+        db.prepare(`UPDATE plans SET ${setClauses.join(', ')} WHERE id = ?`).run(...values);
     }
 
-    values.push(id);
-    db.prepare(`UPDATE plans SET ${setClauses.join(', ')} WHERE id = ?`).run(...values);
+    // Write content to filesystem if provided
+    if (updates.content !== undefined && updates.projectRoot) {
+        const row = db.prepare(`
+            SELECT pl.number as plan_number, ph.number as phase_number, ph.milestone_id
+            FROM plans pl
+            JOIN phases ph ON ph.id = pl.phase_id
+            WHERE pl.id = ?
+        `).get(id) as { plan_number: number; phase_number: number; milestone_id: string };
+
+        writePlanContent(updates.projectRoot, row.milestone_id, row.phase_number, row.plan_number, updates.content);
+    }
 
     return db.prepare('SELECT * FROM plans WHERE id = ?').get(id) as Plan;
 }

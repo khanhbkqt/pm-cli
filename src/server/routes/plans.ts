@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import type Database from 'better-sqlite3';
-import { listPlans, getPlanById } from '../../core/plan.js';
+import { listPlans, getPlanById, getPlanContent } from '../../core/plan.js';
 
 /**
  * Create Express Router with plan API endpoints.
+ * `projectRoot` is used to resolve plan content files from the filesystem.
  */
-export function createPlanRoutes(db: Database.Database): Router {
+export function createPlanRoutes(db: Database.Database, projectRoot: string): Router {
     const router = Router();
 
-    // GET /api/phases/:phaseId/plans — list plans for a phase
+    // GET /api/phases/:phaseId/plans — list plans for a phase (metadata only, no content)
     router.get('/api/phases/:phaseId/plans', (req, res) => {
         try {
             const status = req.query.status as string | undefined;
@@ -26,7 +27,7 @@ export function createPlanRoutes(db: Database.Database): Router {
         }
     });
 
-    // GET /api/plans/:id — get single plan by ID
+    // GET /api/plans/:id — get single plan by ID, including content from filesystem
     router.get('/api/plans/:id', (req, res) => {
         try {
             const plan = getPlanById(db, req.params.id);
@@ -34,7 +35,8 @@ export function createPlanRoutes(db: Database.Database): Router {
                 res.status(404).json({ error: `Plan '${req.params.id}' not found` });
                 return;
             }
-            res.json({ plan });
+            const content = getPlanContent(db, req.params.id, projectRoot);
+            res.json({ plan: { ...plan, content } });
         } catch (err: any) {
             res.status(400).json({ error: err.message });
         }

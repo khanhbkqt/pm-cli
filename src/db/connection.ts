@@ -122,8 +122,16 @@ export function runMigrations(db: Database.Database): MigrationResult {
             currentVersion = 1;
         }
 
+        if (currentVersion === 1) {
+            // v1 → v2: plan content moved to filesystem files (.pm/milestones/...)
+            // Null out any content stored in the DB column — it is no longer read.
+            db.exec(`UPDATE plans SET content = NULL WHERE content IS NOT NULL;`);
+            currentVersion = 2;
+        }
+
         // Update version after all successful migrations
         db.pragma(`user_version = ${currentVersion}`);
+
     })();
 
     // Re-enable foreign keys after transaction
