@@ -56,15 +56,7 @@ describe('plan core', () => {
         expect(plan.completed_at).toBeNull();
     });
 
-    it('createPlan with content stores brief in DB and template in file', () => {
-        // Set up template
-        const tplDir = path.join(tempDir, '.pm', 'templates');
-        fs.mkdirSync(tplDir, { recursive: true });
-        fs.writeFileSync(
-            path.join(tplDir, 'PLAN.md'),
-            '# Plan {N}.{M}: {Descriptive Name}\n\n## Objective\nTODO\n',
-        );
-
+    it('createPlan with content stores brief in DB only (agent writes the plan file separately)', () => {
         const plan = createPlan(db, {
             phase_id: phaseId,
             number: 1,
@@ -77,10 +69,9 @@ describe('plan core', () => {
         expect(plan.wave).toBe(2);
         // Brief stored in DB
         expect(plan.content).toBe('Set up the database schema and models');
-        // File gets the comprehensive template version (not the brief)
+        // No plan file is auto-generated — agent writes it via updatePlan
         const fileContent = getPlanContent(db, plan.id, tempDir);
-        expect(fileContent).toContain('# Plan 1.1: Schema');
-        expect(fileContent).toContain('## Objective');
+        expect(fileContent).toBeNull();
     });
 
     it('createPlan throws if phase does not exist', () => {
@@ -178,14 +169,7 @@ describe('plan core', () => {
         expect(same.name).toBe('Same');
     });
 
-    it('createPlan without content still writes template to file', () => {
-        const tplDir = path.join(tempDir, '.pm', 'templates');
-        fs.mkdirSync(tplDir, { recursive: true });
-        fs.writeFileSync(
-            path.join(tplDir, 'PLAN.md'),
-            '# Plan {N}.{M}: {Descriptive Name}\n\n## Objective\nTODO\n',
-        );
-
+    it('createPlan without content leaves no plan file (agent generates it later)', () => {
         const plan = createPlan(db, {
             phase_id: phaseId,
             number: 3,
@@ -196,10 +180,9 @@ describe('plan core', () => {
 
         // No brief in DB
         expect(plan.content).toBeNull();
-        // But template file is still generated
+        // No file generated — agent is responsible for writing the comprehensive plan
         const fileContent = getPlanContent(db, plan.id, tempDir);
-        expect(fileContent).not.toBeNull();
-        expect(fileContent).toContain('# Plan 1.3: No Brief Plan');
+        expect(fileContent).toBeNull();
     });
 });
 
