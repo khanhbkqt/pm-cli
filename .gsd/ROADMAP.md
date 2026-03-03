@@ -333,7 +333,7 @@ Add first-class bug tracking to pm-cli — a dedicated `bugs` table in SQLite, d
 | 2 | Core Domain Logic | ✅ Complete | 2 |
 | 3 | Formatter & CLI Commands | ✅ Complete | 2 |
 | 4 | Dashboard API Routes & UI | ✅ Complete | 2 |
-| 5 | Workflow Updates | ⬜ Not Started | 2 |
+| 5 | Workflow Updates | ✅ Complete | 2 |
 
 ---
 
@@ -358,6 +358,6 @@ Add first-class bug tracking to pm-cli — a dedicated `bugs` table in SQLite, d
 **Depends on**: Phase 3
 
 ### Phase 5: Workflow Updates
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Update `pm-execute-phase.md` with blocking bug check, update `pm-debug.md` to integrate with bug system, create new `pm-fix-bug.md` workflow.
 **Depends on**: Phase 2

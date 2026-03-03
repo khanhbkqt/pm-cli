@@ -3,14 +3,14 @@
 ## Current Position
 
 - **Milestone**: v3.5-bug-tracking
-- **Phase**: 3 (completed)
+- **Phase**: 5 (completed)
 - **Task**: All tasks complete
 - **Status**: Verified ✅
 
 ## Last Session Summary
 
-Phase 3 executed successfully. 2 plans, 3 tasks completed across 2 waves. Wave 1: Added `formatBug`/`formatBugList` to `src/output/formatter.ts` with priority icons (🔴🟠🟡🟢). Created `src/cli/commands/bug.ts` with `report`, `list`, `show`, `update` subcommands. Registered in `src/index.ts`. Wave 2: Created `tests/bug-cli.test.ts` with 12 passing CLI integration tests.
+Phase 5 executed successfully. 2 plans, 4 tasks completed in 1 wave (both plans wave 1). Updated `pm-execute-phase.md` with a blocking bug gate (Step 0.5) and linked to `pm-fix-bug.md`. Rewrote `pm-debug.md` to replace `pm context set` with `pm bug` commands throughout. Created `pm-fix-bug.md` workflow with 8-step bug resolution process (open → investigating → fixing → resolved). Added `fix-bug` to `pm-help.md` workflow table.
 
 ## Next Steps
 
-1. /execute 4 — Dashboard API Routes & UI
+1. All phases of v3.5-bug-tracking are complete — consider `/complete-milestone` or `/audit-milestone`
