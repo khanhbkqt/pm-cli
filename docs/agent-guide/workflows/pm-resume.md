@@ -20,11 +20,11 @@ When starting a new session after a previous pause, or when you need to understa
 ## Step 1: Load Saved State
 
 ```bash
-pm context get session:phase
-pm context get session:plan
-pm context get session:status
-pm context get session:summary
-pm context get session:next-steps
+pm context get session:phase --agent <name>
+pm context get session:plan --agent <name>
+pm context get session:status --agent <name>
+pm context get session:summary --agent <name>
+pm context get session:next-steps --agent <name>
 ```
 
 If no saved context exists, skip to Step 2.
@@ -49,7 +49,7 @@ These may be from the previous session. Review before proceeding.
 ## Step 3: Review Overall Progress
 
 ```bash
-pm progress
+pm progress --agent <name>
 ```
 
 Understand where the project stands — which phases are done, in progress, or pending.
@@ -61,10 +61,10 @@ Understand where the project stands — which phases are done, in progress, or p
 If debugging context was saved:
 
 ```bash
-pm context get session:blockers
-pm context get session:approaches-tried
-pm context get session:hypothesis
-pm context get session:files-of-interest
+pm context get session:blockers --agent <name>
+pm context get session:approaches-tried --agent <name>
+pm context get session:hypothesis --agent <name>
+pm context get session:files-of-interest --agent <name>
 ```
 
 Review what was tried and what failed — avoid repeating failed approaches.
@@ -74,7 +74,7 @@ Review what was tried and what failed — avoid repeating failed approaches.
 ## Step 5: Find Pending Work
 
 ```bash
-pm plan list --phase <phase-id> --json
+pm plan list --phase <phase-id> --json --agent <name>
 ```
 
 Look for:

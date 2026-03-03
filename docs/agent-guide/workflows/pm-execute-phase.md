@@ -40,7 +40,7 @@ Before executing any plans, quickly understand the current state:
    > ⚠️ **CRITICAL:** The user refers to phases by their **number** (e.g. "Phase 3"). This is NOT the database `<phase-id>`. You MUST look up the actual integer ID before running any `pm` command.
 
    ```bash
-   pm phase list --json
+   pm phase list --json --agent <name>
    ```
 
    Find the entry where `"number": <N>` matches the phase the user requested. Use its `"id"` field as `<phase-id>` in all subsequent commands.
@@ -56,7 +56,7 @@ _This ensures you don't execute plans blindly without understanding the wider ph
 Before executing plans, check for unresolved blocking bugs:
 
 ```bash
-pm bug list --blocking --status open
+pm bug list --blocking --status open --agent <name>
 ```
 
 **If blocking bugs exist:**
@@ -71,7 +71,7 @@ pm bug list --blocking --status open
 ## Step 1: Review Plans and Wave Order
 
 ```bash
-pm plan list --phase <phase-id> --json
+pm plan list --phase <phase-id> --json --agent <name>
 ```
 
 Group plans by wave. Execute wave 1 first, then wave 2, etc.
@@ -92,7 +92,7 @@ For each plan in wave order:
 ### 2a. Start the Plan
 
 ```bash
-pm plan update <plan-id> --status in_progress
+pm plan update <plan-id> --status in_progress --agent <name>
 ```
 
 **Cascading:** Starting a plan auto-transitions the parent phase to `in_progress` if it's `not_started`.
@@ -122,7 +122,7 @@ git commit -m "feat(phase-{N}): {plan-name}"
 ### 2d. Complete the Plan
 
 ```bash
-pm plan update <plan-id> --status completed
+pm plan update <plan-id> --status completed --agent <name>
 ```
 
 ### 2e. Handle Failures
@@ -130,7 +130,7 @@ pm plan update <plan-id> --status completed
 If a plan cannot be completed:
 
 ```bash
-pm plan update <plan-id> --status failed
+pm plan update <plan-id> --status failed --agent <name>
 ```
 
 To retry: set back to `pending`, then restart from 2a.
@@ -144,7 +144,7 @@ After all plans in a wave complete:
 2. Only then proceed to the next wave
 
 ```bash
-pm plan list --phase <phase-id> --json
+pm plan list --phase <phase-id> --json --agent <name>
 ```
 
 ---
@@ -153,7 +153,7 @@ pm plan list --phase <phase-id> --json
 
 After all waves complete:
 
-1. Review phase objective from `pm phase show <phase-id>`
+1. Review phase objective from `pm phase show <phase-id> --agent <name>`
 2. Check all must-haves against actual codebase (not claims)
 3. Run verification commands (build, tests, etc.)
 
@@ -187,7 +187,7 @@ After committing, update the project state files:
 ## Step 6: Track Progress
 
 ```bash
-pm progress
+pm progress --agent <name>
 ```
 
 ---
@@ -196,7 +196,7 @@ pm progress
 
 **After 3 failed debugging attempts on the same issue:**
 1. Stop current approach
-2. Record what was tried via `pm context set debug-attempts "{approaches tried}"`
+2. Record what was tried via `pm context set debug-attempts "{approaches tried}" --agent <name>`
 3. Recommend pausing for a fresh session (`/pause`)
 
 ---

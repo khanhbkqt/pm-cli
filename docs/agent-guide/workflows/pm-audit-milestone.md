@@ -12,7 +12,7 @@ When you believe a milestone is ready to complete, but want to do a thorough che
 
 ## Prerequisites
 
-- Milestone is active (`pm milestone list --status active`)
+- Milestone is active (`pm milestone list --status active --agent <name>`)
 - Most phases should be in `completed` status
 
 ---
@@ -34,7 +34,7 @@ _This ensures you evaluate the milestone against its original goals, not just it
 ## Step 1: Check Overall Progress
 
 ```bash
-pm progress
+pm progress --agent <name>
 ```
 
 Review the completion percentage and identify any phases not yet at 100%.
@@ -44,7 +44,7 @@ Review the completion percentage and identify any phases not yet at 100%.
 ## Step 2: Review Each Phase
 
 ```bash
-pm phase list --json
+pm phase list --json --agent <name>
 ```
 
 For each phase, check its status:
@@ -68,13 +68,13 @@ For each incomplete phase, decide:
 **Option B: Skip it** — It's out of scope or deferred:
 
 ```bash
-pm phase update <phase-id> --status skipped
+pm phase update <phase-id> --status skipped --agent <name>
 ```
 
 **Option C: Force complete** — Use `--force` on milestone completion (not recommended):
 
 ```bash
-pm milestone update <slug> --status completed --force
+pm milestone update <slug> --status completed --force --agent <name>
 ```
 
 ---

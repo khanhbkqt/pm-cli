@@ -92,8 +92,8 @@ Write a `SPEC.md` with:
 ## Step 6: Create the First Milestone
 
 ```bash
-pm milestone create <slug> "<name>" --goal "<goal from SPEC>"
-pm milestone update <slug> --status active
+pm milestone create <slug> "<name>" --goal "<goal from SPEC>" --agent <name>
+pm milestone update <slug> --status active --agent <name>
 ```
 
 This stores brief metadata in the database and auto-generates `.pm/milestones/<slug>/MILESTONE.md` from `.pm/templates/milestone.md`.
@@ -105,9 +105,9 @@ This stores brief metadata in the database and auto-generates `.pm/milestones/<s
 Break the milestone into 3-5 phases based on SPEC goals:
 
 ```bash
-pm phase add "Foundation & Setup" --number 1 --description "Project setup and schema"
-pm phase add "Core Feature A" --number 2 --description "Implement Feature A"
-pm phase add "Core Feature B" --number 3 --description "Implement Feature B"
+pm phase add "Foundation & Setup" --number 1 --description "Project setup and schema" --agent <name>
+pm phase add "Core Feature A" --number 2 --description "Implement Feature A" --agent <name>
+pm phase add "Core Feature B" --number 3 --description "Implement Feature B" --agent <name>
 ```
 
 Each call stores brief metadata in the database and auto-generates `.pm/milestones/<slug>/<N>/PHASE.md` from `.pm/templates/phase-summary.md`.
@@ -122,7 +122,7 @@ Each call stores brief metadata in the database and auto-generates `.pm/mileston
 ## Step 8: Verify Setup
 
 ```bash
-pm progress
+pm progress --agent <name>
 ```
 
 Confirm the milestone is active and phases match your SPEC.

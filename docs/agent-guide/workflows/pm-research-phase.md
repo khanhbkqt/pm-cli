@@ -43,8 +43,8 @@ _This ensures your research is relevant and doesn't stray out of scope._
 ## Step 1: Load Phase Context
 
 ```bash
-pm phase show <phase-id> --json
-pm progress --json
+pm phase show <phase-id> --json --agent <name>
+pm progress --json --agent <name>
 ```
 
 Review the phase objective and understand what needs to be researched.
@@ -81,11 +81,13 @@ Store key decisions and findings:
 ```bash
 pm context set "research-phase-<N>" \
   "<summary of findings, decisions, and recommendations>" \
-  --category decision
+  --category decision \
+  --agent <name>
 
 pm context set "research-phase-<N>-deps" \
   "<dependencies identified: package@version — purpose>" \
-  --category note
+  --category note \
+  --agent <name>
 ```
 
 ---
@@ -102,7 +104,7 @@ git commit -m "docs(phase-<N>): research complete"
 - [ ] Research questions answered
 - [ ] Approach selected with rationale
 - [ ] Dependencies identified
-- [ ] Findings recorded via `pm context set`
+- [ ] Findings recorded via `pm context set` with `--agent <name>`
 
 ## Offer Next Steps
 

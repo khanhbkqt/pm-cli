@@ -30,7 +30,7 @@ Before creating a milestone, define what you're building:
 ## Step 2: Create the Milestone
 
 ```bash
-pm milestone create <slug> "<name>" --goal "<goal description from SPEC>"
+pm milestone create <slug> "<name>" --goal "<goal description from SPEC>" --agent <name>
 ```
 
 This does **two things**:
@@ -39,7 +39,7 @@ This does **two things**:
 
 **Example:**
 ```bash
-pm milestone create v2.0-auth "Authentication System" --goal "Add user authentication per Spec"
+pm milestone create v2.0-auth "Authentication System" --goal "Add user authentication per Spec" --agent <name>
 ```
 
 ---
@@ -47,7 +47,7 @@ pm milestone create v2.0-auth "Authentication System" --goal "Add user authentic
 ## Step 3: Activate the Milestone
 
 ```bash
-pm milestone update <slug> --status active
+pm milestone update <slug> --status active --agent <name>
 ```
 
 **Cascading:** Activating a milestone deactivates any currently-active milestone (single-active rule).
@@ -56,12 +56,14 @@ pm milestone update <slug> --status active
 
 ## Step 4: Add Phases
 
-Break the milestone into 3-5 phases based on SPEC goals:
+**Read `.pm/SPEC.md` and `.pm/IDEATION.md`** (brainstorm outputs) to derive the phase breakdown. Do NOT invent arbitrary phase names — phases must map directly to the SPEC's feature areas, deliverables, or logical implementation stages.
+
+Break the milestone into 3-5 phases:
 
 ```bash
-pm phase add "Database Schema" --number 1 --description "Create auth tables and models"
-pm phase add "API Endpoints" --number 2 --description "Login, register, token refresh"
-pm phase add "Integration Tests" --number 3 --description "End-to-end auth flow tests"
+pm phase add "Database Schema" --number 1 --description "Create auth tables and models" --agent <name>
+pm phase add "API Endpoints" --number 2 --description "Login, register, token refresh" --agent <name>
+pm phase add "Integration Tests" --number 3 --description "End-to-end auth flow tests" --agent <name>
 ```
 
 Each `pm phase add` does **two things**:
@@ -70,16 +72,51 @@ Each `pm phase add` does **two things**:
 
 **Phase rules:**
 - 3-5 phases per milestone
-- Each phase has a clear deliverable
+- Each phase has a clear deliverable derived from SPEC
 - Dependencies flow forward (Phase 2 depends on Phase 1)
 - All phases start as `not_started`
 
 ---
 
-## Step 5: Verify and Commit
+## Step 5: Enrich Documents from Brainstorming
+
+**CRITICAL**: The auto-generated files contain placeholder tokens. You MUST now populate them with real content derived from `.pm/SPEC.md` and `.pm/IDEATION.md`.
+
+### 5a: Enrich `MILESTONE.md`
+
+Open `.pm/milestones/<slug>/MILESTONE.md` and populate **every section** with content from the brainstorming output:
+
+| Section | Source | What to Write |
+|---------|--------|---------------|
+| **Vision** | SPEC.md goal/scope | One paragraph synthesizing the milestone's purpose and impact |
+| **Must-Haves** | SPEC.md core features | Concrete, testable deliverables (not placeholders) |
+| **Nice-to-Haves** | SPEC.md optional/deferred items | Features that could be cut without blocking the milestone |
+| **Phases table** | Step 4 output | Actual phase names, numbers, and objectives from the phases you just created |
+| **Success Criteria** | SPEC.md acceptance criteria | Measurable outcomes that prove the milestone is complete |
+| **Architecture Decisions** | IDEATION.md / SPEC.md tech decisions | Key technical choices made during brainstorming with rationale |
+| **Risks** | SPEC.md constraints, IDEATION.md concerns | Real risks identified during brainstorming with mitigation strategies |
+
+### 5b: Enrich Each `PHASE.md`
+
+Open each `.pm/milestones/<slug>/<N>/PHASE.md` and populate:
+
+| Section | What to Write |
+|---------|---------------|
+| **Status** | Change from `Complete` → `Not Started` |
+| **Objective** | Specific description of what this phase delivers, derived from the SPEC |
+| **Deliverables** | Concrete deliverables that map to milestone must-haves |
+
+**Quality check** — after enrichment, the documents should:
+- ✅ Contain zero placeholder tokens (`{...}`)
+- ✅ Every section reflects real decisions from brainstorming
+- ✅ A new team member could read them and understand the full scope
+
+---
+
+## Step 6: Verify and Commit
 
 ```bash
-pm progress
+pm progress --agent <name>
 ```
 
 Confirm the milestone is active and phases match your SPEC.
@@ -121,6 +158,8 @@ Present the new milestone structure and suggest the first action:
 
 Milestone: {slug}
 Phases created: {N}
+
+Documents enriched from brainstorming ✓
 
 ───────────────────────────────────────────────────────
 

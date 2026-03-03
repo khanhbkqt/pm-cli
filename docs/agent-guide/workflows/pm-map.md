@@ -17,7 +17,7 @@ Before planning on brownfield projects — gives the planner full context about 
 Confirm this is a valid project with `pm status`:
 
 ```bash
-pm status --json
+pm status --json --agent <name>
 ```
 
 If not initialized, run `pm init` first.
@@ -91,11 +91,13 @@ Store key architecture decisions and findings:
 ```bash
 pm context set "architecture-overview" \
   "<high-level description of the system>" \
-  --category note
+  --category note \
+  --agent <name>
 
 pm context set "tech-stack" \
   "<runtime, frameworks, key dependencies>" \
-  --category note
+  --category note \
+  --agent <name>
 ```
 
 Write findings to `docs/ARCHITECTURE.md` (or project-appropriate location).
@@ -115,7 +117,7 @@ git commit -m "docs: map existing codebase"
 - [ ] Dependencies analyzed
 - [ ] Data flow mapped
 - [ ] Technical debt identified
-- [ ] Findings recorded via `pm context set`
+- [ ] Findings recorded via `pm context set` with `--agent <name>`
 
 ## Offer Next Steps
 

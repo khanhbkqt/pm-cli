@@ -31,7 +31,7 @@ _This provides the necessary context to understand why the bug matters and what 
 Check if the bug was already reported:
 
 ```bash
-pm bug list --status open
+pm bug list --status open --agent <name>
 ```
 
 **If an existing bug matches:** Note the ID and skip to Step 2 using that ID.
@@ -39,13 +39,13 @@ pm bug list --status open
 **If no existing bug:** Report a new one:
 
 ```bash
-pm bug report "<description>" --priority <level> --blocking
+pm bug report "<description>" --priority <level> --blocking --agent <name>
 ```
 
 **Example:**
 
 ```bash
-pm bug report "API returns 500 on milestone creation when goal contains special characters" --priority high --blocking
+pm bug report "API returns 500 on milestone creation when goal contains special characters" --priority high --blocking --agent <name>
 ```
 
 Use `--blocking` if this bug blocks plan execution or other work.
@@ -57,7 +57,7 @@ Use `--blocking` if this bug blocks plan execution or other work.
 Set the bug to investigating status:
 
 ```bash
-pm bug update <id> --status investigating
+pm bug update <id> --status investigating --agent <name>
 ```
 
 Investigate the codebase — search for the root cause, check logs, reproduce the issue.
@@ -69,7 +69,7 @@ Investigate the codebase — search for the root cause, check logs, reproduce th
 Update bug status:
 
 ```bash
-pm bug update <id> --status fixing
+pm bug update <id> --status fixing --agent <name>
 ```
 
 Implement the fix, then verify it works with empirical evidence (test output, curl response, etc.):
@@ -77,7 +77,7 @@ Implement the fix, then verify it works with empirical evidence (test output, cu
 ```bash
 npm test
 # or
-pm progress  # verify state is consistent
+pm progress --agent <name>  # verify state is consistent
 ```
 
 ---
@@ -85,13 +85,13 @@ pm progress  # verify state is consistent
 ## Step 4: Record Resolution
 
 ```bash
-pm bug update <id> --status resolved --description "<root cause and fix>"
+pm bug update <id> --status resolved --description "<root cause and fix>" --agent <name>
 ```
 
 **Example:**
 
 ```bash
-pm bug update 42 --status resolved --description "Goal parameter was not escaped in db.ts line 42 — fixed with parameterized query"
+pm bug update 42 --status resolved --description "Goal parameter was not escaped in db.ts line 42 — fixed with parameterized query" --agent <name>
 ```
 
 ---
@@ -109,7 +109,7 @@ git commit -m "fix: <description of what was fixed>"
 
 If debugging takes more than 3 attempts without progress:
 1. Stop the current approach
-2. Update the bug: `pm bug update <id> --status open --description "<what was tried>"`
+2. Update the bug: `pm bug update <id> --status open --description "<what was tried>" --agent <name>`
 3. Consider pausing → [Pause Work](pm-pause.md) for fresh session
 
 ## Success Criteria

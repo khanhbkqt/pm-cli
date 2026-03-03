@@ -12,7 +12,7 @@ Before planning a phase that has unclear scope, open questions, or multiple poss
 
 ## Prerequisites
 
-- Phase exists (`pm phase list`)
+- Phase exists (`pm phase list --agent <name>`)
 
 ---
 
@@ -33,16 +33,16 @@ _This ensures your discussion is grounded in the project's actual goals._
 ## Step 1: Review Phase Details
 
 ```bash
-pm phase list --json
+pm phase list --json --agent <name>
 ```
 
 Find the target phase and note its DB integer ID.
 
 ```bash
-pm phase show <phase-id>
+pm phase show <phase-id> --agent <name>
 ```
 
-> **Note:** `pm phase show` takes the DB integer ID, not the phase number. Use `pm phase list --json` to find the correct ID.
+> **Note:** `pm phase show` takes the DB integer ID, not the phase number. Use `pm phase list --json --agent <name>` to find the correct ID.
 
 Review the phase name and description to understand the intended scope.
 
@@ -64,15 +64,15 @@ Discuss with the team or review relevant documentation to answer:
 Use context to store key decisions for future reference:
 
 ```bash
-pm context set phase:<phase-id>:scope "<scope summary>"
+pm context set phase:<phase-id>:scope "<scope summary>" --agent <name>
 ```
 
 ```bash
-pm context set phase:<phase-id>:approach "<chosen approach>"
+pm context set phase:<phase-id>:approach "<chosen approach>" --agent <name>
 ```
 
 ```bash
-pm context set phase:<phase-id>:risks "<identified risks>"
+pm context set phase:<phase-id>:risks "<identified risks>" --agent <name>
 ```
 
 ---

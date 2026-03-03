@@ -12,15 +12,15 @@ When a phase is no longer needed — scope changed, requirements dropped, or pha
 
 ## Prerequisites
 
-- Active milestone with phases (`pm phase list --milestone <milestone-id> --json`)
+- Active milestone with phases (`pm phase list --milestone <milestone-id> --json --agent <name>`)
 
 ---
 
 ## Step 1: Identify the Phase
 
 ```bash
-pm phase list --milestone <milestone-id> --json
-pm phase show <phase-id> --json
+pm phase list --milestone <milestone-id> --json --agent <name>
+pm phase show <phase-id> --json --agent <name>
 ```
 
 ---
@@ -30,7 +30,7 @@ pm phase show <phase-id> --json
 Check phase status before removing:
 
 ```bash
-pm plan list --phase <phase-id> --json
+pm plan list --phase <phase-id> --json --agent <name>
 ```
 
 | Phase Status | Action |
@@ -48,7 +48,7 @@ If plans are `in_progress` or `completed`, warn the user and ask for confirmatio
 Review if other phases depend on this one:
 
 ```bash
-pm phase list --milestone <milestone-id> --json
+pm phase list --milestone <milestone-id> --json --agent <name>
 ```
 
 Inspect phase descriptions for dependency references. If dependencies exist, update dependent phases first.
@@ -61,7 +61,7 @@ Delete all plans in the phase:
 
 ```bash
 # For each plan in the phase
-pm plan update <plan-id> --status failed
+pm plan update <plan-id> --status failed --agent <name>
 ```
 
 ---
@@ -71,7 +71,7 @@ pm plan update <plan-id> --status failed
 For each phase after the removed one, decrement its number:
 
 ```bash
-pm phase update <phase-id> --number <new-number>
+pm phase update <phase-id> --number <new-number> --agent <name>
 ```
 
 > **Note:** Update from lowest to highest to avoid collisions.
@@ -81,8 +81,8 @@ pm phase update <phase-id> --number <new-number>
 ## Step 6: Verify
 
 ```bash
-pm phase list --milestone <milestone-id> --json
-pm progress
+pm phase list --milestone <milestone-id> --json --agent <name>
+pm progress --agent <name>
 ```
 
 ## Success Criteria

@@ -22,14 +22,14 @@ After running [Audit Milestone](pm-audit-milestone.md) when gaps are found that 
 Check current milestone progress for incomplete items:
 
 ```bash
-pm progress --json
-pm plan list --phase <phase-id> --status failed --json
+pm progress --json --agent <name>
+pm plan list --phase <phase-id> --status failed --json --agent <name>
 ```
 
 Also check context for audit results:
 
 ```bash
-pm context search "audit" --json
+pm context search "audit" --json --agent <name>
 ```
 
 ---
@@ -47,7 +47,7 @@ pm context search "audit" --json
 ## Step 3: Create Gap Closure Phase
 
 ```bash
-pm phase create "Gap Closure" --milestone <milestone-id> --number <next-number>
+pm phase create "Gap Closure" --milestone <milestone-id> --number <next-number> --agent <name>
 ```
 
 ---
@@ -59,7 +59,8 @@ pm plan create "Fix: <gap description>" \
   --phase <gap-phase-id> \
   --number 1 \
   --wave 1 \
-  --content "<fix instructions and verification steps>"
+  --content "<fix instructions and verification steps>" \
+  --agent <name>
 ```
 
 Repeat for each gap, grouping into waves by dependency.
@@ -71,7 +72,8 @@ Repeat for each gap, grouping into waves by dependency.
 ```bash
 pm context set "gap-closure-<milestone>" \
   "<summary of gaps and planned fixes>" \
-  --category note
+  --category note \
+  --agent <name>
 ```
 
 ---

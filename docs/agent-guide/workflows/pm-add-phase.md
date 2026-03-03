@@ -12,14 +12,14 @@ When you discover work that doesn't fit into existing phases, or when you need t
 
 ## Prerequisites
 
-- Active milestone exists (`pm milestone list --status active`)
+- Active milestone exists (`pm milestone list --status active --agent <name>`)
 
 ---
 
 ## Step 1: Review Existing Phases
 
 ```bash
-pm phase list --json
+pm phase list --json --agent <name>
 ```
 
 Note the current phase numbers to determine where the new phase should sit in the ordering.
@@ -29,7 +29,7 @@ Note the current phase numbers to determine where the new phase should sit in th
 ## Step 2: Add the Phase
 
 ```bash
-pm phase add "<name>" --number <n> --description "<description>"
+pm phase add "<name>" --number <n> --description "<description>" --agent <name>
 ```
 
 This does **two things**:
@@ -39,7 +39,7 @@ This does **two things**:
 **Example:**
 
 ```bash
-pm phase add "Performance Optimization" --number 5 --description "Profile and optimize critical paths"
+pm phase add "Performance Optimization" --number 5 --description "Profile and optimize critical paths" --agent <name>
 ```
 
 **Options:**
@@ -52,7 +52,7 @@ pm phase add "Performance Optimization" --number 5 --description "Profile and op
 ## Step 3: Verify
 
 ```bash
-pm phase list --json
+pm phase list --json --agent <name>
 ```
 
 Confirm the new phase appears with the correct number and `not_started` status.

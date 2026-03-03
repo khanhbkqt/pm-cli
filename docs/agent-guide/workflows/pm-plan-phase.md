@@ -12,8 +12,8 @@ After a milestone and phases exist, and you're ready to break a phase into concr
 
 ## Prerequisites
 
-- Milestone is `active` (`pm milestone list --json`)
-- Phase exists (`pm phase list --json`)
+- Milestone is `active` (`pm milestone list --json --agent <name>`)
+- Phase exists (`pm phase list --json --agent <name>`)
 
 ---
 
@@ -32,7 +32,7 @@ Before planning, you must understand the wider context:
    > ⚠️ **CRITICAL:** The user refers to phases by their **number** (e.g. "Phase 3"). This is NOT the database `<phase-id>`. You MUST look up the actual integer ID before running any `pm` command.
 
    ```bash
-   pm phase list --json
+   pm phase list --json --agent <name>
    ```
 
    Find the entry where `"number": <N>` matches the phase the user requested. Use its `"id"` field as `<phase-id>` in all subsequent commands.
@@ -48,10 +48,10 @@ _This ensures your plans align with the overall project direction._
 Using the `<phase-id>` resolved in Step 0:
 
 ```bash
-pm phase show <phase-id> --json
+pm phase show <phase-id> --json --agent <name>
 ```
 
-> ⚠️ `<phase-id>` is the database ID, **not** the phase number the user refers to (e.g. "Phase 2"). Always resolve via `pm phase list --json`.
+> ⚠️ `<phase-id>` is the database ID, **not** the phase number the user refers to (e.g. "Phase 2"). Always resolve via `pm phase list --json --agent <name>`.
 
 Extract the phase name, description, and objective. Confirm the phase isn't already completed.
 
@@ -70,7 +70,7 @@ Assess the discovery level needed:
 
 **Record research decisions:**
 ```bash
-pm context set "phase-{N}-research" "{key findings}" --category decision
+pm context set "phase-{N}-research" "{key findings}" --category decision --agent <name>
 ```
 
 ---
@@ -115,7 +115,8 @@ pm plan create "<plan-name>" \
   --phase <phase-id> \
   --number <N> \
   --wave <wave-number> \
-  --content "<one-line brief describing the plan's purpose>"
+  --content "<one-line brief describing the plan's purpose>" \
+  --agent <name>
 ```
 
 This stores a short brief in the DB for the dashboard/CLI quick view. Note the returned `<plan-id>`.
@@ -164,7 +165,7 @@ For each plan, verify:
 ## Step 6: Update Phase Status
 
 ```bash
-pm phase update <phase-id> --status planning
+pm phase update <phase-id> --status planning --agent <name>
 ```
 
 ---

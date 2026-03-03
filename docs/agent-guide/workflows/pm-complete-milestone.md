@@ -12,7 +12,7 @@ When all phases in a milestone are `completed` or `skipped`, and you're ready to
 
 ## Prerequisites
 
-- All phases are `completed` or `skipped` (check with `pm progress`)
+- All phases are `completed` or `skipped` (check with `pm progress --agent <name>`)
 - Work has been verified (see [Verify Work](pm-verify-work.md))
 
 ---
@@ -20,13 +20,13 @@ When all phases in a milestone are `completed` or `skipped`, and you're ready to
 ## Step 1: Check All Phases Are Done
 
 ```bash
-pm progress
+pm progress --agent <name>
 ```
 
 Verify every phase shows as `completed` or `skipped`. If any phases are incomplete, finish them first or skip them explicitly:
 
 ```bash
-pm phase update <phase-id> --status skipped
+pm phase update <phase-id> --status skipped --agent <name>
 ```
 
 ---
@@ -34,7 +34,7 @@ pm phase update <phase-id> --status skipped
 ## Step 2: Complete the Milestone
 
 ```bash
-pm milestone update <slug> --status completed
+pm milestone update <slug> --status completed --agent <name>
 ```
 
 **Cascading behavior:** Completion requires all phases to be `completed` or `skipped`. If any phase is in another status, this command will fail.
@@ -42,7 +42,7 @@ pm milestone update <slug> --status completed
 **Force completion** (skip the phase check):
 
 ```bash
-pm milestone update <slug> --status completed --force
+pm milestone update <slug> --status completed --force --agent <name>
 ```
 
 Use `--force` sparingly — only when you intentionally want to close a milestone with unfinished phases.
@@ -54,7 +54,7 @@ Use `--force` sparingly — only when you intentionally want to close a mileston
 After completion, optionally archive the milestone to remove it from active views:
 
 ```bash
-pm milestone update <slug> --status archived
+pm milestone update <slug> --status archived --agent <name>
 ```
 
 Archived milestones are still queryable but won't appear in default listings.
@@ -64,7 +64,7 @@ Archived milestones are still queryable but won't appear in default listings.
 ## Step 4: Verify Completion
 
 ```bash
-pm milestone show <slug> --json
+pm milestone show <slug> --json --agent <name>
 ```
 
 Confirm status is `completed` or `archived`.
@@ -100,7 +100,7 @@ planned → active → completed → archived
 
 - [ ] All phases are `completed` or `skipped`
 - [ ] Milestone status is `completed`
-- [ ] `pm milestone show` confirms final state
+- [ ] `pm milestone show` confirms final state with `--agent <name>`
 - [ ] Change committed
 
 ## Git Rules

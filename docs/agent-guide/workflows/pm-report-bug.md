@@ -68,7 +68,8 @@ Fill in what you know. Use "Unknown" for anything missing.
 pm bug create \
   --title "{Bug Title}" \
   --severity {blocking|high|medium|low} \
-  --description "{one-line summary}"
+  --description "{one-line summary}" \
+  --agent <name>
 ```
 
 ---

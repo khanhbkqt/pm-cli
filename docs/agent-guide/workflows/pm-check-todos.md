@@ -15,7 +15,7 @@ When you have free cycles, at the start of a session, or periodically to keep tr
 ## Step 1: List Pending Todos
 
 ```bash
-pm context search "todo" --json
+pm context search "todo" --json --agent <name>
 ```
 
 This returns all context entries with "todo" in the key or value.
@@ -39,7 +39,7 @@ Sort the results by urgency:
 **Option B: Create a plan** — if it's substantial enough:
 
 ```bash
-pm plan create "<description>" --phase <phase-id> --number <n>
+pm plan create "<description>" --phase <phase-id> --number <n> --agent <name>
 ```
 
 **Option C: Defer** — leave it as context for later

@@ -20,9 +20,9 @@ Safely pause work with complete state preservation for session handoff.
 Record your position and all critical context:
 
 ```bash
-pm context set session:phase "<phase number and name>"
-pm context set session:plan "<plan ID or description>"
-pm context set session:status "Paused at <timestamp>"
+pm context set session:phase "<phase number and name>" --agent <name>
+pm context set session:plan "<plan ID or description>" --agent <name>
+pm context set session:status "Paused at <timestamp>" --agent <name>
 ```
 
 ---
@@ -32,24 +32,24 @@ pm context set session:status "Paused at <timestamp>"
 Save everything that would be lost without this capture:
 
 ```bash
-pm context set session:summary "<what was accomplished this session>"
-pm context set session:in-progress "<uncommitted changes, partial work>"
-pm context set session:blockers "<what was preventing progress>"
+pm context set session:summary "<what was accomplished this session>" --agent <name>
+pm context set session:in-progress "<uncommitted changes, partial work>" --agent <name>
+pm context set session:blockers "<what was preventing progress>" --agent <name>
 ```
 
 ### Decisions and Approaches
 
 ```bash
-pm context set session:decisions "<decision 1: rationale, decision 2: rationale>"
-pm context set session:approaches-tried "<approach 1: outcome, approach 2: outcome>"
-pm context set session:hypothesis "<best guess at solution/issue>"
-pm context set session:files-of-interest "<file1: what's relevant, file2: what's relevant>"
+pm context set session:decisions "<decision 1: rationale, decision 2: rationale>" --agent <name>
+pm context set session:approaches-tried "<approach 1: outcome, approach 2: outcome>" --agent <name>
+pm context set session:hypothesis "<best guess at solution/issue>" --agent <name>
+pm context set session:files-of-interest "<file1: what's relevant, file2: what's relevant>" --agent <name>
 ```
 
 ### Next Steps
 
 ```bash
-pm context set session:next-steps "<1. specific first action, 2. second priority, 3. third priority>"
+pm context set session:next-steps "<1. specific first action, 2. second priority, 3. third priority>" --agent <name>
 ```
 
 ---
@@ -62,7 +62,7 @@ If you have plans in `in_progress` that won't be resumed soon:
 - **Not resuming** — Reset to `pending`
 
 ```bash
-pm plan update <plan-id> --status pending
+pm plan update <plan-id> --status pending --agent <name>
 ```
 
 ---

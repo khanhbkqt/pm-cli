@@ -24,7 +24,7 @@ Before starting, understand the surrounding context:
 ## Step 2: Read Bug Details
 
 ```bash
-pm bug show <id>
+pm bug show <id> --agent <name>
 ```
 
 Understand:
@@ -37,7 +37,7 @@ Understand:
 ## Step 3: Set Status — Investigating
 
 ```bash
-pm bug update <id> --status investigating
+pm bug update <id> --status investigating --agent <name>
 ```
 
 ---
@@ -61,7 +61,7 @@ Document the root cause once identified.
 ## Step 5: Set Status — Fixing
 
 ```bash
-pm bug update <id> --status fixing
+pm bug update <id> --status fixing --agent <name>
 ```
 
 Implement the fix. Keep changes minimal and targeted.
@@ -85,13 +85,13 @@ npm test
 ## Step 7: Resolve
 
 ```bash
-pm bug update <id> --status resolved --description "<root cause and fix>"
+pm bug update <id> --status resolved --description "<root cause and fix>" --agent <name>
 ```
 
 **Example:**
 
 ```bash
-pm bug update 42 --status resolved --description "Goal field not escaped in db.ts:42 — fixed with parameterized query"
+pm bug update 42 --status resolved --description "Goal field not escaped in db.ts:42 — fixed with parameterized query" --agent <name>
 ```
 
 ---
@@ -109,7 +109,7 @@ git commit -m "fix: <description of what was fixed>"
 
 If you cannot identify the root cause after 3 attempts:
 1. Stop the current approach
-2. Record attempts: `pm bug update <id> --description "<what was tried>"`
+2. Record attempts: `pm bug update <id> --description "<what was tried>" --agent <name>`
 3. Pause for a fresh session → [Pause Work](pm-pause.md)
 
 ---

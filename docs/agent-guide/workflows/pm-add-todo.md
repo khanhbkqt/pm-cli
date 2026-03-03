@@ -17,15 +17,15 @@ When you notice something that needs doing but don't want to context-switch righ
 Use context to store the todo item:
 
 ```bash
-pm context set "todo:<short-key>" "<description>" --category note
+pm context set "todo:<short-key>" "<description>" --category note --agent <name>
 ```
 
 **Examples:**
 
 ```bash
-pm context set "todo:update-readme" "Update README with new CLI commands" --category note
-pm context set "todo:refactor-errors" "Refactor error handling in phase module — messages are too vague" --category note
-pm context set "todo:add-tests" "Add integration tests for milestone completion edge cases" --category note
+pm context set "todo:update-readme" "Update README with new CLI commands" --category note --agent <name>
+pm context set "todo:refactor-errors" "Refactor error handling in phase module — messages are too vague" --category note --agent <name>
+pm context set "todo:add-tests" "Add integration tests for milestone completion edge cases" --category note --agent <name>
 ```
 
 ---
@@ -38,8 +38,8 @@ pm context set "todo:add-tests" "Add integration tests for milestone completion 
 
 ## Success Criteria
 
-- [ ] Todo recorded via `pm context set`
-- [ ] Searchable with `pm context search "todo"`
+- [ ] Todo recorded via `pm context set` with `--agent <name>`
+- [ ] Searchable with `pm context search "todo" --agent <name>`
 
 ## Offer Next Steps
 

@@ -12,7 +12,7 @@ When a new phase needs to be added between existing phases rather than appended 
 
 ## Prerequisites
 
-- Active milestone exists (`pm milestone list --json`)
+- Active milestone exists (`pm milestone list --json --agent <name>`)
 - Know the position where the new phase should be inserted
 
 ---
@@ -20,7 +20,7 @@ When a new phase needs to be added between existing phases rather than appended 
 ## Step 1: Review Current Phases
 
 ```bash
-pm phase list --milestone <milestone-id> --json
+pm phase list --milestone <milestone-id> --json --agent <name>
 ```
 
 Identify the position where the new phase should be inserted.
@@ -40,7 +40,7 @@ Determine:
 ## Step 3: Create the New Phase
 
 ```bash
-pm phase create "<name>" --milestone <milestone-id> --number <position>
+pm phase create "<name>" --milestone <milestone-id> --number <position> --agent <name>
 ```
 
 ---
@@ -50,7 +50,7 @@ pm phase create "<name>" --milestone <milestone-id> --number <position>
 For each phase with number >= position (excluding the new one), update its number:
 
 ```bash
-pm phase update <phase-id> --number <new-number>
+pm phase update <phase-id> --number <new-number> --agent <name>
 ```
 
 > **Note:** Update from highest to lowest to avoid number collisions.
@@ -60,8 +60,8 @@ pm phase update <phase-id> --number <new-number>
 ## Step 5: Verify
 
 ```bash
-pm phase list --milestone <milestone-id> --json
-pm progress
+pm phase list --milestone <milestone-id> --json --agent <name>
+pm progress --agent <name>
 ```
 
 Confirm phases are correctly numbered and ordered.

@@ -12,14 +12,14 @@ After planning a phase, before executing — to identify risks and validate assu
 
 ## Prerequisites
 
-- Phase has plans (`pm plan list --phase <phase-id> --json`)
+- Phase has plans (`pm plan list --phase <phase-id> --json --agent <name>`)
 
 ---
 
 ## Step 1: Load Phase Plans
 
 ```bash
-pm plan list --phase <phase-id> --json
+pm plan list --phase <phase-id> --json --agent <name>
 ```
 
 Review each plan's content for implicit and explicit assumptions.
@@ -56,7 +56,8 @@ Store assumptions as context for the team:
 ```bash
 pm context set "phase-<N>-assumptions" \
   "<categorized assumptions list>" \
-  --category note
+  --category note \
+  --agent <name>
 ```
 
 ---

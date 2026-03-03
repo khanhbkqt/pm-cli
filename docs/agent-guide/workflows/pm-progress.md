@@ -33,13 +33,13 @@ _This gives you the project's true intent before looking at CLI output._
 ## Step 1: Check Overall Progress
 
 ```bash
-pm progress
+pm progress --agent <name>
 ```
 
 For a specific milestone:
 
 ```bash
-pm progress --milestone <milestone-id>
+pm progress --milestone <milestone-id> --agent <name>
 ```
 
 ---
@@ -47,13 +47,13 @@ pm progress --milestone <milestone-id>
 ## Step 2: Review Phase Details
 
 ```bash
-pm phase list --json
+pm phase list --json --agent <name>
 ```
 
 For a specific phase:
 
 ```bash
-pm phase show <phase-id>
+pm phase show <phase-id> --agent <name>
 ```
 
 ---
@@ -61,13 +61,13 @@ pm phase show <phase-id>
 ## Step 3: Drill Into Plans
 
 ```bash
-pm plan list --phase <phase-id> --json
+pm plan list --phase <phase-id> --json --agent <name>
 ```
 
 Or use the kanban board view:
 
 ```bash
-pm plan board --phase <phase-id>
+pm plan board --phase <phase-id> --agent <name>
 ```
 
 ---

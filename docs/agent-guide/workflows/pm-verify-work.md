@@ -13,7 +13,7 @@ After executing a phase's plans, before marking the phase as complete.
 ## Prerequisites
 
 - Phase plans have been executed
-- Phase has completed plans (`pm plan list --phase <phase-id> --json`)
+- Phase has completed plans (`pm plan list --phase <phase-id> --json --agent <name>`)
 
 ---
 
@@ -34,9 +34,9 @@ _This ensures you verify the actual goals, not just what the plans happened to b
 ## Step 1: Load Verification Context
 
 ```bash
-pm phase show <phase-id> --json
-pm plan list --phase <phase-id> --json
-pm progress
+pm phase show <phase-id> --json --agent <name>
+pm plan list --phase <phase-id> --json --agent <name>
+pm progress --agent <name>
 ```
 
 Extract the phase objective and all deliverables from completed plans.
@@ -94,7 +94,7 @@ For each must-have, record:
 Record results via context:
 
 ```bash
-pm context set "phase-{N}-verification" "{X}/{Y} must-haves verified. Verdict: PASS|FAIL" --category note
+pm context set "phase-{N}-verification" "{X}/{Y} must-haves verified. Verdict: PASS|FAIL" --category note --agent <name>
 ```
 
 ---
@@ -127,7 +127,8 @@ pm plan create "Fix: {issue}" \
   --phase <phase-id> \
   --number <next-number> \
   --wave 1 \
-  --content "Problem: {what failed}. Fix: {specific instructions}. Verify: {how to confirm fix}"
+  --content "Problem: {what failed}. Fix: {specific instructions}. Verify: {how to confirm fix}" \
+  --agent <name>
 ```
 
 ```bash
