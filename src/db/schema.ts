@@ -1,8 +1,8 @@
 /**
- * SQLite schema definition — 6 tables for project management + workflow engine.
+ * SQLite schema definition — 7 tables for project management + workflow engine.
  */
 
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 export const SCHEMA_SQL = `
 -- Agents table
@@ -62,6 +62,23 @@ CREATE TABLE IF NOT EXISTS plans (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   completed_at DATETIME,
   UNIQUE(phase_id, number)
+);
+
+-- Bugs table (bug tracking)
+CREATE TABLE IF NOT EXISTS bugs (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  priority TEXT NOT NULL DEFAULT 'medium' CHECK(priority IN ('critical', 'high', 'medium', 'low')),
+  status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open', 'investigating', 'fixing', 'resolved', 'closed', 'wontfix', 'duplicate')),
+  reported_by TEXT NOT NULL REFERENCES agents(id),
+  assigned_to TEXT REFERENCES agents(id),
+  milestone_id TEXT REFERENCES milestones(id),
+  phase_id TEXT REFERENCES phases(id),
+  blocking INTEGER NOT NULL DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  resolved_at DATETIME
 );
 
 -- Workflow state table (session persistence)

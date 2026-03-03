@@ -190,3 +190,66 @@ export function readPhaseContent(
     }
     return fs.readFileSync(filePath, 'utf-8');
 }
+
+// ---------------------------------------------------------------------------
+// Bug content helpers
+// ---------------------------------------------------------------------------
+
+const BUGS_DIR = 'bugs';
+
+/**
+ * Get the absolute path for a bug's content file.
+ *
+ * Layout: .pm/bugs/<bugId>.md
+ */
+export function getBugContentPath(projectRoot: string, bugId: string): string {
+    return path.join(projectRoot, PM_DIR, BUGS_DIR, `${bugId}.md`);
+}
+
+/**
+ * Ensure the bugs directory exists.
+ */
+export function ensureBugDir(projectRoot: string): void {
+    const dir = path.join(projectRoot, PM_DIR, BUGS_DIR);
+    fs.mkdirSync(dir, { recursive: true });
+}
+
+/**
+ * Write bug content to its file. Creates intermediate directories as needed.
+ */
+export function writeBugContent(
+    projectRoot: string,
+    bugId: string,
+    content: string,
+): void {
+    ensureBugDir(projectRoot);
+    fs.writeFileSync(getBugContentPath(projectRoot, bugId), content, 'utf-8');
+}
+
+/**
+ * Read bug content from its file.
+ * Returns null if the file does not exist.
+ */
+export function readBugContent(
+    projectRoot: string,
+    bugId: string,
+): string | null {
+    const filePath = getBugContentPath(projectRoot, bugId);
+    if (!fs.existsSync(filePath)) {
+        return null;
+    }
+    return fs.readFileSync(filePath, 'utf-8');
+}
+
+/**
+ * Delete a bug content file if it exists.
+ */
+export function deleteBugContent(
+    projectRoot: string,
+    bugId: string,
+): void {
+    const filePath = getBugContentPath(projectRoot, bugId);
+    if (fs.existsSync(filePath)) {
+        fs.rmSync(filePath);
+    }
+}

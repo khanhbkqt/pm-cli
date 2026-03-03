@@ -129,6 +129,13 @@ export function runMigrations(db: Database.Database): MigrationResult {
             currentVersion = 2;
         }
 
+        if (currentVersion === 2) {
+            // v2 → v3: add bugs table
+            // IF NOT EXISTS is safe — only the new table gets created.
+            db.exec(SCHEMA_SQL);
+            currentVersion = 3;
+        }
+
         // Update version after all successful migrations
         db.pragma(`user_version = ${currentVersion}`);
 

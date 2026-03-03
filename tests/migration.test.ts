@@ -82,12 +82,12 @@ describe('Database Migration', () => {
         // 4. Assert migration result
         expect(result.migrated).toBe(true);
         expect(result.fromVersion).toBe(0);
-        // v0→v1 (UUID migration) + v1→v2 (null plan content) both run
-        expect(result.toVersion).toBe(2);
+        // v0→v1 (UUID migration) + v1→v2 (null plan content) + v2→v3 (bugs table) all run
+        expect(result.toVersion).toBe(3);
 
         // 5. Assert database version updated
         const user_version = db.pragma('user_version', { simple: true }) as number;
-        expect(user_version).toBe(2);
+        expect(user_version).toBe(3);
 
         // 6. Assert data was migrated and types changed
         const phase = db.prepare('SELECT * FROM phases').get() as any;
@@ -119,7 +119,7 @@ describe('Database Migration', () => {
         // Second run
         const result2 = runMigrations(db);
         expect(result2.migrated).toBe(false);
-        expect(result2.fromVersion).toBe(2);
+        expect(result2.fromVersion).toBe(3);
 
         db.close();
     });

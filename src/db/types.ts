@@ -54,6 +54,22 @@ export interface Plan {
     completed_at: string | null;
 }
 
+export interface Bug {
+    id: string;
+    title: string;
+    description: string | null;
+    priority: 'critical' | 'high' | 'medium' | 'low';
+    status: 'open' | 'investigating' | 'fixing' | 'resolved' | 'closed' | 'wontfix' | 'duplicate';
+    reported_by: string;
+    assigned_to: string | null;
+    milestone_id: string | null;
+    phase_id: string | null;
+    blocking: number;
+    created_at: string;
+    updated_at: string;
+    resolved_at: string | null;
+}
+
 export interface WorkflowState {
     id: number;
     key: string;

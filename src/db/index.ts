@@ -4,5 +4,5 @@
  */
 
 export { createDatabase, initializeSchema, getDatabase, runMigrations } from './connection.js';
-export type { Agent, ContextEntry, Milestone, Phase, Plan, WorkflowState } from './types.js';
+export type { Agent, Bug, ContextEntry, Milestone, Phase, Plan, WorkflowState } from './types.js';
 
