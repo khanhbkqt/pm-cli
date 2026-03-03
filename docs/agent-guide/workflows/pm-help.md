@@ -49,6 +49,7 @@ pm --help
 | whats-new | Show recent changes |
 | web-search | Search the web for research |
 | report-bug | Format a bug report from brief |
+| fix-bug | Fix a reported bug with systematic tracking |
 
 ## Quick Start
 
