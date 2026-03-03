@@ -329,7 +329,7 @@ Add first-class bug tracking to pm-cli — a dedicated `bugs` table in SQLite, d
 
 | Phase | Name | Status | Plans |
 |-------|------|--------|-------|
-| 1 | DB Schema, Types & Content Layer | ⬜ Not Started | 2 |
+| 1 | DB Schema, Types & Content Layer | ✅ Complete | 2 |
 | 2 | Core Domain Logic | ⬜ Not Started | 2 |
 | 3 | Formatter & CLI Commands | ⬜ Not Started | 2 |
 | 4 | Dashboard API Routes & UI | ⬜ Not Started | 2 |
@@ -338,7 +338,7 @@ Add first-class bug tracking to pm-cli — a dedicated `bugs` table in SQLite, d
 ---
 
 ### Phase 1: DB Schema, Types & Content Layer
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Add `bugs` table to schema, create `Bug` type, add v2→v3 migration, and add bug content helpers to `content.ts`. Create bug report template.
 **Depends on**: None
 
