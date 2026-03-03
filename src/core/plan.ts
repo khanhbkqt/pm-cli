@@ -53,8 +53,29 @@ export function createPlan(
 
     const plan = db.prepare('SELECT * FROM plans WHERE id = ?').get(id) as Plan;
 
+    // Generate comprehensive plan doc from template and write to filesystem
+    if (projectRoot) {
+        const row = db.prepare(`
+            SELECT ph.number as phase_number, ph.milestone_id
+            FROM phases ph
+            WHERE ph.id = ?
+        `).get(phase_id) as { phase_number: number; milestone_id: string };
+
+        const template = loadGsdTemplate(projectRoot, 'PLAN.md');
+        const fileContent = template
+            ? populatePlanTemplate(template, {
+                phaseNumber: row.phase_number,
+                planNumber: number,
+                wave: wave ?? 1,
+                name,
+            })
+            : `# Plan ${row.phase_number}.${number}: ${name}\n\n## Objective\n\nTODO\n`;
+
+        writePlanContent(projectRoot, row.milestone_id, row.phase_number, number, fileContent);
+    }
 
     return plan;
+
 }
 
 /**
