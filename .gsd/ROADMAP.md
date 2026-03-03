@@ -332,7 +332,7 @@ Add first-class bug tracking to pm-cli — a dedicated `bugs` table in SQLite, d
 | 1 | DB Schema, Types & Content Layer | ✅ Complete | 2 |
 | 2 | Core Domain Logic | ✅ Complete | 2 |
 | 3 | Formatter & CLI Commands | ✅ Complete | 2 |
-| 4 | Dashboard API Routes & UI | ⬜ Not Started | 2 |
+| 4 | Dashboard API Routes & UI | ✅ Complete | 2 |
 | 5 | Workflow Updates | ⬜ Not Started | 2 |
 
 ---
@@ -353,7 +353,7 @@ Add first-class bug tracking to pm-cli — a dedicated `bugs` table in SQLite, d
 **Depends on**: Phase 2
 
 ### Phase 4: Dashboard API Routes & UI
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Add bug API routes (`GET/POST/PATCH /api/bugs`), register in server app, and add a Bugs page to the dashboard frontend.
 **Depends on**: Phase 3
 
