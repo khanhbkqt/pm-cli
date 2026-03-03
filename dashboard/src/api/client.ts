@@ -1,4 +1,4 @@
-import type { StatusResponse, Plan, Agent, ContextEntry, Milestone, PhaseWithPlanCounts, PhasesSummary, BoardMilestone } from './types';
+import type { StatusResponse, Plan, Agent, ContextEntry, Milestone, PhaseWithPlanCounts, PhasesSummary, BoardMilestone, Bug } from './types';
 
 /**
  * Base GET fetch wrapper with error handling.
@@ -83,4 +83,57 @@ export type { Plan };
 export async function fetchBoard(): Promise<BoardMilestone[]> {
     const res = await apiFetch<{ board: BoardMilestone[] }>('/api/board');
     return res.board;
+}
+
+/* ─── Bug endpoints ────────────────────────────────── */
+
+/** Fetch bugs with optional filters. */
+export async function fetchBugs(filters?: Record<string, string>): Promise<Bug[]> {
+    const params = filters ? '?' + new URLSearchParams(filters).toString() : '';
+    const res = await apiFetch<{ bugs: Bug[] }>(`/api/bugs${params}`);
+    return res.bugs;
+}
+
+/** Fetch a single bug by ID (includes filesystem content). */
+export async function fetchBugById(id: string): Promise<Bug> {
+    const res = await apiFetch<{ bug: Bug }>(`/api/bugs/${id}`);
+    return res.bug;
+}
+
+/** Report a new bug. */
+export async function reportBugApi(params: {
+    title: string;
+    description?: string;
+    priority?: string;
+    reported_by: string;
+    milestone_id?: string;
+    phase_id?: string;
+    blocking?: boolean;
+}): Promise<Bug> {
+    const res = await fetch('/api/bugs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params),
+    });
+    if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error((body as { error?: string }).error || `API error: ${res.status}`);
+    }
+    const data = await res.json();
+    return data.bug;
+}
+
+/** Update a bug. */
+export async function updateBugApi(id: string, updates: Record<string, any>): Promise<Bug> {
+    const res = await fetch(`/api/bugs/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+    });
+    if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error((body as { error?: string }).error || `API error: ${res.status}`);
+    }
+    const data = await res.json();
+    return data.bug;
 }

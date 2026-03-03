@@ -10,6 +10,7 @@ import { PhasesPage } from './pages/PhasesPage';
 import { PlansPage } from './pages/PlansPage';
 import { PlanDetailPage } from './pages/PlanDetailPage';
 import { BoardPage } from './pages/BoardPage';
+import { BugsPage } from './pages/BugsPage';
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                         <Route path="/agents" element={<AgentsPage />} />
                         <Route path="/context" element={<ContextPage />} />
                         <Route path="/board" element={<BoardPage />} />
+                        <Route path="/bugs" element={<BugsPage />} />
                     </Routes>
                 </Layout>
             </ErrorBoundary>

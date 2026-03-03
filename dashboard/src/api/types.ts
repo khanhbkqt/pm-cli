@@ -99,3 +99,20 @@ export interface BoardMilestone extends Milestone {
 }
 
 export type BoardData = BoardMilestone[];
+
+export interface Bug {
+    id: string;
+    title: string;
+    description: string | null;
+    priority: 'critical' | 'high' | 'medium' | 'low';
+    status: 'open' | 'investigating' | 'fixing' | 'resolved' | 'closed' | 'wontfix';
+    reported_by: string;
+    assigned_to: string | null;
+    milestone_id: string | null;
+    phase_id: string | null;
+    blocking: number;
+    created_at: string;
+    updated_at: string;
+    resolved_at: string | null;
+    content?: string | null;
+}

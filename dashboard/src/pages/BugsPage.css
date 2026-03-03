@@ -1,0 +1,481 @@
+/* ─── Bugs Page ────────────────────────────────────── */
+.bugs-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ─── Header ───────────────────────────────────────── */
+.bugs-page__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.bugs-page__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.bugs-page__subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ─── Toolbar ──────────────────────────────────────── */
+.bugs-page__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.bugs-page__filter-group {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    border: 1px solid var(--border-color);
+}
+
+.bugs-page__filter-btn {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.bugs-page__filter-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.bugs-page__filter-btn--active {
+    background: var(--accent-blue);
+    color: #0f0f23;
+    font-weight: 600;
+}
+
+.bugs-page__filter-btn--active:hover {
+    background: var(--accent-blue);
+    color: #0f0f23;
+}
+
+.bugs-page__report-btn {
+    background: var(--accent-red);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    margin-left: auto;
+}
+
+.bugs-page__report-btn:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+}
+
+/* ─── Bug Table ────────────────────────────────────── */
+.bugs-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.bugs-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.bugs-table td {
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.15s ease;
+}
+
+.bugs-table tbody tr {
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.bugs-table tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.bugs-table__title-cell {
+    font-weight: 500;
+}
+
+/* ─── Priority Badge ───────────────────────────────── */
+.bugs-priority {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.bugs-priority--critical {
+    background: rgba(244, 67, 54, 0.15);
+    color: #f44336;
+}
+
+.bugs-priority--high {
+    background: rgba(255, 152, 0, 0.15);
+    color: #ff9800;
+}
+
+.bugs-priority--medium {
+    background: rgba(255, 235, 59, 0.15);
+    color: #fdd835;
+}
+
+.bugs-priority--low {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4caf50;
+}
+
+/* ─── Status Badge ─────────────────────────────────── */
+.bugs-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.bugs-status--open {
+    background: rgba(79, 195, 247, 0.15);
+    color: #4fc3f7;
+}
+
+.bugs-status--investigating {
+    background: rgba(171, 71, 188, 0.15);
+    color: #ab47bc;
+}
+
+.bugs-status--fixing {
+    background: rgba(255, 152, 0, 0.15);
+    color: #ff9800;
+}
+
+.bugs-status--resolved {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4caf50;
+}
+
+.bugs-status--closed {
+    background: rgba(158, 158, 158, 0.15);
+    color: #9e9e9e;
+}
+
+.bugs-status--wontfix {
+    background: rgba(158, 158, 158, 0.15);
+    color: #9e9e9e;
+}
+
+/* ─── Blocking Tag ─────────────────────────────────── */
+.bugs-blocking {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: rgba(244, 67, 54, 0.15);
+    color: #f44336;
+}
+
+/* ─── Detail Panel ─────────────────────────────────── */
+.bugs-detail-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bugs-detail {
+    width: min(560px, 90vw);
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideInRight 0.2s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.bugs-detail__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.bugs-detail__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.bugs-detail__close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.bugs-detail__close:hover {
+    color: var(--text-primary);
+}
+
+.bugs-detail__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.bugs-detail__meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.bugs-detail__meta-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+.bugs-detail__meta-value {
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.bugs-detail__content {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.bugs-detail__no-content {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* ─── Report Modal ─────────────────────────────────── */
+.bugs-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bugs-modal {
+    width: min(480px, 90vw);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: fadeInScale 0.15s ease;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.bugs-modal__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.bugs-modal__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bugs-modal__label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+.bugs-modal__input,
+.bugs-modal__textarea,
+.bugs-modal__select {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--text-primary);
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.bugs-modal__input:focus,
+.bugs-modal__textarea:focus,
+.bugs-modal__select:focus {
+    border-color: var(--accent-blue);
+}
+
+.bugs-modal__textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.bugs-modal__actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.bugs-modal__cancel {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--text-secondary);
+    transition: all 0.15s ease;
+}
+
+.bugs-modal__cancel:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+}
+
+.bugs-modal__submit {
+    background: var(--accent-red);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+}
+
+.bugs-modal__submit:hover {
+    opacity: 0.85;
+}
+
+.bugs-modal__submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.bugs-modal__checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bugs-modal__checkbox-row input[type="checkbox"] {
+    accent-color: var(--accent-red);
+}
+
+.bugs-modal__checkbox-row label {
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+/* ─── Responsive ───────────────────────────────────── */
+@media (max-width: 768px) {
+
+    .bugs-table th:nth-child(5),
+    .bugs-table td:nth-child(5) {
+        display: none;
+    }
+
+    .bugs-page__toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .bugs-page__report-btn {
+        margin-left: 0;
+    }
+}

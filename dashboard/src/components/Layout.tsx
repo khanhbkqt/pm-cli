@@ -12,6 +12,7 @@ const pageTitles: Record<string, string> = {
     '/milestones': 'Milestones',
     '/board': 'Plans Board',
     '/agents': 'Agents',
+    '/bugs': 'Bugs',
     '/context': 'Context',
 };
 
@@ -78,6 +79,16 @@ export function Layout({ children }: LayoutProps) {
                     >
                         <span className="sidebar__link-icon">👥</span>
                         Agents
+                    </NavLink>
+                    <NavLink
+                        to="/bugs"
+                        className={({ isActive }) =>
+                            `sidebar__link${isActive ? ' sidebar__link--active' : ''}`
+                        }
+                        onClick={() => setSidebarOpen(false)}
+                    >
+                        <span className="sidebar__link-icon">🐛</span>
+                        Bugs
                     </NavLink>
                     <NavLink
                         to="/context"
