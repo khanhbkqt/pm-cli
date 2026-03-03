@@ -27,15 +27,31 @@ Before planning, you must understand the wider context:
 2. **Read `.pm/STATE.md`**
    - Check where the last session left off
 
+3. **Resolve the phase-id from the phase number**
+
+   > ⚠️ **CRITICAL:** The user refers to phases by their **number** (e.g. "Phase 3"). This is NOT the database `<phase-id>`. You MUST look up the actual integer ID before running any `pm` command.
+
+   ```bash
+   pm phase list --json
+   ```
+
+   Find the entry where `"number": <N>` matches the phase the user requested. Use its `"id"` field as `<phase-id>` in all subsequent commands.
+
+   **Example:** If the user says "plan Phase 3", find `"number": 3` in the output and read its `"id"` (e.g. `42`). All further commands use `--phase 42`, not `--phase 3`.
+
 _This ensures your plans align with the overall project direction._
 
 ---
 
 ## Step 1: Validate Phase
-Retrive target phase of current milestone and get the `<phase-id>`
+
+Using the `<phase-id>` resolved in Step 0:
+
 ```bash
 pm phase show <phase-id> --json
 ```
+
+> ⚠️ `<phase-id>` is the database ID, **not** the phase number the user refers to (e.g. "Phase 2"). Always resolve via `pm phase list --json`.
 
 Extract the phase name, description, and objective. Confirm the phase isn't already completed.
 

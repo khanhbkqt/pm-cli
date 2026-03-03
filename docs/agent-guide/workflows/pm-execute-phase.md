@@ -15,7 +15,7 @@ After plans have been created for a phase (via the Plan Phase workflow) and you'
 - Phase has plans — confirm by resolving `<phase-id>` first (see Step 0), then: `pm plan list --phase <phase-id> --json`
 - Plans are in `pending` status
 
-> ⚠️ `<phase-id>` is the database integer ID, **not** the phase number the user refers to (e.g. "Phase 2"). Always resolve via `pm phase list --json`.
+> ⚠️ `<phase-id>` is the database ID, **not** the phase number the user refers to (e.g. "Phase 2"). Always resolve via `pm phase list --json`.
 
 ## Rules
 
