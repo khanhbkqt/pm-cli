@@ -32,7 +32,7 @@ _This ensures your plans align with the overall project direction._
 ---
 
 ## Step 1: Validate Phase
-
+Retrive target phase of current milestone and get the `<phase-id>`
 ```bash
 pm phase show <phase-id> --json
 ```
