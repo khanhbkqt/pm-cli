@@ -1,64 +1,49 @@
 ---
-description: Assist user in creating a detailed, properly formatted bug report from a brief description
+description: Capture a properly formatted bug report from a brief user description — reporting only, no investigation
 ---
 
-# /report-bug Workflow
+# /pm-report-bug Workflow
 
 <objective>
-Take a brief, potentially incomplete bug description from the user, analyze the context, ask necessary clarifying questions, and generate a properly formatted, actionable bug report.
+Turn a brief bug description into a structured, actionable bug report. **This workflow is for reporting only.** Do not investigate, debug, or read source files.
 </objective>
 
-<context>
-Run WHEN:
-- User types `/report-bug [brief description]`
-- User encounters an issue, error, or unexpected behavior but doesn't have time to write a full report
-- Missing steps to reproduce, expected behavior, or environmental context need to be extracted or inferred
-</context>
+> ⚠️ **SCOPE LIMIT:** Do NOT grep files, read terminals, view source code, or research the root cause. That is the job of `/pm-fix-bug` and `/pm-debug`. Your only job here is to capture what the user tells you in a clean format.
 
 <process>
 
-## 1. Initial Analysis & Context Gathering
+## 1. Acknowledge and Ask (if needed)
 
-When the user gives a brief bug description:
-1. **Acknowledge the issue:** Let the user know you are looking into it.
-2. **Scan Context:** Quickly scan recent workspace context (compile errors, terminal logs, recent file changes, active tasks).
-3. **Identify Gaps:** Determine what is missing from a standard bug report (e.g., exact reproduction steps, actual vs expected behavior, stack traces).
+Read the user's description. If you already have enough to fill the report, skip straight to Step 2.
 
----
+If key fields are missing, ask **one round** of targeted questions only:
 
-## 2. Clarification & Investigation
-
-If the issue is obvious from the context, skip to step 3. Otherwise:
-
-Ask the user targeted, concise questions to fill in the gaps:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- PM CLI ► ANALYZING BUG
+ PM CLI ► REPORT BUG
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-I see you're running into: "{brief description}"
+Got it. A couple of quick questions:
+1. {e.g. "What exact command or action triggered this?"}
+2. {e.g. "What did you expect to happen?"}
 
-To properly document this, I just need a quick clarification:
-1. {Question 1, e.g., "What was the exact command you ran?"}
-2. {Question 2, e.g., "Did it crash immediately or output a specific error?"}
-
-(If you're not sure, just let me know and I'll investigate the codebase/logs directly)
+(Skip any you're unsure about — I'll mark them as unknown)
 ───────────────────────────────────────────────────────
 ```
 
-*Agent Proactivity:* Independently use `grep_search`, `read_terminal`, or `view_file` to investigate the issue and attempt to reproduce or locate the faulty code locally.
+**Do not ask a second round. Do not investigate independently.**
 
 ---
 
-## 3. Format the Bug Report
+## 2. Format the Bug Report
 
-Once sufficient context is gathered, structure the bug report using a comprehensive, standardized format:
+Fill in what you know. Use "Unknown" for anything missing.
 
 ```markdown
 # Bug: {Clear, concise title}
 
 ## Description
-{Detailed description of the problem based on analysis}
+{What went wrong, in the user's own words}
 
 ## Steps to Reproduce
 1. {Step 1}
@@ -71,52 +56,39 @@ Once sufficient context is gathered, structure the bug report using a comprehens
 {What actually occurred, including any error messages/stack traces}
 
 ## Environment / Context
-- **Location:** {File/Module/Endpoint where error occurs}
-- **Recent Changes:** {Any recent commits or changes related}
-
-## Root Cause Analysis (Initial thoughts)
-{Your assessment of why this might be happening, if known. e.g., "Null pointer due to missing API parameter"}
+- **Location:** {File/module/command — if provided}
+- **Severity:** {blocking / high / medium / low}
 ```
 
 ---
 
-## 4. Document & Record the Bug
+## 3. Record the Bug
 
-Depending on how the project tracks bugs, formally record it:
-
-**Option A (As a Plan):**
-If the user wants it tracked as an immediate or future task:
 ```bash
-pm plan create --phase <phase-id> --title "Fix: {Bug Title}"
+pm bug create \
+  --title "{Bug Title}" \
+  --severity {blocking|high|medium|low} \
+  --description "{one-line summary}"
 ```
-Then update the generated plan `.md` file with the formatted bug report content from Step 3.
-
-**Option B (ROADMAP / State):**
-If the bug requires scheduling for later:
-- Add it to a Bug Tracking phase in `.gsd/ROADMAP.md` or as a phase TODO in `.gsd/STATE.md`.
 
 ---
 
-## 5. Present to User and Offer Next Steps
-
-Show the finalized report and ask how they want to proceed:
+## 4. Offer Next Steps
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- PM CLI ► BUG REPORT FILED
+ PM CLI ► BUG REPORTED
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-The bug has been analyzed, formatted, and documented.
-
-Title: {Title}
-Location/Plan: {Where it was recorded}
+Bug filed: {Title}
+Severity: {severity}
 
 ───────────────────────────────────────────────────────
 
 ▶ NEXT
 
-/pm-fix-bug   — To immediately start debugging and fixing this issue
-/pm-plan-phase — To continue with regular planning or next steps
+/pm-fix-bug   — Immediately start debugging and fixing this issue
+/pm-plan-phase — Continue with regular planning or next steps
 ───────────────────────────────────────────────────────
 ```
 
