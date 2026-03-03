@@ -48,6 +48,7 @@ pm --help
 | update | Update pm-cli to latest |
 | whats-new | Show recent changes |
 | web-search | Search the web for research |
+| report-bug | Format a bug report from brief |
 
 ## Quick Start
 
