@@ -16,7 +16,7 @@ PM CLI (`pm`) is a local-first project management tool that serves as a shared p
 
 - 🔄 **Workflow Engine** — GSD-inspired lifecycle management (milestones → phases → plans) with state machine transitions
 - 🤖 **Human-AI Collaboration** — Agents and humans share the same toolset; every action is tagged with identity
-- 📐 **27 Agent Workflow Templates** — Installable instruction files covering plan/execute/verify patterns with git rules
+- 📐 **30 Agent Workflow Templates** — Installable instruction files covering plan/execute/verify patterns with contextual next-step suggestions
 - 🕵️ **Agent System** — Register agents, identify who did what, track activity per agent
 - 📝 **Context Sharing** — Set, get, search key-value context entries across collaborators
 - 📊 **Web Dashboard** — Local browser-based project view with plan board, stats, and activity feed
@@ -40,7 +40,7 @@ Milestone (planned → active → completed → archived)
 - **Plans** — atomic execution units with wave-based parallel ordering
 - **State Machine** — enforced status transitions prevent invalid workflows
 - **Git Integration** — commit per plan, commit per phase, commit per milestone
-- **Agent Templates** — 27 workflow instruction files teach AI agents the full lifecycle
+- **Agent Templates** — 30 workflow instruction files teach AI agents the full lifecycle, each ending with an **Offer Next Steps** block to keep the agent on track
 
 ## Quick Start
 
@@ -148,9 +148,9 @@ pm install --all             # Install for all detected clients
 
 | Client | Config Format |
 |--------|---------------|
-| Antigravity | `.agent/workflows/pm-guide.md` + `.agent/rules/pm-cli.md` + 27 workflow files + 4 skill files |
+| Antigravity | `.agent/workflows/pm-guide.md` + `.agent/rules/pm-cli.md` + 30 workflow files + 4 skill files |
 | Claude Code | `CLAUDE.md` (section markers with workflow index) |
-| Cursor | `.cursor/rules/pm-guide.mdc` + 31 `.mdc` workflow/skill files |
+| Cursor | `.cursor/rules/pm-guide.mdc` + 34 `.mdc` workflow/skill files |
 | Codex | `AGENTS.md` (section markers with workflow index) |
 | OpenCode | `AGENTS.md` + `opencode.json` |
 | Gemini CLI | `GEMINI.md` (section markers with workflow index) |
@@ -158,7 +158,7 @@ pm install --all             # Install for all detected clients
 ### What Gets Installed
 
 - **Agent Instructions** — Core PM CLI usage guide
-- **27 Workflow Files** — Step-by-step guides for plan, execute, verify, debug, pause, resume, etc.
+- **30 Workflow Files** — Step-by-step guides for plan, execute, verify, debug, pause, resume, etc. Each workflow ends with an **Offer Next Steps** block suggesting the most relevant `/pm-workflow-name` to run next.
 - **4 Skill Files** — Identity, context, collaboration, and error recovery guides
 - **CLI Reference** — Complete command reference (Antigravity/Cursor only)
 

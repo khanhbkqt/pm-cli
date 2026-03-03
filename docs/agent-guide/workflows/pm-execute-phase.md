@@ -213,3 +213,27 @@ pm progress
 | Fix Bug | Fix blocking bugs before execution |
 | Pause | Use after 3 debugging failures |
 | Progress | Check milestone progress |
+
+## Offer Next Steps
+
+Present the phase result and suggest next actions:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PM CLI ► PHASE EXECUTED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Phase {N}: {name}
+Plans completed: {X}/{Y}
+Status: {completed ✓ / in_progress ⚠ / failed ✗}
+
+───────────────────────────────────────────────────────
+
+▶ NEXT
+
+/pm-verify-work  — Validate deliverables with empirical evidence
+/pm-progress     — Check overall milestone progress
+/pm-execute-phase — Continue to the next phase
+/pm-pause        — Pause session and save state
+───────────────────────────────────────────────────────
+```

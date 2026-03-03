@@ -33,7 +33,7 @@ If the issue is obvious from the context, skip to step 3. Otherwise:
 Ask the user targeted, concise questions to fill in the gaps:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► ANALYZING BUG
+ PM CLI ► ANALYZING BUG
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I see you're running into: "{brief description}"
@@ -103,7 +103,7 @@ Show the finalized report and ask how they want to proceed:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► BUG REPORT FILED
+ PM CLI ► BUG REPORT FILED
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 The bug has been analyzed, formatted, and documented.
@@ -115,8 +115,8 @@ Location/Plan: {Where it was recorded}
 
 ▶ NEXT
 
-/fix-bug — To immediately start debugging and fixing this issue
-/plan — To continue with regular planning or next steps
+/pm-fix-bug   — To immediately start debugging and fixing this issue
+/pm-plan-phase — To continue with regular planning or next steps
 ───────────────────────────────────────────────────────
 ```
 

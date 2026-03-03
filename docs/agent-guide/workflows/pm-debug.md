@@ -127,3 +127,26 @@ If debugging takes more than 3 attempts without progress:
 | Resume Work | If you paused during debugging |
 | Check Progress | Verify overall state after fix |
 | Pause | Use after 3 failed debugging attempts |
+
+## Offer Next Steps
+
+Present the resolution and suggest what to do next:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PM CLI ► BUG RESOLVED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Bug #{id}: {description}
+Status: resolved ✓
+Root cause: {summary}
+
+───────────────────────────────────────────────────────
+
+▶ NEXT
+
+/pm-execute-phase — Resume plan execution after the fix
+/pm-fix-bug       — Fix another reported bug
+/pm-pause         — Pause for fresh session (if 3-strike reached)
+───────────────────────────────────────────────────────
+```

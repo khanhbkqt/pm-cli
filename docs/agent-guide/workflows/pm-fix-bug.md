@@ -129,3 +129,26 @@ If you cannot identify the root cause after 3 attempts:
 | Execute Phase | Checks for blocking bugs before running plans |
 | Pause | Use after 3 failed fix attempts |
 | Resume | Restore context after pausing |
+
+## Offer Next Steps
+
+Present the fix result and suggest what to do next:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PM CLI ► BUG FIXED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Bug #{id}: {description}
+Status: resolved ✓
+Fix committed: fix: {description}
+
+───────────────────────────────────────────────────────
+
+▶ NEXT
+
+/pm-execute-phase — Resume plan execution
+/pm-debug         — Start a new debugging session for another issue
+/pm-pause         — Pause session (if 3-strike reached)
+───────────────────────────────────────────────────────
+```
