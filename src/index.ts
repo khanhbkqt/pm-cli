@@ -5,6 +5,7 @@ import { registerAgentCommands } from './cli/commands/agent.js';
 import { registerMilestoneCommands } from './cli/commands/milestone.js';
 import { registerPhaseCommands } from './cli/commands/phase.js';
 import { registerPlanCommands } from './cli/commands/plan.js';
+import { registerBugCommands } from './cli/commands/bug.js';
 import { registerContextCommands } from './cli/commands/context.js';
 import { registerStatusCommand } from './cli/commands/status.js';
 import { registerDashboardCommand } from './cli/commands/dashboard.js';
@@ -22,6 +23,7 @@ registerInstallCommand(program);
 registerMilestoneCommands(program);
 registerPhaseCommands(program);
 registerPlanCommands(program);
+registerBugCommands(program);
 registerProgressCommand(program);
 
 // Parse and execute

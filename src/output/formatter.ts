@@ -1,4 +1,4 @@
-import type { Agent, ContextEntry, Milestone, Phase, Plan } from '../db/types.js';
+import type { Agent, Bug, ContextEntry, Milestone, Phase, Plan } from '../db/types.js';
 
 /**
  * Format a simple ASCII table from headers and rows.
@@ -294,6 +294,72 @@ export function formatPlanBoard(plans: Plan[], json: boolean): string {
     return sections.join('\n').trimEnd();
 }
 
+
+// ---------------------------------------------------------------------------
+// Bug formatting
+// ---------------------------------------------------------------------------
+
+const PRIORITY_ICONS: Record<string, string> = {
+    critical: '🔴',
+    high: '🟠',
+    medium: '🟡',
+    low: '🟢',
+};
+
+/**
+ * Format a single bug for display.
+ * `content` is loaded from the filesystem (.pm/bugs/<id>.md) by the caller.
+ */
+export function formatBug(bug: Bug, json: boolean, content?: string): string {
+    if (json) {
+        return JSON.stringify({ ...bug, content: content ?? null }, null, 2);
+    }
+
+    const icon = PRIORITY_ICONS[bug.priority] ?? '';
+    const lines = [
+        `ID:          ${bug.id}`,
+        `Title:       ${bug.title}`,
+        `Priority:    ${icon} ${bug.priority}`,
+        `Status:      ${bug.status}`,
+        `Blocking:    ${bug.blocking ? 'Yes' : 'No'}`,
+        `Reported by: ${bug.reported_by}`,
+        bug.assigned_to ? `Assigned to: ${bug.assigned_to}` : null,
+        bug.milestone_id ? `Milestone:   ${bug.milestone_id}` : null,
+        bug.phase_id ? `Phase:       ${bug.phase_id}` : null,
+        `Created:     ${bug.created_at}`,
+        bug.resolved_at ? `Resolved:    ${bug.resolved_at}` : null,
+    ].filter(Boolean) as string[];
+
+    if (content) {
+        lines.push('', '--- Content ---', content);
+    }
+
+    return lines.join('\n');
+}
+
+/**
+ * Format a list of bugs for display.
+ */
+export function formatBugList(bugs: Bug[], json: boolean): string {
+    if (json) {
+        return JSON.stringify(bugs, null, 2);
+    }
+
+    if (bugs.length === 0) {
+        return 'No bugs found.';
+    }
+
+    const headers = ['ID', 'Title', 'Priority', 'Status', 'Blocking'];
+    const rows = bugs.map(b => [
+        b.id.substring(0, 8),
+        b.title,
+        `${PRIORITY_ICONS[b.priority] ?? ''} ${b.priority}`,
+        b.status,
+        b.blocking ? 'Yes' : 'No',
+    ]);
+
+    return formatTable(headers, rows);
+}
 
 /**
  * Phase enriched with plan statistics.
