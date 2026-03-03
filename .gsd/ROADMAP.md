@@ -331,7 +331,7 @@ Add first-class bug tracking to pm-cli — a dedicated `bugs` table in SQLite, d
 |-------|------|--------|-------|
 | 1 | DB Schema, Types & Content Layer | ✅ Complete | 2 |
 | 2 | Core Domain Logic | ✅ Complete | 2 |
-| 3 | Formatter & CLI Commands | ⬜ Not Started | 2 |
+| 3 | Formatter & CLI Commands | ✅ Complete | 2 |
 | 4 | Dashboard API Routes & UI | ⬜ Not Started | 2 |
 | 5 | Workflow Updates | ⬜ Not Started | 2 |
 
@@ -348,7 +348,7 @@ Add first-class bug tracking to pm-cli — a dedicated `bugs` table in SQLite, d
 **Depends on**: Phase 1
 
 ### Phase 3: Formatter & CLI Commands
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Add `formatBug`/`formatBugList` to formatter, create `src/cli/commands/bug.ts` with `pm bug report/list/show/update` commands, register in `src/index.ts`.
 **Depends on**: Phase 2
 

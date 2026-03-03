@@ -3,14 +3,14 @@
 ## Current Position
 
 - **Milestone**: v3.5-bug-tracking
-- **Phase**: 2 (completed)
+- **Phase**: 3 (completed)
 - **Task**: All tasks complete
 - **Status**: Verified ✅
 
 ## Last Session Summary
 
-Phase 2 executed successfully. 2 plans, 2 tasks completed. Created `src/core/bug.ts` with 6 functions (reportBug, listBugs, getBugById, getBugContent, updateBug, getBlockingBugs). Created `tests/bug.test.ts` with 16 passing tests.
+Phase 3 executed successfully. 2 plans, 3 tasks completed across 2 waves. Wave 1: Added `formatBug`/`formatBugList` to `src/output/formatter.ts` with priority icons (🔴🟠🟡🟢). Created `src/cli/commands/bug.ts` with `report`, `list`, `show`, `update` subcommands. Registered in `src/index.ts`. Wave 2: Created `tests/bug-cli.test.ts` with 12 passing CLI integration tests.
 
 ## Next Steps
 
-1. /execute 3 — Formatter & CLI Commands
+1. /execute 4 — Dashboard API Routes & UI
