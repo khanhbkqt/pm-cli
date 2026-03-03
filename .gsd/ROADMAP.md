@@ -1,13 +1,13 @@
 ---
-milestone: v3.4-gsd-templates
-version: 3.4.0
-updated: 2026-03-02T14:55:00+07:00
+milestone: v3.5-bug-tracking
+version: 3.5.0
+updated: 2026-03-03T08:03:00+07:00
 ---
 
 # Roadmap
 
-> **Current Milestone**: v3.4-gsd-templates — GSD Template Integration
-> **Last Completed**: v3.3-board-redesign
+> **Current Milestone**: v3.5-bug-tracking — Bug Tracking System
+> **Last Completed**: v3.4-gsd-templates
 
 ## Previous Milestones
 
@@ -271,7 +271,8 @@ Redesign the Plans Board page into a premium Jira-style hierarchy tree view with
 
 ---
 
-## Active Milestone: v3.4-gsd-templates — GSD Template Integration
+<details>
+<summary>✅ v3.4-gsd-templates — GSD Template Integration (Complete)</summary>
 
 ### Goal
 
@@ -294,25 +295,69 @@ When `pm milestone create`, `pm phase add`, or `pm plan create` is called, autom
 | 2 | Domain Logic — Milestone, Phase & Plan | ✅ Complete | 2 |
 | 3 | CLI Passthrough & Tests | ✅ Complete | 1 |
 
+</details>
+
 ---
 
-### Phase 1: Template Loader & Content Helpers
-**Status**: ✅ Complete
-**Objective**: Create `src/core/template_gsd.ts` with template-loading functions, and extend `src/core/content.ts` with `writeMilestoneContent` and `writePhaseContent` helpers.
+## Active Milestone: v3.5-bug-tracking — Bug Tracking System
+
+### Goal
+
+Add first-class bug tracking to pm-cli — a dedicated `bugs` table in SQLite, dual-storage with `.pm/bugs/<id>.md` filesystem files, CLI commands (`pm bug report/list/show/update`), dashboard API routes + UI page, and updated agent workflows for bug-first execution.
+
+### Must-Haves
+
+- [ ] `bugs` table in SQLite with priority, status, blocking flag, milestone/phase links
+- [ ] Dual storage — brief in DB, comprehensive report in `.pm/bugs/<id>.md`
+- [ ] Bug template for structured reporting (`docs/templates/BUG.md`)
+- [ ] `pm bug report <title>` — create bug with priority, description, blocking flag
+- [ ] `pm bug list` — list bugs with `--priority`, `--status`, `--blocking` filters
+- [ ] `pm bug show <id>` — display bug details + filesystem content
+- [ ] `pm bug update <id>` — update status, priority, assignment
+- [ ] Dashboard API routes — CRUD for bugs
+- [ ] Dashboard UI — bug list/detail page
+- [ ] Updated execute-phase workflow — check blocking bugs before execution
+- [ ] Fix-bug workflow — dedicated bug resolution flow
+
+### Nice-to-Haves
+
+- [ ] Bug linking to specific plans
+- [ ] Bug statistics in `pm progress` output
+- [ ] Timeline view of bug activity in dashboard
+
+### Phases
+
+| Phase | Name | Status | Plans |
+|-------|------|--------|-------|
+| 1 | DB Schema, Types & Content Layer | ⬜ Not Started | 2 |
+| 2 | Core Domain Logic | ⬜ Not Started | 2 |
+| 3 | Formatter & CLI Commands | ⬜ Not Started | 2 |
+| 4 | Dashboard API Routes & UI | ⬜ Not Started | 2 |
+| 5 | Workflow Updates | ⬜ Not Started | 2 |
+
+---
+
+### Phase 1: DB Schema, Types & Content Layer
+**Status**: ⬜ Not Started
+**Objective**: Add `bugs` table to schema, create `Bug` type, add v2→v3 migration, and add bug content helpers to `content.ts`. Create bug report template.
 **Depends on**: None
 
----
-
-### Phase 2: Domain Logic — Milestone, Phase & Plan
-**Status**: ✅ Complete
-**Objective**: Update `src/core/milestone.ts`, `src/core/phase.ts`, and `src/core/plan.ts` to call the template loaders and write populated Markdown files on creation.
+### Phase 2: Core Domain Logic
+**Status**: ⬜ Not Started
+**Objective**: Create `src/core/bug.ts` with `reportBug`, `listBugs`, `getBugById`, `getBugContent`, `updateBug`, `getBlockingBugs` functions following the `plan.ts` pattern.
 **Depends on**: Phase 1
 
----
-
-### Phase 3: CLI Passthrough & Tests
-**Status**: ✅ Complete
-**Objective**: Pass `projectRoot` through to `createMilestone` and `addPhase` in their CLI command handlers. Update/add tests in `tests/milestone.test.ts`, `tests/phase.test.ts`, and `tests/plan*.test.ts`.
+### Phase 3: Formatter & CLI Commands
+**Status**: ⬜ Not Started
+**Objective**: Add `formatBug`/`formatBugList` to formatter, create `src/cli/commands/bug.ts` with `pm bug report/list/show/update` commands, register in `src/index.ts`.
 **Depends on**: Phase 2
 
+### Phase 4: Dashboard API Routes & UI
+**Status**: ⬜ Not Started
+**Objective**: Add bug API routes (`GET/POST/PATCH /api/bugs`), register in server app, and add a Bugs page to the dashboard frontend.
+**Depends on**: Phase 3
 
+### Phase 5: Workflow Updates
+**Status**: ⬜ Not Started
+**Objective**: Update `pm-execute-phase.md` with blocking bug check, update `pm-debug.md` to integrate with bug system, create new `pm-fix-bug.md` workflow.
+**Depends on**: Phase 2

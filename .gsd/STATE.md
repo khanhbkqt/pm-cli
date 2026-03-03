@@ -2,22 +2,15 @@
 
 ## Current Position
 
-- **Milestone**: v3.4-gsd-templates (completed)
-- **Phase**: 3 (completed)
-- **Task**: All tasks complete
-- **Status**: Verified ✅
+- **Milestone**: v3.5-bug-tracking
+- **Phase**: 1 (not started)
+- **Task**: Planning complete, ready for execution
+- **Status**: Milestone planned ⬜
 
 ## Last Session Summary
 
-Phase 3 (CLI Passthrough & Tests) executed successfully. 1 plan completed.
-
-**Phase 3 Delivered:**
-- `src/cli/commands/milestone.ts` — `findProjectRoot` added and passed to `createMilestone`
-- `src/cli/commands/phase.ts` — `findProjectRoot` added and passed to `addPhase`
-- Added filesystem assertions to `tests/milestone-cli.test.ts`
-- Added filesystem assertions to `tests/phase-cli.test.ts`
-- 24/24 integration tests pass
+Milestone v3.4-gsd-templates completed. Created v3.5-bug-tracking milestone with 5 phases and 10 plans for adding a bug tracking system.
 
 ## Next Steps
 
-1. Milestone `v3.4-gsd-templates` is fully verified and complete. Proceed to next milestone or polish.
+1. /execute 1 — DB Schema, Types & Content Layer
