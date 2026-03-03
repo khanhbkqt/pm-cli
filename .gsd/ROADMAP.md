@@ -330,7 +330,7 @@ Add first-class bug tracking to pm-cli — a dedicated `bugs` table in SQLite, d
 | Phase | Name | Status | Plans |
 |-------|------|--------|-------|
 | 1 | DB Schema, Types & Content Layer | ✅ Complete | 2 |
-| 2 | Core Domain Logic | ⬜ Not Started | 2 |
+| 2 | Core Domain Logic | ✅ Complete | 2 |
 | 3 | Formatter & CLI Commands | ⬜ Not Started | 2 |
 | 4 | Dashboard API Routes & UI | ⬜ Not Started | 2 |
 | 5 | Workflow Updates | ⬜ Not Started | 2 |
@@ -343,7 +343,7 @@ Add first-class bug tracking to pm-cli — a dedicated `bugs` table in SQLite, d
 **Depends on**: None
 
 ### Phase 2: Core Domain Logic
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Create `src/core/bug.ts` with `reportBug`, `listBugs`, `getBugById`, `getBugContent`, `updateBug`, `getBlockingBugs` functions following the `plan.ts` pattern.
 **Depends on**: Phase 1
 
