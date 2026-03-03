@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import type Database from 'better-sqlite3';
-import { createAgentRoutes, createContextRoutes, createStatusRoutes, createMilestoneRoutes, createPhaseRoutes, createPlanRoutes, createBoardRoutes } from './routes/index.js';
+import { createAgentRoutes, createContextRoutes, createStatusRoutes, createMilestoneRoutes, createPhaseRoutes, createPlanRoutes, createBoardRoutes, createBugRoutes } from './routes/index.js';
 import { createProgressRouter } from './routes/progress.js';
 
 /**
@@ -29,6 +29,7 @@ export function createApp(db: Database.Database, projectRoot: string): express.E
     app.use(createPhaseRoutes(db));
     app.use(createPlanRoutes(db, projectRoot));
     app.use(createBoardRoutes(db));
+    app.use(createBugRoutes(db, projectRoot));
 
     // Serve static dashboard files if the directory exists
     const __dirname = path.dirname(fileURLToPath(import.meta.url));

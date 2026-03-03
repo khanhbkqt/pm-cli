@@ -5,3 +5,4 @@ export { createMilestoneRoutes } from './milestones.js';
 export { createPhaseRoutes } from './phases.js';
 export { createPlanRoutes } from './plans.js';
 export { createBoardRoutes } from './board.js';
+export { createBugRoutes } from './bugs.js';
